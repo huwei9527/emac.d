@@ -3,3 +3,16 @@
 
 # Packaging
 .cask
+
+# Backup files
+*~
+*.swp
+\#*
+*\#
+
+# Data file
+config/
+packages/
+test.txt
+test1.txt
+test.pdf
