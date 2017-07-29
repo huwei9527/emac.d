@@ -1,4 +1,6 @@
-(require 'config-custom)
+;; -*- lexical-binding : t ; byte-compile-dynamic : t -*-
+
+(require 'file-custom)
 
 (defgroup smart-auto-save nil
   "Auto save files smartly."
@@ -20,7 +22,7 @@
   :type 'boolean
   :group 'smart-auto-save)
 
-(defcustom smart-auto-save-filter config-file-filter
+(defcustom smart-auto-save-filter file-custom-file-tail-filter
   "Suffix of the file to be filtered."
   :type 'string
   :group 'smart-auto-save)
@@ -31,7 +33,7 @@
   :type '(repeat string)
   :group 'smart-auto-save)
 
-(defvar smart-auto-save-filter-regexp config-file-filter-regexp)
+(defvar smart-auto-save-filter-regexp file-custom-file-tail-filter-regexp)
 
 (defvar smart-auto-save-last-time (current-time)
   "The time of last idle auto save.")
@@ -60,7 +62,6 @@
 
 (defun smart-auto-save-idle ()
   "Smart save file when Emacs is idle."
-  ;(message "%f %d" (time-to-seconds (time-since smart-auto-save-last-time)) smart-auto-save-interval)
   (when (> (time-to-seconds (time-since smart-auto-save-last-time)) smart-auto-save-interval)
     (let ((cnt (smart-auto-save-all-buffers)))
       (unless (= cnt 0)
@@ -124,7 +125,7 @@
   (smart-auto-save-lost-focus-off)
   (smart-auto-save-trigger-off))
 
-(smart-auto-save-on)
+;(smart-auto-save-on)
 
 (provide 'smart-auto-save)
 ;;; smart-auto-save.el ends here

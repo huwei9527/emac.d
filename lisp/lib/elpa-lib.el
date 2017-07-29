@@ -1,32 +1,4 @@
-(unless (boundp 'config-home-directory)
-  (defconst config-home-directory
-    (file-name-as-directory (expand-file-name "~/Projects/emacs.d"))))
-(add-to-list 'load-path (file-name-as-directory (expand-file-name "lisp" config-home-directory)))
-
-(require 'config-elpa)
-
-(defconst packages-list
-  '(evil)
-  "Package to be install.")
-
-(defun message-null (&rest args) "Function doing nothing." nil)
-
-(defun message-mute ()
-  "Mute message function."
-  (advice-add 'message :override #'message-null))
-
-(defun message-unmute ()
-  "Unmute message function."
-  (advice-remove 'message #'message-null))
-
-(defmacro with-no-message (&rest form)
-  "Run FORM with no message."
-  `(progn
-     (let ((message-log-max nil) (standard-output nil))
-       (message-mute)
-       (unwind-protect
-           (with-no-warnings (with-output-to-temp-buffer "*NULL*" ,@form))
-         (message-unmute)))))
+;; -*- lexical-binding : t ; byte-compile-dynamic : t -*-
 
 (defconst pkg-exist nil "Package exists.")
 (defconst pkg-miss nil "Package misses.")
@@ -44,8 +16,8 @@
 Return:
 package-desc - if PKG is available in CL.
 nil - otherwise."
-  (let ((pc (assoc pkg cl)))
-    (if pc (car (cdr pc)) nil)))
+  (let* ((pc (assq pkg cl)))
+    (if pc (cadr pc) nil)))
 
 (defun local-package-desc (pkg)
   "Get local package-desc of symbol PKG.
@@ -71,7 +43,7 @@ by the given package and are available.
 Return:
 non-nil - out of date.
 nil - up to date."
-  (let ((ver-local (package-desc-version desc-local))
+  (let* ((ver-local (package-desc-version desc-local))
         (ver-remote (package-desc-version desc-remote)))
     (version-list-< ver-local ver-remote)))
 
@@ -97,7 +69,7 @@ and remote content list (package-alist & package-archive-contents).
 Return:
 non-nil - out of date.
 nil - up to date."
-  (let ((desc-local (local-package-desc pkg))
+  (let* ((desc-local (local-package-desc pkg))
         (desc-remote (remote-package-desc pkg)))
     (package-out-of-date-p-raw desc-local desc-remote)))
 
@@ -118,7 +90,7 @@ Return:
 Return:
 'pkg-miss, 'delete-succ, 'delete-fail(Not usual case. Need check.)"
   (if (package-installed-p pkg)
-      (let ((pkg-desc (local-package-desc pkg)))
+      (let* ((pkg-desc (local-package-desc pkg)))
         (if pkg-desc
             (progn (elpa-delete-raw pkg-desc) 'delete-succ)
           'delete-fail))
@@ -129,7 +101,7 @@ Return:
 
 Return:
 'upgrade-fail(Usually miss package), 'upgrade-succ, 'up-to-date"
-  (let ((desc-local nil)
+  (let* ((desc-local nil)
         (desc-remote nil))
     (cond
      ((not (setq desc-local (local-package-desc pkg))) 'upgrade-fail)
@@ -144,12 +116,12 @@ Return:
 
 (defun compute-dependency-family ()
   "Construct necessary package list by dependency."
-  (let ((rlt nil)
+  (let* ((rlt nil)
         (dep nil)
         (dep-last nil)
         (reqs nil)
         (desc nil))
-    (dolist (pkg packages-list)
+    (dolist (pkg elpa-custom-packages-list)
       (when (package-installed-p pkg)
         (add-to-list 'rlt pkg)))
     (setq dep-last rlt)
@@ -171,12 +143,12 @@ Return:
 (defun install-package ()
   "Install packages listed in packages-list."
   (unless package-archive-contents (package-refresh-contents))
-  (let ((rlt-alist nil)
+  (let* ((rlt-alist nil)
         (delete-list nil)
         (dep nil)
         (rlt nil))
     ; Install packages in packages-list. Upgrade it if exists.
-    (dolist (pkg packages-list)
+    (dolist (pkg elpa-custom-packages-list)
       (add-to-list 'rlt-alist
                    (cons pkg
                          (if (eq (setq rlt (elpa-install pkg)) 'pkg-exist)
@@ -195,7 +167,5 @@ Return:
       (dolist (pkg rlt-alist)
         (message "[%s] %s" (symbol-name (cdr pkg)) (symbol-name (car pkg)))))))
 
-(install-package)
-
-(provide 'install-packages)
-; install-packages.el ends here
+(provide 'elpa-lib)
+; elpa-lib.el ends here
