@@ -1,5 +1,7 @@
 ;; -*- lexical-binding : t ; byte-compile-dynamic : t -*-
 
+(require 'utility)
+
 (defconst pkg-exist nil "Package exists.")
 (defconst pkg-miss nil "Package misses.")
 (defconst install-succ nil "Install success.")
@@ -52,7 +54,9 @@ nil - up to date."
 
 No matter whether PKG is installed or available in remote.
 You need to check by yourself for safety."
-  (package-install pkg))
+  (with-no-message (package-install pkg))
+  ;(package-install pkg)
+  )
 
 (defun elpa-delete-raw (pkg-desc)
   "Delete package determined by package descriptor PKG-DESC using ELPA.
@@ -142,12 +146,12 @@ Return:
 
 (defun install-package ()
   "Install packages listed in packages-list."
-  (unless package-archive-contents (package-refresh-contents))
+  (or package-archive-contents (package-refresh-contents))
   (let* ((rlt-alist nil)
-        (delete-list nil)
-        (dep nil)
-        (rlt nil))
-    ; Install packages in packages-list. Upgrade it if exists.
+         (delete-list nil)
+         (dep nil)
+         (rlt nil))
+    ;; Install packages in packages-list. Upgrade it if exists.
     (dolist (pkg elpa-custom-packages-list)
       (add-to-list 'rlt-alist
                    (cons pkg

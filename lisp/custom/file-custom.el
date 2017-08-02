@@ -1,8 +1,8 @@
 ;; -*- lexical-binding : t byte-compile-dynamic : t -*-
 
-(eval-when-compile (require 'code-gen))
+(eval-when-compile (require 'file-code))
 
-(code-gen-defilter-tail "file" "(~|#)|(.(exe|zip|pdf))")
+(code-defilter-tail "file" "(~|#)|(.(exe|zip|pdf))")
 
 (defconst file-custom-read-only-file-list
   `("~/Projects/emacs.d/test1.txt")

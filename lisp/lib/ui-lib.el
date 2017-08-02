@@ -2,7 +2,7 @@
 
 (let ((dflt-fg (face-foreground 'mode-line))
       (dflt-bg (face-background 'mode-line)))
-  (defun set-mode-line-color (&optional fg bg)
+  (defsubst set-mode-line-color (&optional fg bg)
     "Set the foreground FG and background BG color for modeline.
 
 If fg is nil, restore the default color."

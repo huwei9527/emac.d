@@ -1,21 +1,18 @@
 ;; -*- lexical-binding : t ; byte-compile-dynamic : t -*-
 
-(eval-when-compile (require 'code-gen))
+(eval-when-compile (require 'file-code))
 
 (defconst elpa-custom-packages-list
-  '(
-    evil
-    ivy
-    color-theme-solarized
-    swiper
-    )
+  (list 'evil
+        'color-theme-solarized
+        'swiper)
   "Package to be install.")
 
-(code-gen-defdir "packages"
+(code-defdir "packages"
   "The directory to store ELPA packages. This will be set to
 package-user-dir automatically.")
 
-(code-gen-defdir-config "package-describes"
+(code-defdir-config "package-describes"
   "The directory to save ELPA describe file. When you describe a
 package (C-m or <RET> in the package mode) which is no installed,
 ELPA will download a package-name-readme.txt file to describe the

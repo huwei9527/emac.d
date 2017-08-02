@@ -27,13 +27,12 @@
   :type 'string
   :group 'smart-auto-save)
 
-(defcustom smart-auto-save-triggers
-  '("switch-to-buffer" "select-window" "suspend-frame")
-  "Command to trigger smart auto save current buffer."
-  :type '(repeat string)
-  :group 'smart-auto-save)
-
 (defvar smart-auto-save-filter-regexp file-custom-file-tail-filter-regexp)
+
+(defsubst smart-auto-save-filtered-p (fn)
+  "Return t if the suffix of FN (a file name)
+matches 'smart-auto-save-fileter-regexp'"
+  (string-match-p smart-auto-save-filter-regexp fn))
 
 (defvar smart-auto-save-last-time (current-time)
   "The time of last idle auto save.")
@@ -41,91 +40,67 @@
 (defvar smart-auto-save-idle-timer nil
   "The idle timer for idle auto save.")
 
-(defun smart-auto-save-buffer ()
+(defsubst smart-auto-save-buffer ()
   "Smart save the current buffer."
   (when (and buffer-file-name
              (buffer-modified-p)
-             (not (string-match-p smart-auto-save-filter-regexp buffer-file-name))
+             (not (smart-auto-save-filtered-p buffer-file-name))
              (file-writable-p buffer-file-name))
     (if smart-auto-save-mute (with-temp-message "" (save-buffer)) (save-buffer))
     t))
 
 (defun smart-auto-save-all-buffers ()
   "Smart save all the buffers."
-  (let ((cnt 0))
+  (let* ((cnt 0))
     (save-excursion
       (dolist (buf (buffer-list))
         (set-buffer buf)
         (when (smart-auto-save-buffer)
-          (setq cnt (+ cnt 1)))))
+          (setq cnt (1+ cnt)))))
     cnt))
 
 (defun smart-auto-save-idle ()
   "Smart save file when Emacs is idle."
   (when (> (time-to-seconds (time-since smart-auto-save-last-time)) smart-auto-save-interval)
-    (let ((cnt (smart-auto-save-all-buffers)))
-      (unless (= cnt 0)
+    (let* ((cnt (smart-auto-save-all-buffers)))
+      (unless (eq cnt 0)
         (setq smart-auto-save-last-time (current-time))
         (unless smart-auto-save-mute
           (message "Idle save %d files." cnt))))))
 
-(defun smart-auto-save-buffer-trigger (&rest args)
+(defun smart-auto-save-buffer-advice (&rest args)
   "Smart save current file when triggered. (Portable to any triggers.)"
   (smart-auto-save-buffer))
 
-(defun smart-auto-save-idle-on ()
+
+(defsubst smart-auto-save-idle-on ()
   "Enable idle auto save."
   (interactive)
-  (unless smart-auto-save-idle-timer
+  (or smart-auto-save-idle-timer
     (setq smart-auto-save-idle-timer
           (run-with-idle-timer smart-auto-save-idle-time t #'smart-auto-save-idle))))
 
-(defun smart-auto-save-idle-off ()
+(defsubst smart-auto-save-idle-off ()
   "Disable idle auto save."
   (interactive)
   (when smart-auto-save-idle-timer
     (cancel-timer smart-auto-save-idle-timer)
     (setq smart-auto-save-idle-timer nil)))
 
-(defun smart-auto-save-lost-focus-on ()
-  "Enable auto save when lost focus."
-  (interactive)
-  (add-hook 'focus-out-hook #'smart-auto-save-buffer))
+(eval-and-compile
+  (defvar smart-auto-save-advice-triggers
+    (list "switch-to-buffer" "select-window")
+    "Command to trigger smart auto save current buffer.")
 
-(defun smart-auto-save-lost-focus-off ()
-  "Disable auto save when lost focus."
-  (interactive)
-  (remove-hook 'focus-out-hook #'smart-auto-save-buffer))
+  (defvar smart-auto-save-hook-triggers
+    (list "focus-out" "suspend")
+    "Hook to trigger smart auto save all buffers."))
 
-(defun smart-auto-save-trigger-on ()
-  "Enable auto save trigger listed in smart-auto-save-triggers."
-  (interactive)
-  (mapc (lambda (cmd)
-          (advice-add (intern cmd) :before #'smart-auto-save-buffer-trigger))
-        smart-auto-save-triggers))
+(eval-when-compile (require 'auto-save-code))
 
-(defun smart-auto-save-trigger-off ()
-  "Disable auto save trigger listed in smart-auto-save-trigger."
-  (interactive)
-  (mapc (lambda (cmd)
-          (advice-remove (intern cmd) #'smart-auto-save-buffer-trigger))
-        smart-auto-save-triggers))
-
-(defun smart-auto-save-on ()
-  "Enable smart auto save."
-  (interactive)
-  (smart-auto-save-idle-on)
-  (smart-auto-save-lost-focus-on)
-  (smart-auto-save-trigger-on))
-
-(defun smart-auto-save-off ()
-  "Disable smart auto save."
-  (interactive)
-  (smart-auto-sve-idle-off)
-  (smart-auto-save-lost-focus-off)
-  (smart-auto-save-trigger-off))
-
-;(smart-auto-save-on)
+(code-defhook-smart-auto-save-all)
+(code-defadvice-smart-auto-save-all)
+(code-smart-auto-save)
 
 (provide 'smart-auto-save)
 ;;; smart-auto-save.el ends here
