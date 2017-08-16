@@ -17,7 +17,7 @@
   :type 'integer
   :group 'smart-auto-save)
 
-(defcustom smart-auto-save-mute t
+(defcustom smart-auto-save-mute nil
   "Don't show message when save buffer."
   :type 'boolean
   :group 'smart-auto-save)
@@ -61,7 +61,8 @@ matches 'smart-auto-save-fileter-regexp'"
 
 (defun smart-auto-save-idle ()
   "Smart save file when Emacs is idle."
-  (when (> (time-to-seconds (time-since smart-auto-save-last-time)) smart-auto-save-interval)
+  (when (> (time-to-seconds (time-since smart-auto-save-last-time))
+           smart-auto-save-interval)
     (let* ((cnt (smart-auto-save-all-buffers)))
       (unless (eq cnt 0)
         (setq smart-auto-save-last-time (current-time))
@@ -72,13 +73,13 @@ matches 'smart-auto-save-fileter-regexp'"
   "Smart save current file when triggered. (Portable to any triggers.)"
   (smart-auto-save-buffer))
 
-
 (defsubst smart-auto-save-idle-on ()
   "Enable idle auto save."
   (interactive)
   (or smart-auto-save-idle-timer
     (setq smart-auto-save-idle-timer
-          (run-with-idle-timer smart-auto-save-idle-time t #'smart-auto-save-idle))))
+          (run-with-idle-timer smart-auto-save-idle-time
+                               t #'smart-auto-save-idle))))
 
 (defsubst smart-auto-save-idle-off ()
   "Disable idle auto save."
@@ -87,20 +88,21 @@ matches 'smart-auto-save-fileter-regexp'"
     (cancel-timer smart-auto-save-idle-timer)
     (setq smart-auto-save-idle-timer nil)))
 
-(eval-and-compile
-  (defvar smart-auto-save-advice-triggers
-    (list "switch-to-buffer" "select-window")
-    "Command to trigger smart auto save current buffer.")
+(eval-when-compile (require 'code))
 
-  (defvar smart-auto-save-hook-triggers
-    (list "focus-out" "suspend")
-    "Hook to trigger smart auto save all buffers."))
+(defun smart-auto-save-on ()
+  "Enable smart-auto-save."
+  (code-add-advice-for-buffer-change-command
+   smart-auto-save-buffer-advice :before)
+  (code-add-hook-for-emacs-out smart-auto-save-buffer)
+  (smart-auto-save-idle-on))
 
-(eval-when-compile (require 'auto-save-code))
-
-(code-defhook-smart-auto-save-all)
-(code-defadvice-smart-auto-save-all)
-(code-smart-auto-save)
+(defun smart-auto-save-off ()
+  "Disable smart-auto-save."
+  (code-remove-advice-for-buffer-change-command
+   smart-auto-save-buffer-advice)
+  (code-remove-hook-for-emacs-out smart-auto-save-buffer)
+  (smart-auto-save-idle-off))
 
 (provide 'smart-auto-save)
 ;;; smart-auto-save.el ends here

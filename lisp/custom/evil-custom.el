@@ -9,17 +9,20 @@
 
 (defvar evil-custom-initial-state-alist
   (list
-   (cons 'messages-buffer-mode 'motion))
+   (cons 'messages-buffer-mode 'normal)
+   (cons 'finder-mode 'emacs)
+   (cons 'minibuffer-inactive-mode 'insert)
+   )
   "The alist of (mode . state) for evil to set the initial state.")
 
 (defvar evil-custom-mode-line-alist
-  '(("insert" . ("#e80000" . "#ffffff"))
+  '(("insert" . ("red" . "white"))
     ("normal" . (nil . nil))
-    ("visual" . ("#00e800" . "#ffffff"))
-    ("emacs" . ("#444488" . "#ffffff"))
-    ("motion" . (nil . nil))
-    ("replace" . ("#880000" . "#ffffff"))
-    ("operator" . ("#480000" . "#ffffff"))
+    ("visual" . ("green" . "white"))
+    ("emacs" . ("blue" . "whlie"))
+    ("motion" . ("cyan" . "white"))
+    ("replace" . ("#880000" . "white"))
+    ("operator" . ("#480000" . "white"))
     )
   )
 

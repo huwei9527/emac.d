@@ -25,6 +25,6 @@
   ;(byte-compile-file (expand-file-name "test_compile.el" user-emacs-directory))
   (load fn)
   )
-(switch-to-buffer "*Messages*")
+(switch-to-buffer (message-buffer))
 (provide 'test)
 ; test.el ends here

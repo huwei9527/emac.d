@@ -1,18 +1,18 @@
 ;; -*- lexical-binding : t ; byte-compile-dynamic : t -*-
 
-(defsubst code-smart-auto-save-trigger-name (name str-trigger)
+(defun code-smart-auto-save-trigger-name (name str-trigger)
   "The trigger function name for smart-auto-save trigger NAME.
 
 STR-TRIGGER is on / off."
   (format "smart-auto-save-%s-%s" name str-trigger))
 
-(defsubst code-smart-auto-save-on-name (name)
+(defun code-smart-auto-save-on-name (name)
   "The enable function name for hook NAME.
 
 \(smart-auto-save-[NAME]-on)"
   (code-smart-auto-save-trigger-name name "on"))
 
-(defsubst code-smart-auto-save-off-name (name)
+(defun code-smart-auto-save-off-name (name)
   "The disable function name for hook NAME.
 
 \(smart-auto-save-[NAME]-off)"
@@ -128,6 +128,10 @@ Just a wrapper for 'on' and 'off' case.
   `(progn
      (code-smart-auto-save-switch-all "on")
      (code-smart-auto-save-switch-all "off")))
+
+
+(eval-when-compile
+  (require 'code))
 
 
 (provide 'auto-save-code)
