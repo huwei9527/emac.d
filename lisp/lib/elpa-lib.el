@@ -1,6 +1,6 @@
 ;; -*- lexical-binding : t ; byte-compile-dynamic : t -*-
 
-(require 'utility)
+(require 'util-lib)
 
 (defconst pkg-exist nil "Package exists.")
 (defconst pkg-miss nil "Package misses.")
@@ -12,7 +12,7 @@
 (defconst upgrade-fail nil "Upgrade fail.")
 (defconst up-to-date nil "Package is up to date.")
 
-(defun get-package-desc (pkg cl)
+(defsubst get-package-desc (pkg cl)
   "Get package-desc of symbol PKG from content list CL.
 
 Return:
@@ -54,9 +54,8 @@ nil - up to date."
 
 No matter whether PKG is installed or available in remote.
 You need to check by yourself for safety."
-  (with-no-message (package-install pkg))
-  ;(package-install pkg)
-  )
+  ;; (with-no-message (package-install pkg))
+  (package-install pkg))
 
 (defun elpa-delete-raw (pkg-desc)
   "Delete package determined by package descriptor PKG-DESC using ELPA.
@@ -106,14 +105,14 @@ Return:
 Return:
 'upgrade-fail(Usually miss package), 'upgrade-succ, 'up-to-date"
   (let* ((desc-local nil)
-        (desc-remote nil))
+         (desc-remote nil))
     (cond
      ((not (setq desc-local (local-package-desc pkg))) 'upgrade-fail)
      ((not (setq desc-remote (remote-package-desc pkg))) 'upgrade-fail)
      (t
       (if (package-out-of-date-p-raw desc-local desc-remote)
           (progn
-            (elpa-delete-raw pkg)
+            (elpa-delete-raw desc-local)
             (elpa-install-raw pkg)
             'upgrade-succ)
         'up-to-date)))))
@@ -146,7 +145,8 @@ Return:
 
 (defun install-package ()
   "Install packages listed in packages-list."
-  (or package-archive-contents (package-refresh-contents))
+  (package-refresh-contents)
+  ;; (or package-archive-contents (package-refresh-contents))
   (let* ((rlt-alist nil)
          (delete-list nil)
          (dep nil)
@@ -156,9 +156,11 @@ Return:
       (add-to-list 'rlt-alist
                    (cons pkg
                          (if (eq (setq rlt (elpa-install pkg)) 'pkg-exist)
-                             (elpa-upgrade pkg)
+                             (progn
+                               (elpa-upgrade pkg))
                            rlt))))
-    ; Delete packages which is not tracked or dependented by packages-list.
+    ;; Delete packages which is not tracked or dependented by
+    ;; packages-list.
     (setq dep (compute-dependency-family))
     (dolist (pa package-alist)
       (unless (memq (car pa) dep)
@@ -166,7 +168,7 @@ Return:
     (when delete-list
       (dolist (dl delete-list)
         (add-to-list 'rlt-alist (cons dl (elpa-delete dl)))))
-    ; Print result summary.
+                                        ; Print result summary.
     (when rlt-alist
       (dolist (pkg rlt-alist)
         (message "[%s] %s" (symbol-name (cdr pkg)) (symbol-name (car pkg)))))))

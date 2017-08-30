@@ -1,38 +1,49 @@
 ;; -*- lexical-binding : t ; byte-compile-dynamic : t -*-
 
 (require 'ui-lib)
+(require 'ui-custom)
 
 (defconst evil-custom-state-string-list
-  (list "insert" "normal" "visual" "emacs"
-        "motion" "replace" "operator")
+  `(insert normal visual emacs motion replace operator)
   "The list of all the evil state names.")
 
 (defvar evil-custom-initial-state-alist
-  (list
-   (cons 'messages-buffer-mode 'normal)
-   (cons 'finder-mode 'emacs)
-   (cons 'minibuffer-inactive-mode 'insert)
-   )
+  `((messages-buffer-mode . motion)
+    (help-mode . motion)
+    (finder-mode . motion)
+    (minibuffer-inactive-mode . insert))
   "The alist of (mode . state) for evil to set the initial state.")
 
-(defvar evil-custom-mode-line-alist
-  '(("insert" . ("red" . "white"))
-    ("normal" . (nil . nil))
-    ("visual" . ("green" . "white"))
-    ("emacs" . ("blue" . "whlie"))
-    ("motion" . ("cyan" . "white"))
-    ("replace" . ("#880000" . "white"))
-    ("operator" . ("#480000" . "white"))
-    )
-  )
+(require 'test-lib)
+(code-defface-evil-state-tags)
 
-(eval-when-compile
-  (dolist (cus evil-custom-mode-line-alist)
-    (unless (member (car cus) evil-custom-state-string-list)
-      (error "Evil state not match.(%s)" (car cus)))))
+(defface evil-custom-insert-tag
+  `((t (:inherit (red-black bold))))
+  "'evil-insert-state-tag' face show in mode line.")
 
-;(eval-when-compile (require 'evil-code))
-;(code-defsetter-evil-mode-line-for-state-all)
+(defface evil-custom-normal-tag
+  `((t (:inherit (white-black bold))))
+  "'evil-normal-state-tag' face show in mode line.")
+
+(defface evil-custom-motion-tag
+  `((t (:inherit (blue-black bold))))
+  "'evil-motion-state-tag' face show in mode line")
+
+(defface evil-custom-visual-tag
+  `((t (:inherit (green-black bold))))
+  "'evil-visual-state-tag' face show in mode line")
+
+(defface evil-custom-operator-tag
+  `((t (:inherit (yellow-black bold))))
+  "'evil-operator-state-tag' face show in mode line")
+
+(defface evil-custom-replace-tag
+  `((t (:inherit (magenta-black bold))))
+  "'evil-replace-state-tag' face show in mode line")
+
+(defface evil-custom-emacs-tag
+  `((t (:inherit (cyan-black bold))))
+  "'evil-emacs-state-tag' face show in mode line")
 
 (provide 'evil-custom)
 ; evil-custom.el ends here

@@ -69,7 +69,7 @@ matches 'smart-auto-save-fileter-regexp'"
         (unless smart-auto-save-mute
           (message "Idle save %d files." cnt))))))
 
-(defun smart-auto-save-buffer-advice (&rest args)
+(defsubst smart-auto-save-buffer-advice (&rest args)
   "Smart save current file when triggered. (Portable to any triggers.)"
   (smart-auto-save-buffer))
 
@@ -94,12 +94,16 @@ matches 'smart-auto-save-fileter-regexp'"
   "Enable smart-auto-save."
   (code-add-advice-for-buffer-change-command
    smart-auto-save-buffer-advice :before)
+  (code-add-advice-for-window-switch-command
+   smart-auto-save-buffer-advice :before)
   (code-add-hook-for-emacs-out smart-auto-save-buffer)
   (smart-auto-save-idle-on))
 
 (defun smart-auto-save-off ()
   "Disable smart-auto-save."
   (code-remove-advice-for-buffer-change-command
+   smart-auto-save-buffer-advice)
+  (code-remove-advice-for-window-switch-command
    smart-auto-save-buffer-advice)
   (code-remove-hook-for-emacs-out smart-auto-save-buffer)
   (smart-auto-save-idle-off))

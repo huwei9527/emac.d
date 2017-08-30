@@ -5,7 +5,9 @@
 (defconst elpa-custom-packages-list
   (list 'evil
         'color-theme-solarized
-        'swiper)
+        'swiper
+        ;; 'visible-mark
+        )
   "Package to be install.")
 
 (code-defdir "packages"

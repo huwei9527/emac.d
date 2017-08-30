@@ -1,7 +1,7 @@
 ;; -*- lexical-binding : t ; byte-compile-dynamic : t -*-
 
-(let ((dflt-fg (face-foreground 'mode-line))
-      (dflt-bg (face-background 'mode-line)))
+(let* ((dflt-fg (face-foreground 'mode-line))
+       (dflt-bg (face-background 'mode-line)))
   (defsubst set-mode-line-color (&optional fg bg)
     "Set the foreground FG and background BG color for modeline.
 

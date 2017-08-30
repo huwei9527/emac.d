@@ -1,5 +1,10 @@
 ;; -*- lexical-binding : t byte-compile-dynamic : t -*-
 
+;; This package is used by global-custom before it sets up
+;; the load-path. So 'require' packages not in the default
+;; load-path will failed unless you explicitly specify the path.
+;; e.g (require 'xxx-package package-path)
+
 (defmacro code-defdir (dir-name doc &optional path)
   "Define a directory.
 

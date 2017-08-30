@@ -8,5 +8,10 @@
         )
   "Major mode list which disable line number.")
 
+(require 'ui-code)
+
+(code-defface-basic-color)
+
+
 (provide 'ui-custom)
 ; ui-custom.el ends here
