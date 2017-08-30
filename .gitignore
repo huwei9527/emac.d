@@ -11,8 +11,11 @@
 *\#
 
 # Data file
-config/
-packages/
-test.txt
-test1.txt
-test.pdf
+/config/
+/packages/
+/test.txt
+/test1.txt
+/test.pdf
+
+# Don't ignore self
+!.gitignore
