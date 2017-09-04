@@ -88,11 +88,10 @@
                    (let* ((rlt
                            (condition-case nil
                                (apply orig-fun args)
-                             (error (message "error catched in ffip-project-root") nil))))
+                             (error nil))))
                      (unless rlt (setq rlt default-directory))
-                     (message "rlt : %s" rlt)
                      rlt)))
-;; (setq ffip-root-directory "~/Projects/")
+
 ;; (which-func-mode 1)
 ;; (display-time-mode 1)
 
