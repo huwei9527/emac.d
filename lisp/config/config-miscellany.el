@@ -2,18 +2,20 @@
 
 (require 'miscellany-custom)
 (require 'file-lib)
+(eval-when-compile
+  (require 'code))
 
-;; Don't use lock files. (Don't create .#xxxx file)
-(setq create-lockfiles nil)
-
-;; Repeat type C-SPC after C-u C-SPC will cycle the mark ring.
-(setq set-mark-command-repeat-pop t)
-
-;; Set the default abbrev file.
-(setq abbrev-file-name (expand-file-name config-abbrev-directory))
-
-;; Do not allow duplicated item.
-(setq history-delete-duplicates t)
+(setq ;; Don't use lock files. (Don't create .#xxxx file)
+      create-lockfiles nil
+      ;; Repeat type C-SPC after C-u C-SPC will cycle the mark ring.
+      set-mark-command-repeat-pop t
+      ;; Set the default abbrev file.
+      abbrev-file-name (expand-file-name config-abbrev-directory)
+      ;; Do not allow duplicated item.
+      history-delete-duplicates t
+      ;; Creating new file needs confirmation.
+      confirm-nonexistent-file-or-buffer t
+      )
 
 ; Read only file.
 (add-hook 'find-file-hook
@@ -32,12 +34,65 @@
                   (read-only-mode 1)
                   (throw 'tag-break nil))))))
 
+;; Ignore certain error.
 (setq command-error-function
       (lambda (data context caller)
         "Ignore 'text-read-only' error in minibuffer."
-        (unless (and (eq (car data) 'text-read-only) (minibufferp))
-          (command-error-default-function data context caller))))
+        (let* ((error-type (car data)))
+          ;; (message "error: %s %d %s | %s | %s" data (length data) (cadr data) context caller)
+          (unless (or
+                   ;; text-read-only error in minibuffer, <backspace> left margin
+                   (and (eq error-type 'text-read-only) (minibufferp))
+                   ;; beginning-of-buffer and end-of-buffer error
+                   (eq error-type 'beginning-of-buffer)
+                   (eq error-type 'end-of-buffer)
+                   (eq error-type 'beginning-of-line)
+                   (eq error-type 'end-of-line)
+                   (and (eq error-type 'user-error)
+                        ;; beginning and end of history error
+                        (and (minibufferp)
+                             (let* ((error-string (cadr data)))
+                               (or (string-prefix-p "Beginning of history;"
+                                                    error-string)
+                                   (string-prefix-p "End of history;"
+                                                    error-string))))))
+            (command-error-default-function data context caller)))))
 
+;; Remove the message print by help-mode: 'Type C-x-1 ...'
+(code-add-advice-ignore (help-window-display-message))
+
+;;; Global key bindings
+;; help-map: 'c-h'
+(code-define-key
+ help-map nil
+ "C-v" find-variable
+ "C-f" find-function)
+
+;; goto-map: 'M-g'
+(code-define-key
+ goto-map nil
+ "a" code-test-key-binding)
+
+;; global key bindings.
+(code-defkey-global
+ nil
+ "C-q" next-buffer
+ "<backtab>" mode-line-other-buffer
+ )
+
+(which-key-mode 1)
+(require 'find-file-in-project)
+(code-add-advice (ffip-project-root)
+                 :around
+                 (lambda (orig-fun &rest args)
+                   (let* ((rlt
+                           (condition-case nil
+                               (apply orig-fun args)
+                             (error (message "error catched in ffip-project-root") nil))))
+                     (unless rlt (setq rlt default-directory))
+                     (message "rlt : %s" rlt)
+                     rlt)))
+;; (setq ffip-root-directory "~/Projects/")
 ;; (which-func-mode 1)
 ;; (display-time-mode 1)
 

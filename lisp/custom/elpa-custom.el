@@ -3,11 +3,17 @@
 (eval-when-compile (require 'file-code))
 
 (defconst elpa-custom-packages-list
-  (list 'evil
-        'color-theme-solarized
-        'swiper
-        ;; 'visible-mark
-        )
+  '(evil
+    ;; color-theme-solarized
+    ;; zenburn-theme
+    ;; labburn-theme
+    ;; molokai-theme
+    ;; ivy-hydra
+    flx
+    counsel
+    which-key
+    find-file-in-project
+    )
   "Package to be install.")
 
 (code-defdir "packages"

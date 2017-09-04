@@ -6,7 +6,6 @@
   (require 'evil-code))
 
 (require 'test-custom)
-(require 'util-lib)
 
 (defmacro display-in-help-window (buf-name &rest arg-forms)
   "Show content in help buffer BUF-NAME."
@@ -15,8 +14,16 @@
        ,@arg-forms)))
 
 (defun current-buffer-state-string ()
-  "Print current buffer state."
-  (format "%s %s %s" (current-buffer) (window-buffer) (selected-window)))
+  "The string of current buffer state."
+  (format "%-12s %-12s %-12s" (current-buffer) (window-buffer) (selected-window)))
+
+(defun test-trace-message-function (tag)
+  "The function to print the state of current buffer."
+  (lambda (&rest args)
+    (with-temp-message
+        (format "%s: %s"
+                tag
+                (current-buffer-state-string)))))
 
 (defmacro code-deftrace-advice (fun tag &optional wh &rest args)
   "Trace function using advice"
@@ -24,25 +31,14 @@
     `(defun ,(intern-format "trace-%s" fun-name) ()
        ,(format "Trace '%s'" fun-name)
        (code-add-advice (,fun) ,(if wh wh :after)
-                        (lambda (&rest args)
-                          (with-temp-message
-                              (format  "%s: %s"
-                                       ,tag
-                                       (current-buffer-state-string))
-                            nil))))))
+                        ,(test-trace-message-function tag)))))
 
 (defmacro code-deftrace-hook (hk tag &rest args)
   "Trace hook"
   (let* ((hk-name (symbol-name hk)))
     `(defun ,(intern-format "trace-%s" hk-name) ()
        ,(format "Trace '%s'" hk-name)
-       (code-add-hook (,hk)
-                      (lambda ()
-                        (with-temp-message
-                            (format  "%s: %s"
-                                     ,tag
-                                     (current-buffer-state-string))
-                          nil))))))
+       (code-add-hook (,hk) ,(test-trace-message-function tag)))))
 
 (defmacro code-deftrace-hook-for-evil-hook (type)
   "Trace evil entry hook."
@@ -50,7 +46,7 @@
    (dolist (cus code-evil-custom-state-config)
      (let* ((st (car cus))
             (st-name (symbol-name st)))
-       (code-push
+       (code-item
         `(code-deftrace-hook
           ,(intern-format "evil-%s-state-%s-hook" st-name type)
           ,(format "e%cse%c" (aref st-name 0) (aref type 1))))))))
@@ -60,9 +56,9 @@
   (code-progn
    (dolist (cus code-evil-custom-state-config)
      (let* ((st (car cus)))
-       (code-push
-        `(,(intern-format "trace-evil-%s-state-%s-hook" (symbol-name st) type)))))))
-
+       (code-item
+        `(,(intern-format "trace-evil-%s-state-%s-hook"
+                          (symbol-name st) type)))))))
 
 (code-deftrace-advice switch-to-buffer "stb__")
 (code-deftrace-advice select-window "sw___")
@@ -166,8 +162,7 @@
 
 (defun display-font-lock-face ()
   "Show font-lock face."
-  (display-in-help-window
-   "*ShowFace*"
+  (display-in-help-window "*ShowFace*"
    (insert (font-lock-faces-sample))
    (newline)
    (insert (basic-faces-sample))

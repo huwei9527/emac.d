@@ -92,20 +92,26 @@ matches 'smart-auto-save-fileter-regexp'"
 
 (defun smart-auto-save-on ()
   "Enable smart-auto-save."
+  (interactive)
   (code-add-advice-for-buffer-change-command
    smart-auto-save-buffer-advice :before)
   (code-add-advice-for-window-switch-command
    smart-auto-save-buffer-advice :before)
   (code-add-hook-for-emacs-out smart-auto-save-buffer)
+  (code-add-hook (evil-normal-state-entry-hook)
+                 smart-auto-save-buffer)
   (smart-auto-save-idle-on))
 
 (defun smart-auto-save-off ()
   "Disable smart-auto-save."
+  (interactive)
   (code-remove-advice-for-buffer-change-command
    smart-auto-save-buffer-advice)
   (code-remove-advice-for-window-switch-command
    smart-auto-save-buffer-advice)
   (code-remove-hook-for-emacs-out smart-auto-save-buffer)
+  (code-remove-hook (evil-normal-state-entry-hook)
+                    smart-auto-save-buffer)
   (smart-auto-save-idle-off))
 
 (provide 'smart-auto-save)

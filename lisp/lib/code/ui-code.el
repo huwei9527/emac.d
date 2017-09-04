@@ -6,13 +6,11 @@
 (defmacro code-load-solarized-theme ()
   "Load solarized theme."
   (code-progn
-   (code-push
+   (code-item
     `(set-frame-parameter
-      nil 'background-mode color-theme-custom-solarized-style))
-   (code-push
+      nil 'background-mode color-theme-custom-solarized-style)
     `(set-terminal-parameter
-      nil 'background-mode color-theme-custom-solarized-style))
-   (code-push
+      nil 'background-mode color-theme-custom-solarized-style)
     `(load-theme 'solarized t))))
 
 (defvar code-color-alist
@@ -70,17 +68,18 @@
          (cr-alist (nthcdr 2 code-color-alist)))
     (code-progn
      (dolist (list-cr code-color-alist)
-       (code-push `(code-defface-foreground ,list-cr))
-       (code-push `(code-defface-background ,list-cr))
-       )
-     (code-push `(code-defface-foreground-and-background-raw ,(car wb-alist) ,(cadr wb-alist)))
-     (code-push `(code-defface-foreground-and-background-raw ,(cadr wb-alist) ,(car wb-alist)))
+       (code-item `(code-defface-foreground ,list-cr)
+                  `(code-defface-background ,list-cr)))
+     (code-item `(code-defface-foreground-and-background-raw
+                  ,(car wb-alist) ,(cadr wb-alist))
+                `(code-defface-foreground-and-background-raw
+                  ,(cadr wb-alist) ,(car wb-alist)))
      (dolist (list-wb wb-alist)
        (dolist (list-cr cr-alist)
-         (code-push `(code-defface-foreground-and-background-raw ,list-cr ,list-wb))
-         (code-push `(code-defface-foreground-and-background-raw ,list-wb ,list-cr))
-         ))
-     )))
+         (code-item `(code-defface-foreground-and-background-raw
+                      ,list-cr ,list-wb)
+                    `(code-defface-foreground-and-background-raw
+                      ,list-wb ,list-cr)))))))
 
 (provide 'ui-code)
 ;; ui-code.el ends here

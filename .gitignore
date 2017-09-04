@@ -17,5 +17,9 @@
 /test1.txt
 /test.pdf
 
+# Configure file
+/recentf
+/tramp
+
 # Don't ignore self
 !.gitignore

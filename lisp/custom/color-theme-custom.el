@@ -7,8 +7,8 @@
 the color theme file (e.g. [theme-name]-theme.el]) in to this directory.
 The path and subdirectory of depth 1 will be added automatically.")
 
-(defvar color-theme-custom-solarized-style 'dark
-  "Solarized color theme style. (dark or light)")
+;; (defvar color-theme-custom-solarized-style 'dark
+;;   "Solarized color theme style. (dark or light)")
 
 (provide 'color-theme-custom)
 ; color-theme-custom.el ends here.

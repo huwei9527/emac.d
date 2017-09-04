@@ -2,25 +2,16 @@
 
 (require 'test-code)
 
-(defun quotep (sexp)
-  ""
-  (message "%s" (car sexp)))
-
-
-(let* ((pa '(a b c d)))
-  (quotep pa))
-
-(defun backquotep (sexp)
-  ""
-  nil)
-
 (defmacro intern-format (ft &rest args)
-  "Extend 'intern' with format FT string.
-
-\(intern (format FT ...)) "
+  "Extend 'intern' with format FT string."
   `(intern (format ,ft ,@args)))
 
 ;;; {{ Helper macros to construct SEXP forms for 'defmacro'
+;;;    Note: SEXP are evaluated once. e.g '(code-item SEXP)'
+;;;          will evaluate SEXP and add the result to the
+;;;          structure form like 'progn', 'cond' ... If you
+;;;          want SEXP to be added literally, you have to
+;;;          quote it like '(code-item 'SEXP)'
 (defvar code--obarray (make-vector 11 0))
 (defsubst code--gensym (name)
   "Create a symbol with name NAME interned in 'code--obarray'."
@@ -38,7 +29,7 @@
        ,@body
        (nreverse ,tmp))))
 
-(defmacro code--append-one (el)
+(defmacro code--append-one (el &optional eval-p)
   "Append EL to form list."
   `(push ,el ,(code--gensym-sexp-list)))
 
@@ -68,10 +59,7 @@
 (defmacro code-case (cond-sexp &rest body)
   "Create a 'case' form in 'cond' form."
   `(code-append
-    `(,',cond-sexp ,@',body)))
-
-;; (pp (code-cond (code-case `(minibufferp) `(message "abcd") `(message "abcd"))))
-;; (pp-macroexpand-all (code-case (minibufferp) (message "abcd") (message "efgh")))
+    (code-sexp (code-append ,cond-sexp ,@body))))
 
 (defmacro code-setq (&rest body)
   "Create a 'setq' form."
@@ -79,24 +67,11 @@
     (code--append-one 'setq)
     ,@body))
 
-(defmacro code-pair (key value)
+(defmacro code-pair (key value &rest pairs)
   "Create a 'key value' item in 'setq' form."
-  `(code-append ,key ,value))
-
-(pp (code-setq (code-pair 'a 1) (code-pair 'b 2)))
-
-
-(defmacro code-cond (&rest args-forms)
-  "Construct progn forms block list with ARGS-FORMS.
-
-This is a wrapper call '(code-block cond)'"
-  `(code-block cond ,@args-forms))
-
-(defmacro code-case (cond-sexp &rest arg-forms)
-  "Add cond case form (COND-SEXP ,@ARG-FROMS) to cond list.
-
-It's a helper function to construct cond form."
-  `(code-push (list ,cond-sexp ,@arg-forms)))
+  (code-progn
+   (code-item `(code-append ,key ,value))
+   (while pairs (code-item `(code-pair ,(pop pairs) ,(pop pairs))))))
 ;; }}
 
 (defsubst code--gensym-symbol-list ()
@@ -145,6 +120,14 @@ It's a helper function to construct cond form."
      (dolist (hk sym-list)
        (code-item `(remove-hook ',hk #',sym-fun))))))
 
+(defmacro code-add-advice-ignore (ad-list)
+  "Add advice to ignore functions in AD-LIST."
+  `(code-add-advice ,ad-list :override ignore))
+
+(defmacro code-remove-advice-ignore (ad-list)
+  "Remove advice to ignore functions in AD-LIST."
+  `(code-remove-advice ,ad-list ignore))
+
 (defmacro code-defsetter-command-advice (cmd-name cmd-list)
   "Define macro to set up or remove advice for comand in CMD-LIST."
   (code-progn
@@ -176,6 +159,64 @@ It's a helper function to construct cond form."
                                '(other-window windmove-left windmove-right
                                               windmove-up windmove-down))
 (code-defsetter-hook "emacs-out" '(focus-out-hook suspend-hook))
+;; }}
+
+;;; {{ Create key bindings
+(let* ((cnt 0))
+  (defun code-test-key-binding ()
+    "Test"
+    (interactive)
+    (message "cnt = %d" (setq cnt (1+ cnt)))))
+
+(defun code-make-key (key &optional prefix)
+  ""
+  (if prefix
+      (progn
+        (setq prefix (code-make-key prefix))
+        (setq key (code-make-key key))
+        (vconcat prefix key))
+    (if (vectorp key) key (kbd key))))
+
+
+(defmacro code-define-key-raw (keymap prefix key def)
+  "Define key binding in keymap."
+  (declare (indent defun))
+  (let* ((ks (code-make-key key prefix)))
+    (cond
+     ((null def)
+      `(define-key ,keymap ,ks #'undefined))
+     ((symbolp def)
+      `(define-key ,keymap ,ks #',def))
+     ((stringp def)
+      `(define-key ,keymap ,ks ,(kbd def)))
+     ((vectorp def)
+      `(define-key ,keymap ,ks ,def))
+     ((and (listp def))
+      `(define-key ,keymap ,ks ,(eval def)))
+     (t
+      (error "Undefined binding: %s" def)
+      nil))))
+
+(defmacro code-define-key (keymap prefix key def &rest bindings)
+  "Define key bindings in keymap."
+  (declare (indent defun))
+  (code-progn
+   (code-item
+    `(code-define-key-raw ,keymap ,prefix ,key ,def))
+   (while bindings
+     (code-item
+      `(code-define-key-raw ,keymap ,prefix ,(pop bindings) ,(pop bindings))))))
+
+
+(defmacro code-defkey-global (prefix key def &rest bindings)
+  (declare (indent defun))
+  (code-progn
+   (code-item
+    `(code-define-key-raw (current-global-map) ,prefix ,key ,def))
+   (while bindings
+     (code-item
+      `(code-define-key-raw (current-global-map)
+                            ,prefix ,(pop bindings) ,(pop bindings))))))
 ;; }}
 
 (provide 'code)

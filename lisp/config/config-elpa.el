@@ -22,4 +22,4 @@
                 (apply func `(,pkg)))))
 
 (provide 'config-elpa)
-; config-elpa.el ends here
+;; config-elpa.el ends here
