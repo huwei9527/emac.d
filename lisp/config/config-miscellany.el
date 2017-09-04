@@ -62,15 +62,14 @@
 (code-add-advice-ignore (help-window-display-message))
 
 ;;; Global key bindings
+
 ;; help-map: 'c-h'
-(code-define-key
- help-map nil
+(code-defkey-ctl-h
  "C-v" find-variable
  "C-f" find-function)
 
 ;; goto-map: 'M-g'
-(code-define-key
- goto-map nil
+(code-defkey-meta-g
  "a" code-test-key-binding)
 
 ;; global key bindings.
@@ -81,16 +80,6 @@
  )
 
 (which-key-mode 1)
-(require 'find-file-in-project)
-(code-add-advice (ffip-project-root)
-                 :around
-                 (lambda (orig-fun &rest args)
-                   (let* ((rlt
-                           (condition-case nil
-                               (apply orig-fun args)
-                             (error nil))))
-                     (unless rlt (setq rlt default-directory))
-                     rlt)))
 
 ;; (which-func-mode 1)
 ;; (display-time-mode 1)

@@ -8,23 +8,25 @@
       ivy-count-format "(%d/%d) "
       ivy-wrap t)
 
+(code-defkey-ctl-x
+ "C-f" counsel-find-file)
 
 (code-defkey-global
  nil
  "C-s" swiper
  "M-x" counsel-M-x
- ;; "C-x C-f" counsel-find-file
- "C-x C-f" find-file-in-project-by-selected
- "C-c g" counsel-git
- "C-c j" counsel-git-grep
- "C-c k" counsel-ag
- "C-c l" counsel-locate
  ;; "C-S-o" counsel-rhythmbox
- "C-c C-r" ivy-resume
  )
 
-(code-define-key
- help-map nil
+(code-defkey-ctl-c
+ "g" counsel-git
+ "j" counsel-git-grep
+ "k" counsel-ag
+ "l" counsel-locate
+ "C-r" ivy-resume
+ )
+
+(code-defkey-ctl-h
  "f" counsel-describe-function
  "v" counsel-describe-variable
  "C-l" counsel-find-library

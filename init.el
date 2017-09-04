@@ -16,6 +16,7 @@
   (require 'config-auto-save)
   (require 'config-evil)
   (require 'config-ivy)
+  (require 'config-ffip)
   (require 'code)
   (require 'test-lib)
   ;; (require 'test)

@@ -89,8 +89,6 @@
 ;; Motion and insert keymap
 (code-defkey-evil-global
  (motion insert)
- ;; "C-q" next-buffer
- ;; "<backtab>" switch-to-other-buffer
  "C-e" move-end-of-line
  "M-1" delete-other-windows
  "M-2" split-window-below
@@ -150,7 +148,6 @@
 (eval-after-load 'package
   '(progn
      (evil-make-overriding-map package-menu-mode-map 'motion)))
-
 ;; }}
 
 

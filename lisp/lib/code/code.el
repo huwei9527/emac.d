@@ -209,6 +209,7 @@
 
 
 (defmacro code-defkey-global (prefix key def &rest bindings)
+  "Set global map. (current-global-map)"
   (declare (indent defun))
   (code-progn
    (code-item
@@ -217,6 +218,23 @@
      (code-item
       `(code-define-key-raw (current-global-map)
                             ,prefix ,(pop bindings) ,(pop bindings))))))
+
+(defmacro code-defkey-ctl-x (key def &rest bindings)
+  "Set ctl-x-map. 'C-x ...'"
+  (declare (indent defun))
+  `(code-define-key ctl-x-map nil ,key ,def ,@bindings))
+
+(defmacro code-defkey-ctl-h (key def &rest bindings)
+  "Set help-map. 'C-h ...'"
+  `(code-define-key help-map nil ,key ,def ,@bindings))
+
+(defmacro code-defkey-meta-g (key def &rest bindings)
+  "Set goto-map. 'M-g ...'"
+  `(code-define-key goto-map nil ,key ,def ,@bindings))
+
+(defmacro code-defkey-ctl-c (key def &rest bindings)
+  "Set mode-specific-map. 'C-c ...'"
+  `(code-define-key mode-specific-map nil ,key ,def ,@bindings))
 ;; }}
 
 (provide 'code)
