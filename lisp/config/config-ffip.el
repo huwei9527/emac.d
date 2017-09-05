@@ -3,13 +3,14 @@
 (eval-when-compile
   (require 'code))
 
-(require 'find-file-in-project)
+;; (require 'find-file-in-project)
 
 (code-defkey-ctl-x
  "f" find-file-in-project-by-selected)
 
 ;; Set the 'ffip-project-root' dynamically
-;; Get around the error issue.
+;; Get around the error if 'ffip-project-root' can't find
+;; a valid directory.
 (code-add-advice (ffip-project-root)
                  :around
                  (lambda (orig-fun &rest args)

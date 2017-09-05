@@ -15,6 +15,8 @@
       history-delete-duplicates t
       ;; Creating new file needs confirmation.
       confirm-nonexistent-file-or-buffer t
+      ;; Ingnore ad redefinition warning message
+      ad-redefinition-action 'accept
       )
 
 ; Read only file.
