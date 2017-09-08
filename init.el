@@ -25,6 +25,7 @@
   (require 'config-ffip)
   (require 'config-rainbow-delimiters)
   (require 'config-which-key)
+  (require 'config-paredit)
   (require 'code)
   (require 'test-lib)
   ;; (require 'test)

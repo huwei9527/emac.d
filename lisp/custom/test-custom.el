@@ -9,7 +9,7 @@
 ;; (setq edebug-all-forms t)
 ;; (switch-to-buffer "*ShowFace*")
 ;; (switch-to-buffer "*Messages*")
-(find-file "test.txt")
+;; (find-file "test.txt")
 ;; (split-window-right)
 
 

@@ -3,6 +3,8 @@
 (eval-when-compile
   (require 'code))
 
+(require 'ffip-custom)
+
 (code-defkey-ctl-x
  "f" find-file-in-project-by-selected)
 
@@ -20,7 +22,10 @@
                                      (data-err (cdr err)))
                                 (unless (equal data-err '(stringp nil))
                                   (signal sym-err data-err)))))))
-                     (unless rlt (setq rlt default-directory))
+                     (unless rlt
+		       (if (file-equal-p default-directory "~")
+			   (setq rlt ffip-custom-default-directory)
+			 (setq rlt default-directory)))
                      rlt)))
 
 (provide 'config-ffip)
