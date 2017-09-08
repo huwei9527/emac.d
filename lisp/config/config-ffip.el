@@ -3,8 +3,6 @@
 (eval-when-compile
   (require 'code))
 
-;; (require 'find-file-in-project)
-
 (code-defkey-ctl-x
  "f" find-file-in-project-by-selected)
 
@@ -15,9 +13,13 @@
                  :around
                  (lambda (orig-fun &rest args)
                    (let* ((rlt
-                           (condition-case nil
+                           (condition-case err
                                (apply orig-fun args)
-                             (error nil))))
+                             (wrong-type-argument
+                              (let* ((sym-err (car err))
+                                     (data-err (cdr err)))
+                                (unless (equal data-err '(stringp nil))
+                                  (signal sym-err data-err)))))))
                      (unless rlt (setq rlt default-directory))
                      rlt)))
 

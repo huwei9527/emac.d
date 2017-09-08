@@ -3,16 +3,24 @@
 (eval-when-compile (require 'file-code))
 
 (defconst elpa-custom-packages-list
-  '(evil
+  '(
+    ;; import vim in emacs
+    evil
     ;; color-theme-solarized
     ;; zenburn-theme
     ;; labburn-theme
     ;; molokai-theme
     ;; ivy-hydra
+    ;; fuzzy search sortting
     flx
+    ;; ivy minibuffer completion and counsel utils
     counsel
+    ;; show keymap menu
     which-key
+    ;; find file in project like ctrl-p
     find-file-in-project
+    ;; latex environment
+    auctex
     )
   "Package to be install.")
 

@@ -17,7 +17,13 @@
       confirm-nonexistent-file-or-buffer t
       ;; Ingnore ad redefinition warning message
       ad-redefinition-action 'accept
+      ;; Enable primary selected (mid mouse button selection)
+      x-select-enable-primary t
       )
+
+
+;; Set default font size in gui frame
+(set-face-attribute 'default nil :height 120)
 
 ; Read only file.
 (add-hook 'find-file-hook
