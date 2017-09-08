@@ -24,6 +24,7 @@
   (require 'config-ivy)
   (require 'config-ffip)
   (require 'config-rainbow-delimiters)
+  (require 'config-which-key)
   (require 'code)
   (require 'test-lib)
   ;; (require 'test)

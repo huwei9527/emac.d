@@ -89,7 +89,6 @@
  "<backtab>" mode-line-other-buffer
  )
 
-(which-key-mode 1)
 
 
 ;; (which-func-mode 1)
