@@ -73,8 +73,10 @@
 
 ;; help-map: 'c-h'
 (code-defkey-ctl-h
+ ;; find in source code
  "C-v" find-variable
- "C-f" find-function)
+ "C-f" find-function
+ "C-k" find-function-on-key)
 
 ;; goto-map: 'M-g'
 (code-defkey-meta-g
@@ -88,6 +90,7 @@
  )
 
 (which-key-mode 1)
+
 
 ;; (which-func-mode 1)
 ;; (display-time-mode 1)

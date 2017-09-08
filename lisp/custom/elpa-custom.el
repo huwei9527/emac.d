@@ -21,6 +21,11 @@
     find-file-in-project
     ;; latex environment
     auctex
+    ;; paredit
+    paredit
+    paredit-everywhere
+    ;;
+    rainbow-delimiters
     )
   "Package to be install.")
 
