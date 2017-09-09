@@ -25,7 +25,8 @@
 (code-set-face-for-evil-state-tags)
 (setq evil-mode-line-format '(before . mode-line-overwrite-mode))
 
-
+;; operation can take place to nonspace line beginning
+(evil-declare-motion 'back-to-indenttation)
 
 (evil-mode 1)
 
