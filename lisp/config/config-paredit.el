@@ -7,7 +7,7 @@
  (emacs-lisp-mode-hook
   eval-expression-minibuffer-setup-hook
   lisp-interaction-mode-hook)
- enable-paredit-mode)
+ paredit-mode)
 
 (provide 'config-paredit)
 ;;; config-paredit.el ends here

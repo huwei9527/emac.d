@@ -177,7 +177,6 @@
         (vconcat prefix key))
     (if (vectorp key) key (kbd key))))
 
-
 (defmacro code-define-key-raw (keymap prefix key def)
   "Define key binding in keymap."
   (declare (indent defun))
@@ -235,6 +234,10 @@
 (defmacro code-defkey-ctl-c (key def &rest bindings)
   "Set mode-specific-map. 'C-c ...'"
   `(code-define-key mode-specific-map nil ,key ,def ,@bindings))
+
+(defmacro code-defkey-ctl-c-local (keymap key def &rest bindings)
+  "Set keymap for major mode with leader key 'C-c'"
+  `(code-define-key ,keymap "C-c" ,key ,def ,@bindings))
 ;; }}
 
 (provide 'code)
