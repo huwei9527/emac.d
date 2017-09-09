@@ -21,10 +21,14 @@
   '((t (:inherit blue-foreground)))
   "The face for line number and column number in mode line.")
 
+(defface mode-line-overwrite-tag
+  '((t (:inherit evil-custom-insert-state-tag)))
+  "The face for overwrite tag in mode line")
+
 (defvar mode-line-overwrite-mode
   `(overwrite-mode
     ,(propertize "+"
-                 'face 'red-black
+                 'face 'mode-line-overwrite-tag
                  'help-echo "Overwrite mode.")
     ,(propertize ">"
                  'help-echo "Insert mode."))
