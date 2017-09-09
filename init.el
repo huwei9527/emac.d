@@ -27,6 +27,7 @@
   (require 'config-which-key)
   (require 'config-paredit)
   (require 'config-emacs-lisp)
+  (require 'config-hideshow)
   ;; (require 'code)
   (require 'test-lib)
   ;; (require 'test)
