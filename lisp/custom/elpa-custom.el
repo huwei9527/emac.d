@@ -25,6 +25,7 @@
     paredit
     paredit-everywhere
     rainbow-delimiters
+    hl-sexp
     )
   "Package to be install.")
 

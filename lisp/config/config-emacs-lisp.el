@@ -14,6 +14,13 @@
 ;; eldoc-mode
 (code-add-hook (emacs-lisp-mode-hook) eldoc-mode)
 
+;; hightlight current sexp
+(code-add-hook
+ (emacs-lisp-mode-hook
+  lisp-interaction-mode-hook)
+ hl-sexp-mode)
+
+
 (provide 'config-emacs-lisp)
 
 ;;; config-emacs-lisp.el ends here
