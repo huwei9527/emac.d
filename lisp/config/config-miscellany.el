@@ -87,6 +87,7 @@
  nil
  "C-q" next-buffer
  "<backtab>" mode-line-other-buffer
+ "M-/" hippie-expand
  )
 
 

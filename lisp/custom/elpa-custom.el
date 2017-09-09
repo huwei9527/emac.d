@@ -24,7 +24,6 @@
     ;; paredit
     paredit
     paredit-everywhere
-    ;;
     rainbow-delimiters
     )
   "Package to be install.")

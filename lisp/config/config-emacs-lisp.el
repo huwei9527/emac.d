@@ -11,6 +11,9 @@
 	 emacs-lisp-mode-map
 	 "c" checkdoc))))
 
+;; eldoc-mode
+(code-add-hook (emacs-lisp-mode-hook) eldoc-mode)
+
 (provide 'config-emacs-lisp)
 
 ;;; config-emacs-lisp.el ends here
