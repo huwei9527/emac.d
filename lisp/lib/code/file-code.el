@@ -24,7 +24,8 @@ DIR-NAME / DOC / PATH (a string or nil)"
          :type 'string
          :group 'config-custom)
        (defconst ,sb-dir
-         ,(file-name-as-directory (expand-file-name str-name str-path))
+         ,(file-truename (file-name-as-directory
+			  (expand-file-name str-name str-path)))
          ,(format "The directory path of %s.\n\n%s" str-name str-doc))
        (and (boundp 'config-directory-list)
          (setq config-directory-list (cons ',sb-dir config-directory-list))))))
