@@ -1,6 +1,7 @@
 ;; -*- lexical-binding : t ; byte-compile-dynamic : t -*-
 
 (require 'miscellany-custom)
+(require 'miscellany-lib)
 (require 'file-lib)
 (eval-when-compile
   (require 'code))
@@ -86,12 +87,11 @@
 (code-defkey-global
  nil
  "C-q" next-buffer
+ "TAB" super-tab
  "<backtab>" mode-line-other-buffer
- "C-<tab>" mode-line-other-buffer
+ "<C-tab>" mode-line-other-buffer
  "M-/" hippie-expand
  )
-
-
 
 ;; (which-func-mode 1)
 ;; (display-time-mode 1)

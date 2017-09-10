@@ -70,6 +70,9 @@
  "C-v" evil-scroll-page-down
  )
 
+;; delete evil original key binding to reveal global key binding
+(code-remove-key evil-motion-state-map ?\t)
+
 ;; Insert state keymap
 (code-defkey-evil-global
  insert

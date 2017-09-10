@@ -1,6 +1,5 @@
 ;;; -*- lexical-binding : t ; byte-compile-dynamic : t -*-
 
-
 (eval-when-compile
   (require 'code))
 
@@ -19,6 +18,18 @@
  (emacs-lisp-mode-hook
   lisp-interaction-mode-hook)
  hl-sexp-mode)
+
+;;; company
+(eval-after-load 'company
+  `(progn
+     ,(macroexpand-all
+       '(code-add-hook
+	 (emacs-lisp-mode-hook
+	  lisp-interaction-mode-hook)
+	 (lambda ()
+	   (setq company-backends
+		 '((company-capf company-dabbrev-code company-keywords)
+		   )))))))
 
 
 (provide 'config-emacs-lisp)

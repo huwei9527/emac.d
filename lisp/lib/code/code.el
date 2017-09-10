@@ -218,6 +218,15 @@
       `(code-define-key-raw (current-global-map)
                             ,prefix ,(pop bindings) ,(pop bindings))))))
 
+(defmacro code-remove-key (keymap key &rest keys)
+  "Delete KEY and KEYS from keymap."
+  (declare (indent defun))
+  (code-progn
+   (code-item
+    `(assq-delete-all ,key ,keymap))
+   (while keys
+     `(assq-delete-all ,(pop keys) ,keymap))))
+
 (defmacro code-defkey-ctl-x (key def &rest bindings)
   "Set ctl-x-map. 'C-x ...'"
   (declare (indent defun))

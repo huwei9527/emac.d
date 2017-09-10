@@ -27,6 +27,7 @@
     rainbow-delimiters
     hl-sexp
     hideshow-org
+    company
     )
   "Package to be install.")
 
