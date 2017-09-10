@@ -72,7 +72,85 @@
   (code-progn
    (code-item `(code-append ,key ,value))
    (while pairs (code-item `(code-pair ,(pop pairs) ,(pop pairs))))))
+
+(defun code-parse-list (sexp op)
+  "Parse the list, take operator on each element recursively."
+  (let* ((stack (list (cons sexp nil)))
+	 stack-curr sexp-curr sexp-parent sexp-parser
+	 path op-rlt)
+    (while stack
+      (setq stack-curr (pop stack)
+	    sexp-curr (car stack-curr)
+	    sexp-parent (cdr stack-curr))
+      (while (not (eq sexp-parent (car path)))
+	(pop path))
+      (when (and (funcall op sexp-curr path)
+		 (listp sexp-curr))
+	(setq sexp-parser sexp-curr)
+	(while sexp-parser
+	  (push (cons (car sexp-parser) sexp-curr) stack)
+	  (setq sexp-parser (cdr sexp-parser))))
+      (push sexp-curr path))))
+
+(defun code-op-test (sexp path)
+  "Test"
+  (if (eq sexp 'c)
+      (let* ((sexp-parser (car path)))
+	(catch 'tag-break
+	  (while sexp-parser
+	    (when (eq (car sexp-parser) sexp)
+	      (setcar sexp-parser 'fuck)
+	      (throw 'tag-break nil))
+	    (setq sexp-parser (cdr sexp-parser))))
+	nil)
+    t))
+
+(let* ((t-list '(a b (c d e c) f g)))
+  (code-parse-list t-list 'code-op-test)
+  (message "%s" t-list))
+(defvar code-macro-list nil
+  "The list of macros defined in 'code'.")
+(defmacro code-record-macro (macro)
+  "Record MACRO in 'code-macro-list'"
+  `(push ',macro code-macro-list))
+(defmacro code-expandmacro-p (macro)
+  "Non-nil if MACRO is in 'code-macro-list'"
+  (if (symbolp macro)
+      `(memq ',macro code-macro-list)
+    `(memq ,macro code-macro-list)))
+(defun code-expandmacro (sexp path)
+  "Expand SEXP if it is a 'code' macro."
+  (if (and (listp sexp)
+	   (code-expandmacro-p (car sexp)))
+      (let* ((sexp-parser (car path)))
+	(catch 'tag-break
+	  (while sexp-parser
+	    (when (eq sexp (car sexp-parser))
+	      (setcar sexp-parser
+		      (macroexpand-all sexp))
+	      (throw 'tag-break nil))
+	    (setq sexp-parser (cdr sexp-parser))))
+	nil)
+    t))
+
+(defmacro code-eval-after-load (package &rest body)
+  "Run body after PACHAGE loads.
+
+This extend 'eval-after-load' to 'code' macros which is useful
+in byte compilation."
+  (code-sexp
+    (code-append 'eval-after-load)
+    (if (symbolp package)
+	(code-append `(quote ,package))
+      (code-append package))
+    (code-parse-list body 'code-expandmacro)
+    (code-append
+     `(quote
+       ,(code-progn
+	 (dolist (form body)
+	   (code-item form)))))))
 ;; }}
+
 
 (defsubst code--gensym-symbol-list ()
   "Create temporary symbol interned in 'code-obarray'"
@@ -111,6 +189,7 @@
           (sym-fun hk-fun))
      (dolist (hk sym-list)
        (code-item `(add-hook ',hk #',sym-fun))))))
+(code-record-macro code-add-hook)
 
 (defmacro code-remove-hook (hk-list hk-fun)
   "Remove hook function HK-FUN to hooks in HK-LIST"
@@ -206,7 +285,6 @@
      (code-item
       `(code-define-key-raw ,keymap ,prefix ,(pop bindings) ,(pop bindings))))))
 
-
 (defmacro code-defkey-global (prefix key def &rest bindings)
   "Set global map. (current-global-map)"
   (declare (indent defun))
@@ -247,6 +325,7 @@
 (defmacro code-defkey-ctl-c-local (keymap key def &rest bindings)
   "Set keymap for major mode with leader key 'C-c'"
   `(code-define-key ,keymap "C-c" ,key ,def ,@bindings))
+(code-record-macro code-defkey-ctl-c-local)
 ;; }}
 
 (provide 'code)

@@ -3,12 +3,11 @@
 (eval-when-compile
   (require 'code))
 
-(eval-after-load 'lisp-mode
-  `(progn
-     ,(macroexpand-all
-       '(code-defkey-ctl-c-local
-	 emacs-lisp-mode-map
-	 "c" checkdoc))))
+(code-eval-after-load
+ lisp-mode
+ (code-defkey-ctl-c-local
+  emacs-lisp-mode-map
+  "c" checkdoc))
 
 ;; eldoc-mode
 (code-add-hook (emacs-lisp-mode-hook) eldoc-mode)
@@ -20,17 +19,14 @@
  hl-sexp-mode)
 
 ;;; company
-(eval-after-load 'company
-  `(progn
-     ,(macroexpand-all
-       '(code-add-hook
-	 (emacs-lisp-mode-hook
-	  lisp-interaction-mode-hook)
-	 (lambda ()
-	   (setq company-backends
-		 '((company-capf company-dabbrev-code company-keywords)
-		   )))))))
-
+(code-eval-after-load
+ company
+ (code-add-hook
+  (emacs-lisp-mode-hook
+   lisp-interaction-mode-hook)
+  (lambda ()
+    (setq company-backends
+	  '((company-capf company-dabbrev-code company-keywords))))))
 
 (provide 'config-emacs-lisp)
 
