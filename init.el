@@ -33,10 +33,7 @@
   (require 'test-lib)
   ;; (require 'test)
   )
-(pp-macroexpand (code-eval-after-load
-		 company
-		 (code-add-hook (b c) fun-d)
-		 (e f g h)))
+
 ;; (require 'evil-surround)
 ;; (require 'evil-visualstar)
 ;; (require 'find-file-in-project)

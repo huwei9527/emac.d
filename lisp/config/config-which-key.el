@@ -11,8 +11,9 @@
 ;; (setq which-key-popup-type 'frame)
 
 ;; (setq which-key-idle-delay 1.0)
-(eval-after-load 'evil
-  '(setq which-key-show-operator-state-maps t))
+(code-eval-after-load
+ evil
+ (setq which-key-show-operator-state-maps t))
 
 (provide 'config-which-key)
 ;;; config-which-key.el ends here

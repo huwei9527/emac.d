@@ -92,22 +92,6 @@
 	  (setq sexp-parser (cdr sexp-parser))))
       (push sexp-curr path))))
 
-(defun code-op-test (sexp path)
-  "Test"
-  (if (eq sexp 'c)
-      (let* ((sexp-parser (car path)))
-	(catch 'tag-break
-	  (while sexp-parser
-	    (when (eq (car sexp-parser) sexp)
-	      (setcar sexp-parser 'fuck)
-	      (throw 'tag-break nil))
-	    (setq sexp-parser (cdr sexp-parser))))
-	nil)
-    t))
-
-(let* ((t-list '(a b (c d e c) f g)))
-  (code-parse-list t-list 'code-op-test)
-  (message "%s" t-list))
 (defvar code-macro-list nil
   "The list of macros defined in 'code'.")
 (defmacro code-record-macro (macro)
@@ -165,39 +149,47 @@ in byte compilation."
        ,tempvar)))
 
 ;;; {{ Helper function to add advices or hooks for one function.
-(defmacro code-add-advice (ad-list ad-where ad-fun)
+(defmacro code-add-advice (ad-list ad-where ad-fun &rest funs)
   "Add advice function AD-FUN to functions in AD-LIST."
   (code-progn
    (let* ((sym-list (code-get-list ad-list))
           (sym-fun ad-fun)
           (sym-where ad-where))
      (dolist (ad sym-list)
-       (code-item `(advice-add ',ad ,sym-where #',sym-fun))))))
+       (code-item `(advice-add ',ad ,sym-where #',sym-fun)))
+     (while funs
+       (code-item `(code-add-advice ,ad-list ,ad-where ,(pop funs)))))))
 
-(defmacro code-remove-advice (ad-list ad-fun)
+(defmacro code-remove-advice (ad-list ad-fun &rest funs)
   "Remove advice function AD-FUN from functions in AD-LIST"
   (code-progn
    (let* ((sym-list (code-get-list ad-list))
           (sym-fun ad-fun))
      (dolist (ad sym-list)
-       (code-item `(advice-remove ',ad #',sym-fun))))))
+       (code-item `(advice-remove ',ad #',sym-fun)))
+     (while funs
+       (code-item `(code-remove-advice ,ad-list ,(pop funs)))))))
 
-(defmacro code-add-hook (hk-list hk-fun)
+(defmacro code-add-hook (hk-list hk-fun &rest funs)
   "Add hook function HK-FUN to hooks in HK-LIST"
   (code-progn
    (let* ((sym-list (code-get-list hk-list))
           (sym-fun hk-fun))
      (dolist (hk sym-list)
-       (code-item `(add-hook ',hk #',sym-fun))))))
+       (code-item `(add-hook ',hk #',sym-fun)))
+     (while funs
+       (code-item `(code-add-hook ,hk-list ,(pop funs)))))))
 (code-record-macro code-add-hook)
 
-(defmacro code-remove-hook (hk-list hk-fun)
+(defmacro code-remove-hook (hk-list hk-fun &rest funs)
   "Remove hook function HK-FUN to hooks in HK-LIST"
   (code-progn
    (let* ((sym-list (code-get-list hk-list))
           (sym-fun hk-fun))
      (dolist (hk sym-list)
-       (code-item `(remove-hook ',hk #',sym-fun))))))
+       (code-item `(remove-hook ',hk #',sym-fun)))
+     (while funs
+       (code-item `(code-remove-hook ,hk-list ,(pop funs)))))))
 
 (defmacro code-add-advice-ignore (ad-list)
   "Add advice to ignore functions in AD-LIST."
@@ -212,26 +204,26 @@ in byte compilation."
   (code-progn
    (code-item
     `(defmacro ,(intern-format "code-add-advice-for-%s-command" cmd-name)
-         (ad-fun ad-where)
+         (ad-fun ad-where &rest funs)
        ,(format "Add advice AD-FUN to %s commands." cmd-name)
-       `(code-add-advice ,,cmd-list ,ad-where ,ad-fun))
+       `(code-add-advice ,,cmd-list ,ad-where ,ad-fun ,@funs))
     `(defmacro ,(intern-format "code-remove-advice-for-%s-command" cmd-name)
-         (ad-fun)
+         (ad-fun &rest funs)
        ,(format "Remove advice AD-FUN from %s commands." cmd-name)
-       `(code-remove-advice ,,cmd-list ,ad-fun)))))
+       `(code-remove-advice ,,cmd-list ,ad-fun ,@funs)))))
 
 (defmacro code-defsetter-hook (hk-name hk-list)
   "Define macro to set up or remove hook for hooks in HK-LIST."
   (code-progn
    (code-item
     `(defmacro ,(intern-format "code-add-hook-for-%s" hk-name)
-         (hk-fun)
+         (hk-fun &rest funs)
        ,(format "Add hook HK-FUN to %s hooks." hk-name)
-       `(code-add-hook ,,hk-list ,hk-fun))
+       `(code-add-hook ,,hk-list ,hk-fun ,@funs))
     `(defmacro ,(intern-format "code-remove-hook-for-%s" hk-name)
-         (hk-fun)
+         (hk-fun &rest funs)
        ,(format "Remove hook HK-FUN from %s hooks." hk-name)
-       `(code-remove-hook ,,hk-list ,hk-fun)))))
+       `(code-remove-hook ,,hk-list ,hk-fun ,@funs)))))
 
 (code-defsetter-command-advice "buffer-change" '(switch-to-buffer))
 (code-defsetter-command-advice "window-switch"
@@ -284,6 +276,7 @@ in byte compilation."
    (while bindings
      (code-item
       `(code-define-key-raw ,keymap ,prefix ,(pop bindings) ,(pop bindings))))))
+(code-record-macro code-define-key)
 
 (defmacro code-defkey-global (prefix key def &rest bindings)
   "Set global map. (current-global-map)"

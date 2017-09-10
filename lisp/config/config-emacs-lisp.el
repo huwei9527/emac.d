@@ -16,7 +16,8 @@
 (code-add-hook
  (emacs-lisp-mode-hook
   lisp-interaction-mode-hook)
- hl-sexp-mode)
+ hl-sexp-mode
+ company-mode)
 
 ;;; company
 (code-eval-after-load
