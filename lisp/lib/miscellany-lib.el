@@ -5,7 +5,7 @@
 (defun super-tab ()
   "Tab to do everything."
   (interactive)
-  (unless (and (char-at-point-visible-p)
+  (unless (and (char-at-point-word-p)
 	       (and (boundp 'company-mode) company-mode
 		    (call-interactively 'company-manual-begin)))
     (call-interactively 'indent-for-tab-command)))

@@ -5,8 +5,6 @@
 
 (require 'company-lib)
 
-;; (global-company-mode)
-
 ;;; Use TAB to select completion and RET insert newline
 (code-eval-after-load
  company
@@ -16,6 +14,7 @@
    "RET" company-newline)
  (code-define-key
    company-filter-map nil
+   "TAB" company-complete-selection
    "RET" company-newline))
 
 (provide 'config-company)

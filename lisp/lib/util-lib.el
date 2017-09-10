@@ -70,6 +70,10 @@
   "Return t if C is a space character."
   (eq ?\s (char-syntax c)))
 
+(defsubst char-word-p (c)
+  "Return t if C is a word constituent."
+  (eq ?w (char-syntax c)))
+
 (defsubst char-path-delimiter-p (c)
   "Return t if C is a path delimiter"
   (or (eq c ?\/) (eq c ?\\)))
@@ -83,12 +87,14 @@
   (or (and (<= 0 c) (<= c 32))
       (memq c file-custom-invalid-path-char)))
 
-(defsubst char-at-point-visible-p ()
+(defsubst char-at-point-word-p ()
   "Return t if the charactor before point is space or point is
 at the begging of buffer."
-  (not (or (eq (point) (point-min))
-	   (eq (point) (line-beginning-position))
-	   (char-space-p (preceding-char)))))
+  (and (not (eq (point) (line-beginning-position)))
+       (let* ((c (preceding-char)))
+	 (or (char-word-p c)
+	     (eq ?\$ c)
+	     (eq ?\- c)))))
 
 (defun path-at-point (&optional buffer start-position)
   "Return the (beg path end) position of the path if find."
