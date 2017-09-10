@@ -7,12 +7,6 @@
   (interactive)
   (scroll-other-window '-))
 
-(let* ((flag 1))
-  (defun select-other-window ()
-    "Switch between two recent window."
-    (interactive)
-    (other-window (setq flag (- flag)))))
-
 (defun quit-other-window ()
   "Quit buffer in other window."
   (interactive)
@@ -88,6 +82,13 @@
   "Return t if C is not a path constituent."
   (or (and (<= 0 c) (<= c 32))
       (memq c file-custom-invalid-path-char)))
+
+(defsubst char-at-point-visible-p ()
+  "Return t if the charactor before point is space or point is
+at the begging of buffer."
+  (not (or (eq (point) (point-min))
+	   (eq (point) (line-beginning-position))
+	   (char-space-p (preceding-char)))))
 
 (defun path-at-point (&optional buffer start-position)
   "Return the (beg path end) position of the path if find."

@@ -28,7 +28,7 @@
   (require 'config-paredit)
   (require 'config-emacs-lisp)
   (require 'config-hideshow)
-  (require 'config-company)
+  ;; (require 'config-company)
   ;; (require 'code)
   (require 'test-lib)
   ;; (require 'test)
