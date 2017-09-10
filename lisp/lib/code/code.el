@@ -159,6 +159,7 @@ in byte compilation."
        (code-item `(advice-add ',ad ,sym-where #',sym-fun)))
      (while funs
        (code-item `(code-add-advice ,ad-list ,ad-where ,(pop funs)))))))
+(code-record-macro code-add-advice)
 
 (defmacro code-remove-advice (ad-list ad-fun &rest funs)
   "Remove advice function AD-FUN from functions in AD-LIST"

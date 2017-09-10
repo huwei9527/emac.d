@@ -44,8 +44,7 @@
 ;; (require 'expand-region)
 ;; (require 'magit)
 ;; (require 'hippie-expand)
-;; (require 'flymake)
-;; (require 'rainbow-delimiters)
+;; (require 'flymake-find-file-hook)
 
 
 (defvar emacs-load-time (time-to-seconds (time-since emacs-load-start-time)))

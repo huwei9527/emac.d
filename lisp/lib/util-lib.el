@@ -56,13 +56,13 @@
 (defmacro with-no-message (&rest form)
   "Run FORM with no message."
   `(progn
-     (let* ((message-log-max nil)
-            (standard-output nil))
+     (let* ((standard-output nil)
+	    ;;(message-log-max nil)
+	    )
        (message-mute)
        (unwind-protect
            (with-no-warnings
-             (with-output-to-temp-buffer "*NULL*"
-               ,@form))
+             ,@form)
          (message-unmute)))))
 ;; }}
 
@@ -94,7 +94,8 @@ at the begging of buffer."
        (let* ((c (preceding-char)))
 	 (or (char-word-p c)
 	     (eq ?\$ c)
-	     (eq ?\- c)))))
+	     (eq ?\- c)
+	     (eq ?\@ c)))))
 
 (defun path-at-point (&optional buffer start-position)
   "Return the (beg path end) position of the path if find."

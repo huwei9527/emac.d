@@ -5,10 +5,14 @@
 (defun super-tab ()
   "Tab to do everything."
   (interactive)
-  (unless (and (char-at-point-word-p)
-	       (and (boundp 'company-mode) company-mode
-		    (call-interactively 'company-manual-begin)))
-    (call-interactively 'indent-for-tab-command)))
+  (let* ((point-last (point)))
+    (unless (and (char-at-point-word-p)
+		 (and (boundp 'company-mode) company-mode
+		      (with-no-message
+		       (call-interactively 'company-manual-begin))))
+      (call-interactively 'indent-for-tab-command)
+      (when (eq (point) point-last)
+	(call-interactively 'toggle-hideshow-block)))))
 
 
 (provide 'miscellany-lib)

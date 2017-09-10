@@ -26,7 +26,8 @@
     paredit-everywhere
     rainbow-delimiters
     hl-sexp
-    hideshow-org
+    ;; hideshow-org
+    ;; hideshowvis
     company
     )
   "Package to be install.")
