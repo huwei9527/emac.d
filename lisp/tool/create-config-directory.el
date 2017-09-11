@@ -13,6 +13,7 @@
 (require 'color-theme-custom)
 (require 'auto-save-custom)
 (require 'file-lib)
+(require 'company-custom)
 
 (dolist (dir config-directory-list) (make-directory-safe (symbol-value dir)))
 

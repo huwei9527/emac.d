@@ -29,6 +29,8 @@
     ;; hideshow-org
     ;; hideshowvis
     company
+    company-statistics
+    browse-kill-ring+
     )
   "Package to be install.")
 

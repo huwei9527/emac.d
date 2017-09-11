@@ -4,7 +4,7 @@
   "Abort company-complete and insert a new line."
   (interactive)
   (company-abort)
-  (newline))
+  (newline-and-indent))
 
 
 (provide 'company-lib)
