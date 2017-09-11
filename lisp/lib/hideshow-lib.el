@@ -14,7 +14,7 @@
 (defun toggle-hideshow-block (column)
   "Toggle hide or show block."
   (interactive "P")
-  (if (and (boundp hs-minor-mode) hs-minor-mode)
+  (if (and (boundp 'hs-minor-mode) hs-minor-mode)
       (save-excursion
 	(with-no-message
 	 (hs-toggle-hiding)))

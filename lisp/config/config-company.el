@@ -1,7 +1,13 @@
-;;; -*- lexical-binding : t ; byte-compile-dynamic : t -*-
+;;; config-company.el --- company configuration -*- lexical-binding : t ; byte-compile-dynamic : t -*-
+
+;;; Code:
 
 (eval-when-compile
   (require 'code))
+
+
+;;; Commentary:
+;; 
 
 (require 'company-custom)
 (require 'company-lib)

@@ -6,6 +6,12 @@
 (eval-when-compile
   (require 'code))
 
+(code-add-advice
+ (x-selection-value)
+ :after
+ (lambda (&rest args)
+   (message "X-SELECTION-VALUE")))
+
 (setq ;; Don't use lock files. (Don't create .#xxxx file)
       create-lockfiles nil
       ;; Repeat type C-SPC after C-u C-SPC will cycle the mark ring.
@@ -21,6 +27,16 @@
       ;; Enable primary selected (mid mouse button selection)
       x-select-enable-primary t
       )
+
+(code-add-advice
+ (x-select-text)
+ :around
+ x-select-text-around-advice)
+
+(code-add-advice
+ (x-selection-value)
+ :around
+ x-selection-value-around-advice)
 
 
 ;; Set default font size in gui frame
@@ -93,7 +109,6 @@
  "M-/" hippie-expand
  )
 
-;; (which-func-mode 1)
 ;; (display-time-mode 1)
 
 (provide 'config-miscellany)

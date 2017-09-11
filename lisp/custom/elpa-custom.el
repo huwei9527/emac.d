@@ -21,6 +21,7 @@
     find-file-in-project
     ;; latex environment
     auctex
+    company-auctex
     ;; paredit
     paredit
     paredit-everywhere
@@ -30,7 +31,8 @@
     ;; hideshowvis
     company
     company-statistics
-    browse-kill-ring+
+    company-ycmd
+    browse-kill-ring
     )
   "Package to be install.")
 

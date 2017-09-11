@@ -17,7 +17,6 @@
 
 (let* ((file-name-handler-alist nil)) ; Accelerate loading.
   (require 'config-elpa)
-  (require 'config-miscellany)
   (require 'config-ui)
   (require 'config-auto-save)
   (require 'config-evil)
@@ -29,6 +28,7 @@
   (require 'config-emacs-lisp)
   (require 'config-hideshow)
   (require 'config-company)
+  (require 'config-miscellany)
   ;; (require 'code)
   (require 'test-lib)
   ;; (require 'test)

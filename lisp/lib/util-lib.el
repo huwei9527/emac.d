@@ -25,6 +25,17 @@
   (interactive)
   nil)
 
+(defun shell-command-stdin (cmd stdin &optional buf buf-error)
+  "Execute CMD with STDIN as input."
+  (shell-command
+   (format "echo %s | %s" (shell-quote-argument stdin) cmd)
+   buf buf-error))
+
+(defun shell-command-to-string-stdin (cmd stdin)
+  "Execute CMD with STDIN as input, collect and return result as string."
+  (shell-command-to-string
+   (format "echo %s | %s" (shell-quote-argument stdin) cmd)))
+
 ;;; {{ Excute form with no output.
 ;;     TODO : Can't shadow file saving message ("Write ...")
 (defun message-null (&rest args) "Dummy function." (ignore))
