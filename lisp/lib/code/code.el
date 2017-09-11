@@ -104,6 +104,13 @@
     `(memq ,macro code-macro-list)))
 (defun code-expandmacro (sexp path)
   "Expand SEXP if it is a 'code' macro."
+  (when (listp sexp)
+    (let* ((sexp-head (car sexp)))
+      (when (and (not (listp sexp-head))
+		 (string-prefix-p "code-" (symbol-name sexp-head))
+		 (not (code-expandmacro-p (car sexp))))
+	(display-warning 'code-not-tracked
+			 (format "code macro not tracked: %s" sexp-head)))))
   (if (and (listp sexp)
 	   (code-expandmacro-p (car sexp)))
       (let* ((sexp-parser (car path)))
