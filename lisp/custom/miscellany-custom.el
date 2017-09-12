@@ -4,6 +4,7 @@
   "The directory to store abbrev_defs file.")
 
 (defvar double-events-delay 0.2)
+(defvar overriding-local-map-list nil)
 
 (defvar gnu/linux-x-selection-shell-command "xsel"
   "Gun/linux shell command name for x selection.")

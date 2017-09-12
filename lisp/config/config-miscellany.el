@@ -96,13 +96,14 @@
 ;; global key bindings.
 (code-defkey-global
  nil
- "C-q" next-buffer
+ "C-q" super-switch-buffer
  "TAB" super-tab
  "<backtab>" mode-line-other-buffer
  "<C-tab>" mode-line-other-buffer
  "M-/" hippie-expand
  "M-1" super-close-window
  "M-2" super-split-window
+ "M-3" super-switch-window
  )
 
 ;; (display-time-mode 1)

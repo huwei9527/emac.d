@@ -4,10 +4,6 @@
 (eval-when-compile
   (require 'miscellany-code))
 
-(defun wait-for-double-events (&optional n)
-  "Wait for N events. The default of N is 1."
-  (wait-for-event n double-events-delay))
-
 (code-defcmd-double-events
  super-close-window
  "1 - 'quit-other-window' 2 - 'delete-other-windows'"
@@ -16,9 +12,64 @@
 
 (code-defcmd-double-events
  super-split-window
- ""
+ "1 - 'split-window-right' 2 - 'split-window-below'"
  ((split-window-right))
  ((split-window-below)))
+
+(code-defcmd-double-events
+ super-switch-window
+ ""
+ ((call-interactively 'evil-window-mru))
+ ((call-interactively 'other-window)
+  (switch-window-mode 1)))
+
+(code-defcmd-double-events
+  super-switch-buffer
+  ""
+  ((call-interactively 'mode-line-other-buffer))
+  ((call-interactively 'next-buffer)
+   (switch-buffer-mode 1)))
+
+(defun set-overriding-local-map (keymap)
+  "Set keymap to 'overriding-local-map'. If 'overriding-local-map' is not
+nil, make a composed keymap to replace it."
+  (if overriding-local-map
+      (unless (eq overriding-local-map keymap)
+	(unless overriding-local-map-list
+	  (push overriding-local-map overriding-local-map-list))
+	(when (and overriding-local-map-list
+		   (memq keymap overriding-local-map-list))
+	  (setq overriding-local-map-list
+		(delq keymap overriding-local-map-list)))
+	(push keymap overriding-local-map-list)
+	(setq overriding-local-map
+	      (make-composed-keymap overriding-local-map-list)))
+    (setq overriding-local-map keymap)))
+
+(defun recover-overriding-local-map (keymap)
+  "Clear keymap from 'overriding-local-map' even when it it 
+a composed keymap."
+  (when overriding-local-map
+    (if (eq overriding-local-map keymap)
+	(setq overriding-local-map nil)
+      (when (memq keymap overriding-local-map-list)
+	(setq overriding-local-map-list
+	      (delq keymap overriding-local-map-list))
+	(if (eq (length overriding-local-map-list) 1)
+	    (setq overriding-local-map (car overriding-local-map-list)
+		  overriding-local-map-list nil)
+	  (setq overriding-local-map
+		(make-composed-keymap overriding-local-map-list)))))))
+
+(code-define-temporary-minor-mode
+ switch-window
+ "Switch window minor mode. Press 'M-3' to cycle through active window list."
+ `((,(kbd "M-3") . other-window)))
+
+(code-define-temporary-minor-mode
+ switch-buffer
+ "Switch buffer minor mode. Press 'C-q' to cycle through buffer lists."
+ `((,(kbd "C-q") . next-buffer)))
 
 (defun super-tab ()
   "Tab to do everything."
