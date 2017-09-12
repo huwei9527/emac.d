@@ -3,7 +3,10 @@
 (code-defdir-config "abbrev"
   "The directory to store abbrev_defs file.")
 
-(defvar gnu/linux-x-selection-shell-command "xsel")
+(defvar double-events-delay 0.2)
+
+(defvar gnu/linux-x-selection-shell-command "xsel"
+  "Gun/linux shell command name for x selection.")
 
 (defvar x-set-primary-selection-shell-command
   (cond

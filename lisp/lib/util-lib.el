@@ -36,6 +36,55 @@
   (shell-command-to-string
    (format "echo %s | %s" (shell-quote-argument stdin) cmd)))
 
+(defun sequence-equal (seq1 seq2)
+  "Return t if all the corresponding elements of SEQ1 and SEQ2 are equal."
+  (let* ((seq1-p (sequencep seq1))
+	 (seq2-p (sequencep seq2)))
+    (cond
+     ((eq seq1 seq2) t)
+     ((and seq1-p seq2-p)
+      (let* ((len (length seq1)) rlt)
+	(if (eq len (length seq2))
+	    (progn
+	      (setq rlt t)
+	      (catch 'tag-break
+		(dotimes (i len)
+		  (unless (sequence-equal (elt seq1 i) (elt seq2 i))
+		    (setq rlt nil)
+		    (throw 'tag-break nil))))))
+	rlt))
+     ((not (or seq1-p seq2-p))
+      (equal seq1 seq2))
+     (t nil))))
+
+(defun wait-for-event (&optional n secs)
+  "Wait for N (default 1) events for maximum SECS seconds."
+  (or n (setq n 1))
+  (let* (rlt)
+    (dotimes (i n)
+      (push (read-event nil nil secs) rlt))
+    (vconcat (nreverse rlt))))
+
+(defun put-back-event (events &optional force)
+  "Put events back to 'unread-command-events'"
+  (when events
+    (setq events (collect-non-nil-element events))
+    (when force
+      (setq events (mapcar (lambda (c) (cons t c)) events)))
+    (setq unread-command-events
+	  (append unread-command-events events))))
+
+(defun collect-non-nil-element (seq)
+  "Return the list of the non-nil element in sequence SEQ."
+  (when (and seq (sequencep seq))
+    (let* ((rlt nil)
+	   (len (length seq))
+	   el-curr)
+      (dotimes (i len)
+	(when (setq el-curr (elt seq i))
+	  (push el-curr rlt)))
+      (nreverse rlt))))
+
 ;;; {{ Excute form with no output.
 ;;     TODO : Can't shadow file saving message ("Write ...")
 (defun message-null (&rest args) "Dummy function." (ignore))

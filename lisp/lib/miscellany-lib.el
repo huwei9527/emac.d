@@ -1,6 +1,24 @@
 ;; -*- lexical-binding : t byte-compile-dynamic : t -*-
 
 (require 'util-lib)
+(eval-when-compile
+  (require 'miscellany-code))
+
+(defun wait-for-double-events (&optional n)
+  "Wait for N events. The default of N is 1."
+  (wait-for-event n double-events-delay))
+
+(code-defcmd-double-events
+ super-close-window
+ "1 - 'quit-other-window' 2 - 'delete-other-windows'"
+ ((quit-other-window))
+ ((delete-other-windows)))
+
+(code-defcmd-double-events
+ super-split-window
+ ""
+ ((split-window-right))
+ ((split-window-below)))
 
 (defun super-tab ()
   "Tab to do everything."
@@ -93,8 +111,6 @@ Otherwise, return nil"
 	(setq next-selection-coding-system nil)
 	(or clip-text primary-text))
     (funcall origin-fun)))
-
-;; (message "aaa: %s bbb" (x-selection-value-shell 'PRIMARY))
 
 (provide 'miscellany-lib)
 ; miscellany.el ends here

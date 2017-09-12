@@ -243,9 +243,11 @@ in byte compilation."
 ;;; {{ Create key bindings
 (let* ((cnt 0))
   (defun code-test-key-binding ()
-    "Test"
+    "Test key bingding"
     (interactive)
-    (message "cnt = %d" (setq cnt (1+ cnt)))))
+    (message "%s[%d]: %s %s"
+	     this-command (setq cnt (1+ cnt))
+	     (this-command-keys) (this-command-keys-vector) )))
 
 (defun code-make-key (key &optional prefix)
   ""

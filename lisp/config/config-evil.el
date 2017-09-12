@@ -94,12 +94,13 @@
 (code-defkey-evil-global
  (motion insert)
  "C-e" move-end-of-line
- "M-1" delete-other-windows
- "M-2" split-window-below
- "M-3" split-window-right
- "M-4" other-window
- "M-5" select-other-window
- "M-6" quit-other-window)
+ ;; "M-1" delete-other-windows
+ ;; "M-2" split-window-below
+ ;; "M-3" split-window-right
+ ;; "M-4" other-window
+ ;; "M-5" select-other-window
+ ;; "M-6" quit-other-window
+ )
 
 ;; Evil all state keymap
 

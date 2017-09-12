@@ -6,12 +6,6 @@
 (eval-when-compile
   (require 'code))
 
-(code-add-advice
- (x-selection-value)
- :after
- (lambda (&rest args)
-   (message "X-SELECTION-VALUE")))
-
 (setq ;; Don't use lock files. (Don't create .#xxxx file)
       create-lockfiles nil
       ;; Repeat type C-SPC after C-u C-SPC will cycle the mark ring.
@@ -107,6 +101,8 @@
  "<backtab>" mode-line-other-buffer
  "<C-tab>" mode-line-other-buffer
  "M-/" hippie-expand
+ "M-1" super-close-window
+ "M-2" super-split-window
  )
 
 ;; (display-time-mode 1)
