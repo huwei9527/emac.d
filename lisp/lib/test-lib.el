@@ -2,7 +2,7 @@
 
 (eval-when-compile
   (require 'test-code)
-  (require 'code)
+  (require 'hook-code)
   (require 'evil-code))
 
 (require 'test-custom)

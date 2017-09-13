@@ -1,7 +1,7 @@
 ;; -*- lexical-binding : t ; byte-compile-dynamic : t -*-
 
 (eval-when-compile
-  (require 'code))
+  (require 'hook-code))
 
 (code-add-hook
  (emacs-lisp-mode-hook

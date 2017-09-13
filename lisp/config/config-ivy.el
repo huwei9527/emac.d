@@ -1,7 +1,8 @@
 ;; -*- lexical-binding : t ; byte-compile-dynamic : t -*-
 
 (eval-when-compile
-  (require 'code)
+  (require 'hook-code)
+  (require 'keymap-code)
   (require 'ivy-code))
 
 (setq ivy-use-virtual-buffers t

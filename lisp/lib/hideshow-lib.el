@@ -21,7 +21,5 @@
 	 (hs-toggle-hiding))
      (toggle-selective-display column))))
 
-
-
 (provide 'hideshow-lib)
 ;;; hideshow-lib.el ends here

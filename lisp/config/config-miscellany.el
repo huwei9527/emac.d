@@ -4,7 +4,8 @@
 (require 'miscellany-lib)
 (require 'file-lib)
 (eval-when-compile
-  (require 'code))
+  (require 'hook-code)
+  (require 'keymap-code))
 
 (setq ;; Don't use lock files. (Don't create .#xxxx file)
       create-lockfiles nil

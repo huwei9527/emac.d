@@ -1,5 +1,8 @@
 ;; -*- lexical-binding : t ; byte-compile-dynamic : t -*-
 
+(eval-when-compile
+  (require 'hook-code))
+
 (code-add-hook
  (prog-mode-hook
   lisp-interaction-mode-hook)

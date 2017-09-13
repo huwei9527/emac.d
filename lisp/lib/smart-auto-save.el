@@ -83,7 +83,8 @@ matches 'smart-auto-save-fileter-regexp'"
     (cancel-timer smart-auto-save-idle-timer)
     (setq smart-auto-save-idle-timer nil)))
 
-(eval-when-compile (require 'code))
+(eval-when-compile
+  (require 'hook-code))
 
 (defun smart-auto-save-on ()
   "Enable smart-auto-save."

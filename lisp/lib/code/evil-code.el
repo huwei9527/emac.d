@@ -1,7 +1,8 @@
 ;; -*- lexical-binding : t byte-compile-dynamic : t -*-
 
 (eval-when-compile
-  (require 'code))
+  (require 'code)
+  (require 'keymap-code))
 
 ;;; {{ Evil entry and exit hook utility
 (defun code--add-evil-state-hook-form (hk-fun type state)
