@@ -22,7 +22,7 @@
   :type 'boolean
   :group 'smart-auto-save)
 
-(defvar smart-auto-save-filter-regexp file-custom-file-tail-filter-regexp)
+(defvar smart-auto-save-filter-regexp uneditable-file-tail-regexp)
 
 (defun smart-auto-save-filtered-p (fn)
   "Return t if the suffix of FN (a file name)

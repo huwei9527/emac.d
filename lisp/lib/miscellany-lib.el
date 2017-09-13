@@ -20,13 +20,14 @@
   ""
   )
 
-(code-add-advice
- (ivy-switch-buffer
-  ;; select-window
-  )
- :after
- (lambda (&rest args)
-   (message "buffer: %s" (buffer-list))))
+;; (code-add-advice
+;;  (
+;;   ivy-switch-buffer
+;;   ;; select-window
+;;   )
+;;  :after
+;;  (lambda (&rest args)
+;;    (message "buffer: %s" (buffer-list))))
 
 (code-define-temporary-minor-mode
  switch-window

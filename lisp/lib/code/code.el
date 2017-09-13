@@ -1,7 +1,7 @@
 ;; -*- lexical-binding : t ;byte-compile-dynamic : t -*-
 
 (require 'test-code)
-(require 'util-lib)
+(require 'sequence-lib)
 
 (defmacro intern-format (ft &rest args)
   "Extend 'intern' with format FT string."
@@ -132,9 +132,45 @@ in byte compilation."
        ,(code-progn
 	 (dolist (form body)
 	   (code-item form)))))))
-
 ;; }}
 
+(defmacro code-define-regexp (name fil &optional type)
+  "Define a regular expression from FIL with TYPE."
+  (let* ((str-name (symbol-name name))
+	 (str-fil (replace-regexp-in-string "[()|.]" "\\\\\\&" fil))
+	 sym-regexp sym-regexp-fun str-doc)
+    (cond
+     ((eq type 'head)
+      (setq sym-regexp (intern-format "%s-head-regexp" str-name)
+	    str-doc "head "))
+     ((eq type 'tail)
+      (setq sym-regexp (intern-format "%s-tail-regexp" str-name)
+	    str-doc "tail "))
+     (t
+      (setq sym-regexp (intern-format "%s-regexp" str-name)
+	    str-doc "")))
+    `(progn
+       (defconst ,sym-regexp
+	 ,(cond
+	   ((eq type 'head) (format "\\`%s" str-fil))
+	   ((eq type 'tail) (format "%s\\'" str-fil))
+	   (t str-fil))
+	 ,(format "The %sregular expression for %s"
+		  str-doc str-name))
+       (defun ,(intern-format "%s-p" (symbol-name sym-regexp)) (str)
+	 ,(format "Return non-nil if STR match %sregexp '%s'."
+		  str-doc (symbol-name sym-regexp))
+	 (string-match-p ,sym-regexp str)))))
+
+(defmacro code-defregexp-head (name fil)
+  "Define a head regular expression from FIL"
+  `(code-define-regexp ,name ,fil head))
+
+(defmacro code-defregexp-tail (name fil)
+  "Define a tail regular expression from FIL"
+  `(code-define-regexp ,name ,fil tail))
+
+;; (pp-macroexpand (code-define-regexp aaaa "(abc|def)|(.(exe|pdf))" head))
 
 (provide 'code)
 ;; code.el ends here

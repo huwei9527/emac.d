@@ -23,6 +23,7 @@
       x-select-enable-primary t
       )
 
+;; {{ Enable X selection in tty terminal
 (code-add-advice
  (x-select-text)
  :around
@@ -32,17 +33,18 @@
  (x-selection-value)
  :around
  x-selection-value-around-advice)
+;;; }}
 
 
 ;; Set default font size in gui frame
 (set-face-attribute 'default nil :height 120)
 
-; Read only file.
+;;; Read only file.
 (add-hook 'find-file-hook
           (lambda (&rest)
             "Automatically set files in list read-only."
             (catch 'tag-break
-              (when (file-custom-file-tail-filtered-p (buffer-file-name))
+              (when (uneditable-file-tail-regexp-p (buffer-file-name))
                 (read-only-mode 1)
                 (throw 'tag-break nil))
               (dolist (dir file-custom-read-only-directory-list)

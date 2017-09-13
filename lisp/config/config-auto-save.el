@@ -20,7 +20,7 @@
       backup-enable-predicate
       (lambda (name)
         (and (normal-backup-enable-predicate name)
-             (not (file-custom-file-tail-filtered-p name)))))
+             (not (uneditable-file-tail-regexp-p name)))))
 
 ;; Enable smart-auto-save:
 ;; save when idle, switch-buffer, switch window, frame-out.

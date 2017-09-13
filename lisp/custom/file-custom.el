@@ -1,8 +1,11 @@
 ;; -*- lexical-binding : t byte-compile-dynamic : t -*-
 
-(eval-when-compile (require 'file-code))
+(eval-when-compile
+  (require 'code))
 
-(code-defilter-tail "file" "(~|#)|(.(exe|zip|pdf))")
+(code-defregexp-tail uneditable-file "(~|#)|(.(exe|zip|pdf))")
+
+; (code-defregexp-head)
 
 (defconst file-custom-read-only-file-list
   `("~/Projects/emacs.d/test1.txt")

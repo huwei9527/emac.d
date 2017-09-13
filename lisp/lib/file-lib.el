@@ -5,7 +5,7 @@
 (defun file-in-directory-p (file dir)
   "Whether FILE is in sub-directory of DIR."
   (string-prefix-p (file-name-as-directory (expand-file-name dir))
-                   (expand-file-name file)))
+                   (file-truename (expand-file-name file))))
 
 (defun make-directory-safe (dir-name &optional silent)
   "Create direcotry of name DIR-NAME.
