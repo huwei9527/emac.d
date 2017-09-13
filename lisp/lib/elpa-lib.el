@@ -1,6 +1,8 @@
 ;; -*- lexical-binding : t ; byte-compile-dynamic : t -*-
 
 (require 'util-lib)
+(eval-when-compile
+  (require 'silence-code))
 
 (defconst pkg-exist nil "Package exists.")
 (defconst pkg-miss nil "Package misses.")
@@ -54,7 +56,7 @@ nil - up to date."
 
 No matter whether PKG is installed or available in remote.
 You need to check by yourself for safety."
-  ;; (with-no-message (package-install pkg))
+  ;; (code-silence (package-install pkg))
   (package-install pkg))
 
 (defun elpa-delete-raw (pkg-desc)
