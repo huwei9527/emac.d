@@ -7,12 +7,15 @@
   (require 'hook-code)
   (require 'keymap-code))
 
+(require 'saveplace)
+(setq-default save-place t)
+
 (setq ;; Don't use lock files. (Don't create .#xxxx file)
       create-lockfiles nil
       ;; Repeat type C-SPC after C-u C-SPC will cycle the mark ring.
       set-mark-command-repeat-pop t
       ;; Set the default abbrev file.
-      abbrev-file-name (expand-file-name config-abbrev-directory)
+      abbrev-file-name (expand-file-name "abbrev-defs" config-abbrev-directory)
       ;; Do not allow duplicated item.
       history-delete-duplicates t
       ;; Creating new file needs confirmation.
@@ -21,6 +24,8 @@
       ad-redefinition-action 'accept
       ;; Enable primary selected (mid mouse button selection)
       x-select-enable-primary t
+      ;; 
+      save-place-file (expand-file-name "places" config-saveplace-directory)
       )
 
 ;; {{ Enable X selection in tty terminal
