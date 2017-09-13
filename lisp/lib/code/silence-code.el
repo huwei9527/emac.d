@@ -1,7 +1,7 @@
 ;; -*- lexical-binding : t byte-compile-dynamic : t -*-
 
 (eval-when-compile
-  (require 'code))
+  (require 'hook-code))
 
 ;;;  Can't silence "Write file" message
 (defmacro code--define-silence-trigger (out-funs)
@@ -12,7 +12,7 @@
        '(code-add-advice-ignore ,out-funs))
      (defmacro code-silence-off ()
        "Unmute stdout and stderr output"
-       '(code-add-advice-ignore ,out-funs))))
+       '(code-remove-advice-ignore ,out-funs))))
 
 (code--define-silence-trigger
  (message

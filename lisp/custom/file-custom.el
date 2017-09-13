@@ -3,9 +3,15 @@
 (eval-when-compile
   (require 'code))
 
+;; The files which can't be edited by emacs
 (code-defregexp-tail uneditable-file "(~|#)|(.(exe|zip|pdf))")
 
-; (code-defregexp-head)
+;; The prefix of the name of the annoy buffer
+(code-defregexp-head system-buffer
+		     "(*)")
+
+(code-defregexp-head auto-kill-buffer
+		     "(*Directory)")
 
 (defconst file-custom-read-only-file-list
   `("~/Projects/emacs.d/test1.txt")

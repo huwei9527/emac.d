@@ -9,6 +9,14 @@
 (defvar overriding-local-map-list nil
   "The list store the keymaps that compose 'overriding-local-map'.")
 
+(defvar skipped-major-mode-list
+  '(dired-mode help-mode Info-mode)
+  "The list of major mode which will be skipped when 'next-buffer'")
+
+(defvar auto-killed-mode-list
+  '(dired-mode help-mode)
+  "The list of major mode which will be killed when 'close-other-window'")
+
 ;;; {{ X selection shell tool
 (defvar gnu/linux-x-selection-shell-command "xsel"
   "Gun/linux shell command name for x selection.")

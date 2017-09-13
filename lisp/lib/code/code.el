@@ -137,7 +137,7 @@ in byte compilation."
 (defmacro code-define-regexp (name fil &optional type)
   "Define a regular expression from FIL with TYPE."
   (let* ((str-name (symbol-name name))
-	 (str-fil (replace-regexp-in-string "[()|.]" "\\\\\\&" fil))
+	 (str-fil (replace-regexp-in-string "[()|.*]" "\\\\\\&" fil))
 	 sym-regexp sym-regexp-fun str-doc)
     (cond
      ((eq type 'head)
@@ -169,8 +169,6 @@ in byte compilation."
 (defmacro code-defregexp-tail (name fil)
   "Define a tail regular expression from FIL"
   `(code-define-regexp ,name ,fil tail))
-
-;; (pp-macroexpand (code-define-regexp aaaa "(abc|def)|(.(exe|pdf))" head))
 
 (provide 'code)
 ;; code.el ends here

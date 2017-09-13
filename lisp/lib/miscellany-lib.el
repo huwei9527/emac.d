@@ -2,7 +2,8 @@
 
 (require 'util-lib)
 (eval-when-compile
-  (require 'miscellany-code))
+  (require 'miscellany-code)
+  (require 'silence-code))
 
 (defun window-mru ()
   "Move the cursor to previous buffer in other window."
@@ -17,17 +18,48 @@
 	  (throw 'tag-break nil))))))
 
 (defun next-non-system-buffer ()
-  ""
-  )
+  "Switch to non system buffer."
+  (interactive)
+  (let* ((old-buffer (current-buffer))
+	 buf-name)
+    (next-buffer)
+    (unless (eq old-buffer (current-buffer))
+      (catch 'tag-break
+	(while (or (memq major-mode skipped-major-mode-list)
+		   (and (setq buf-name (buffer-name))
+			(system-buffer-head-regexp-p buf-name)))
+	  (next-buffer)
+	  (when (eq old-buffer (current-buffer))
+	    (throw 'tag-break nil)))))))
 
-;; (code-add-advice
-;;  (
-;;   ivy-switch-buffer
-;;   ;; select-window
-;;   )
-;;  :after
-;;  (lambda (&rest args)
-;;    (message "buffer: %s" (buffer-list))))
+(defun buffer-live-other-window-p (&optional window)
+  ""
+  (or window (setq window (selected-window)))
+  (when (window-live-p window)
+    (let* ((buf (window-buffer window))
+	   rlt)
+      (catch 'tag-break
+	(dolist (win (window-list-1))
+	  (unless (eq win window)
+	    (when (eq buf (window-buffer win))
+	      (setq rlt t)
+	      (throw 'tag-break t)))))
+      rlt)))
+
+(defun close-other-window ()
+  "Close buffer in other window."
+  (interactive)
+  (unless (one-window-p)
+    (save-selected-window
+      (let* ((old-buffer (current-buffer))
+	     buf-name)
+	(other-window 1)
+	(unless (buffer-live-other-window-p)
+	  (if (or (memq major-mode auto-killed-mode-list)
+		  (and (setq buf-name (buffer-name))
+		       (auto-kill-buffer-head-regexp-p buf-name)))
+	      (quit-window 'kill)
+	    (quit-window)))))))
 
 (code-define-temporary-minor-mode
  switch-window
@@ -37,34 +69,47 @@
 (code-define-temporary-minor-mode
  switch-buffer
  "Switch buffer minor mode. Press 'C-q' to cycle through buffer lists."
- `((,(kbd "C-q") . next-buffer)))
+ `((,(kbd "C-q") . next-non-system-buffer)))
 
 (code-defcmd-double-events
  super-close-window
  "1 - 'quit-other-window' 2 - 'delete-other-windows'"
- ((quit-other-window))
+ ((close-other-window))
  ((delete-other-windows)))
 
 (code-defcmd-double-events
  super-split-window
  "1 - 'split-window-right' 2 - 'split-window-below'"
  ((split-window-right))
- ((split-window-below)))
+ ((save-selected-window
+    (ivy-switch-buffer-other-window))))
 
 (code-defcmd-double-events
  super-switch-window
- ""
+ "1 - 'window-mru' 2 - 'other-window'"
  ((window-mru))
  ((other-window 1)
   (switch-window-mode 1)))
 
 (code-defcmd-double-events
   super-switch-buffer
-  ""
+  "1 - 'mode-line-other-buffer' 2 - 'next-buffer'"
   ((mode-line-other-buffer))
-  ((next-buffer)
+  ((next-non-system-buffer)
    (switch-buffer-mode 1)))
 
+(defun super-tab ()
+  "Tab to do everything."
+  (interactive)
+  (let* ((point-last (point)))
+    (unless (and (char-at-point-word-p)
+		 (and (boundp 'company-mode) company-mode
+		      (code-silence (company-manual-begin))))
+      (call-interactively 'indent-for-tab-command)
+      (when (eq (point) point-last)
+	(call-interactively 'toggle-hideshow-block)))))
+
+;;; {{ Use 'overriding-local-map'
 (defun set-overriding-local-map (keymap)
   "Set keymap to 'overriding-local-map'. If 'overriding-local-map' is not
 nil, make a composed keymap to replace it."
@@ -95,18 +140,7 @@ a composed keymap."
 		  overriding-local-map-list nil)
 	  (setq overriding-local-map
 		(make-composed-keymap overriding-local-map-list)))))))
-
-(defun super-tab ()
-  "Tab to do everything."
-  (interactive)
-  (let* ((point-last (point)))
-    (unless (and (char-at-point-word-p)
-		 (and (boundp 'company-mode) company-mode
-		      (with-no-message
-		       (call-interactively 'company-manual-begin))))
-      (call-interactively 'indent-for-tab-command)
-      (when (eq (point) point-last)
-	(call-interactively 'toggle-hideshow-block)))))
+;;; }}
 
 ;;; {{ X selection code for tty terminal
 (defun x-set-selection-shell (type data)

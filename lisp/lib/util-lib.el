@@ -3,21 +3,10 @@
 (require 'file-custom)
 (require 'sequence-lib)
 
-
 (defun scroll-other-window-up ()
   "Scroll other window up"
   (interactive)
   (scroll-other-window '-))
-
-(defun quit-other-window ()
-  "Quit buffer in other window."
-  (interactive)
-  (if (> (length (window-list-1)) 1)
-      (let* ((win-curr (selected-window))
-             (win-other (next-window)))
-        (select-window win-other)
-        (quit-window 'kill)
-        (select-window win-curr))))
 
 (defun shell-command-stdin (cmd stdin &optional buf buf-error)
   "Execute CMD with STDIN as input."
@@ -33,9 +22,16 @@
 (defun wait-for-event (&optional n secs)
   "Wait for N (default 1) events for maximum SECS seconds."
   (or n (setq n 1))
-  (let* (rlt)
-    (dotimes (i n)
-      (push (read-event nil nil secs) rlt))
+  (let* ((max-time (when secs
+		     (time-add (current-time)
+			       (seconds-to-time secs))))
+	 rlt)
+    (catch 'tag-break
+      (dotimes (i n)
+	(push (read-event nil nil secs) rlt)
+	(when (and max-time
+		   (time-less-p max-time (current-time)))
+	  (throw 'tag-break nil))))
     (vconcat (nreverse rlt))))
 
 (defun put-back-event (&optional events force)
