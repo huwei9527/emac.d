@@ -1,6 +1,7 @@
 ;; -*- lexical-binding : t ;byte-compile-dynamic : t -*-
 
 (require 'test-code)
+(require 'util-lib)
 
 (defmacro intern-format (ft &rest args)
   "Extend 'intern' with format FT string."
@@ -102,7 +103,7 @@
   (if (symbolp macro)
       `(memq ',macro code-macro-list)
     `(memq ,macro code-macro-list)))
-(defun code-expandmacro (sexp path)
+(defun code-expandmacro (sexp pos path)
   "Expand SEXP if it is a 'code' macro."
   (when (listp sexp)
     (let* ((sexp-head (car sexp)))
@@ -111,17 +112,8 @@
 		 (not (code-expandmacro-p (car sexp))))
 	(display-warning 'code-not-tracked
 			 (format "code macro not tracked: %s" sexp-head)))))
-  (if (and (listp sexp)
-	   (code-expandmacro-p (car sexp)))
-      (let* ((sexp-parser (car path)))
-	(catch 'tag-break
-	  (while sexp-parser
-	    (when (eq sexp (car sexp-parser))
-	      (setcar sexp-parser
-		      (macroexpand-all sexp))
-	      (throw 'tag-break nil))
-	    (setq sexp-parser (cdr sexp-parser))))
-	nil)
+  (if (and (listp sexp) (code-expandmacro-p (car sexp)))
+      (progn (setf (elt (car path) pos) (macroexpand-all sexp)) nil)
     t))
 
 (defmacro code-eval-after-load (package &rest body)
@@ -134,15 +126,17 @@ in byte compilation."
     (if (symbolp package)
 	(code-append `(quote ,package))
       (code-append package))
-    (code-parse-list body 'code-expandmacro)
+    (sequence-element-filter body 'code-expandmacro)
     (code-append
      `(quote
        ,(code-progn
 	 (dolist (form body)
 	   (code-item form)))))))
+
 ;; }}
 
 
+;;; {{ Helper function to add advices or hooks for one function.
 (defsubst code--gensym-symbol-list ()
   "Create temporary symbol interned in 'code-obarray'"
   (code--gensym "code--temporary-symbol"))
@@ -155,7 +149,6 @@ in byte compilation."
          (setq ,tempvar (symbol-value ,tempvar)))
        ,tempvar)))
 
-;;; {{ Helper function to add advices or hooks for one function.
 (defmacro code-add-advice (ad-list ad-where ad-fun &rest funs)
   "Add advice function AD-FUN to functions in AD-LIST."
   (code-progn
@@ -212,7 +205,7 @@ in byte compilation."
   (code-progn
    (code-item
     `(defmacro ,(intern-format "code-add-advice-for-%s-command" cmd-name)
-         (ad-fun ad-where &rest funs)
+         (ad-where ad-fun &rest funs)
        ,(format "Add advice AD-FUN to %s commands." cmd-name)
        `(code-add-advice ,,cmd-list ,ad-where ,ad-fun ,@funs))
     `(defmacro ,(intern-format "code-remove-advice-for-%s-command" cmd-name)
@@ -245,12 +238,13 @@ in byte compilation."
   (defun code-test-key-binding ()
     "Test key bingding"
     (interactive)
-    (message "%s[%d]: %s %s"
+    (message "%s[%d]: (k: %s) (v: %s)"
 	     this-command (setq cnt (1+ cnt))
 	     (this-command-keys) (this-command-keys-vector) )))
 
 (defun code-make-key (key &optional prefix)
-  ""
+  "Combine PREFIX and KEY to form a new key sequence. It also 
+uniformed the format of the key sequence."
   (if prefix
       (progn
         (setq prefix (code-make-key prefix))

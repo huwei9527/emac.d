@@ -30,8 +30,7 @@
   (require 'config-company)
   (require 'config-miscellany)
   ;; (require 'code)
-  (require 'test-lib)
-  ;; (require 'test)
+  (require 'test)
   )
 
 ;; (require 'evil-surround)

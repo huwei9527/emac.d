@@ -35,11 +35,9 @@ modes. So it called 'temporary' minor mode."
        ,doc
        :global t
        :keymap `(,@,keymap
-		 ([t] . (lambda ()
-			  (interactive)
+		 ([t] . (lambda () (interactive)
 			  (,',mode -1)
-			  (put-back-event (this-command-keys-vector)
-					  'force))))
+			  (put-back-event nil 'force))))
        (if ,mode
 	   (set-overriding-local-map ,map)
 	 (recover-overriding-local-map ,map)))))

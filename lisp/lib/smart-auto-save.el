@@ -22,14 +22,9 @@
   :type 'boolean
   :group 'smart-auto-save)
 
-(defcustom smart-auto-save-filter file-custom-file-tail-filter
-  "Suffix of the file to be filtered."
-  :type 'string
-  :group 'smart-auto-save)
-
 (defvar smart-auto-save-filter-regexp file-custom-file-tail-filter-regexp)
 
-(defsubst smart-auto-save-filtered-p (fn)
+(defun smart-auto-save-filtered-p (fn)
   "Return t if the suffix of FN (a file name)
 matches 'smart-auto-save-fileter-regexp'"
   (string-match-p smart-auto-save-filter-regexp fn))
@@ -94,9 +89,9 @@ matches 'smart-auto-save-fileter-regexp'"
   "Enable smart-auto-save."
   (interactive)
   (code-add-advice-for-buffer-change-command
-   smart-auto-save-buffer-advice :before)
+   :before smart-auto-save-buffer-advice)
   (code-add-advice-for-window-switch-command
-   smart-auto-save-buffer-advice :before)
+   :before smart-auto-save-buffer-advice)
   (code-add-hook-for-emacs-out smart-auto-save-buffer)
   (code-add-hook (evil-normal-state-entry-hook)
                  smart-auto-save-buffer)

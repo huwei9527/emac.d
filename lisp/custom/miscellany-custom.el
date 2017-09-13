@@ -3,9 +3,13 @@
 (code-defdir-config "abbrev"
   "The directory to store abbrev_defs file.")
 
-(defvar double-events-delay 0.2)
-(defvar overriding-local-map-list nil)
+(defvar double-events-delay 0.2
+  "Max time interval between two double events.")
 
+(defvar overriding-local-map-list nil
+  "The list store the keymaps that compose 'overriding-local-map'.")
+
+;;; {{ X selection shell tool
 (defvar gnu/linux-x-selection-shell-command "xsel"
   "Gun/linux shell command name for x selection.")
 
@@ -36,6 +40,7 @@
     (format "%s -o -b" gnu/linux-x-selection-shell-command))
    (t nil))
   "The shell command get the value from clipboard of X selection.")
+;;; }}
 
 (provide 'miscellany-custom)
 ; miscellany-custom.el ends here

@@ -4,6 +4,40 @@
 (eval-when-compile
   (require 'miscellany-code))
 
+(defun window-mru ()
+  "Move the cursor to previous buffer in other window."
+  (interactive)
+  (catch 'tag-break
+    (dolist (buf (buffer-list (selected-frame)))
+      (let* ((win (get-buffer-window buf)))
+	(unless (or (not win)
+		    (eq buf (current-buffer))
+		    (eq win (selected-window)))
+	  (select-window win)
+	  (throw 'tag-break nil))))))
+
+(defun next-non-system-buffer ()
+  ""
+  )
+
+(code-add-advice
+ (ivy-switch-buffer
+  ;; select-window
+  )
+ :after
+ (lambda (&rest args)
+   (message "buffer: %s" (buffer-list))))
+
+(code-define-temporary-minor-mode
+ switch-window
+ "Switch window minor mode. Press 'M-3' to cycle through active window list."
+ `((,(kbd "M-3") . other-window)))
+
+(code-define-temporary-minor-mode
+ switch-buffer
+ "Switch buffer minor mode. Press 'C-q' to cycle through buffer lists."
+ `((,(kbd "C-q") . next-buffer)))
+
 (code-defcmd-double-events
  super-close-window
  "1 - 'quit-other-window' 2 - 'delete-other-windows'"
@@ -19,15 +53,15 @@
 (code-defcmd-double-events
  super-switch-window
  ""
- ((call-interactively 'evil-window-mru))
- ((call-interactively 'other-window)
+ ((window-mru))
+ ((other-window 1)
   (switch-window-mode 1)))
 
 (code-defcmd-double-events
   super-switch-buffer
   ""
-  ((call-interactively 'mode-line-other-buffer))
-  ((call-interactively 'next-buffer)
+  ((mode-line-other-buffer))
+  ((next-buffer)
    (switch-buffer-mode 1)))
 
 (defun set-overriding-local-map (keymap)
@@ -61,16 +95,6 @@ a composed keymap."
 	  (setq overriding-local-map
 		(make-composed-keymap overriding-local-map-list)))))))
 
-(code-define-temporary-minor-mode
- switch-window
- "Switch window minor mode. Press 'M-3' to cycle through active window list."
- `((,(kbd "M-3") . other-window)))
-
-(code-define-temporary-minor-mode
- switch-buffer
- "Switch buffer minor mode. Press 'C-q' to cycle through buffer lists."
- `((,(kbd "C-q") . next-buffer)))
-
 (defun super-tab ()
   "Tab to do everything."
   (interactive)
@@ -83,6 +107,7 @@ a composed keymap."
       (when (eq (point) point-last)
 	(call-interactively 'toggle-hideshow-block)))))
 
+;;; {{ X selection code for tty terminal
 (defun x-set-selection-shell (type data)
   "Set X selection with shell command."
   (or type (setq type 'PRIMARY))
@@ -162,6 +187,7 @@ Otherwise, return nil"
 	(setq next-selection-coding-system nil)
 	(or clip-text primary-text))
     (funcall origin-fun)))
+;;; }}
 
 (provide 'miscellany-lib)
 ; miscellany.el ends here

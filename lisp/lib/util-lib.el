@@ -17,14 +17,6 @@
         (quit-window 'kill)
         (select-window win-curr))))
 
-(defun find-file-alternatively ()
-  "Find file using alternative method.")
-
-(defun next-non-system-buffer ()
-  "Cycle through buffer whose name doesn't start with star '*'"
-  (interactive)
-  nil)
-
 (defun shell-command-stdin (cmd stdin &optional buf buf-error)
   "Execute CMD with STDIN as input."
   (shell-command
@@ -36,27 +28,6 @@
   (shell-command-to-string
    (format "echo %s | %s" (shell-quote-argument stdin) cmd)))
 
-(defun sequence-equal (seq1 seq2)
-  "Return t if all the corresponding elements of SEQ1 and SEQ2 are equal."
-  (let* ((seq1-p (sequencep seq1))
-	 (seq2-p (sequencep seq2)))
-    (cond
-     ((eq seq1 seq2) t)
-     ((and seq1-p seq2-p)
-      (let* ((len (length seq1)) rlt)
-	(if (eq len (length seq2))
-	    (progn
-	      (setq rlt t)
-	      (catch 'tag-break
-		(dotimes (i len)
-		  (unless (sequence-equal (elt seq1 i) (elt seq2 i))
-		    (setq rlt nil)
-		    (throw 'tag-break nil))))))
-	rlt))
-     ((not (or seq1-p seq2-p))
-      (equal seq1 seq2))
-     (t nil))))
-
 (defun wait-for-event (&optional n secs)
   "Wait for N (default 1) events for maximum SECS seconds."
   (or n (setq n 1))
@@ -65,25 +36,74 @@
       (push (read-event nil nil secs) rlt))
     (vconcat (nreverse rlt))))
 
-(defun put-back-event (events &optional force)
+(defun put-back-event (&optional events force)
   "Put events back to 'unread-command-events'"
-  (when events
-    (setq events (collect-non-nil-element events))
-    (when force
-      (setq events (mapcar (lambda (c) (cons t c)) events)))
-    (setq unread-command-events
-	  (append unread-command-events events))))
+  (or events (setq events (this-command-keys-vector)))
+  (setq events (collect-non-nil-element events))
+  (when force
+    (setq events (mapcar (lambda (c) (cons t c)) events)))
+  (setq unread-command-events
+	(append unread-command-events events)))
+
+;;; {{ Tools for sequence
+(defun sequence-element-filter (seq op)
+  "Parse the elements of the sequence SEQ recursively and apply 
+funtion OP to each element.
+
+OP must be a function take two argument: (OP el pos path) where
+el - the current element during the parsing
+pos - the index of 'el' in its parent element
+path - the ancestor elements that contains 'el' in the reverse order
+Note that (car path) is the parent elment of 'el'.  If OP return non-nil, 
+'el' will be parsed recursively. Otherwise 'el' will be dropped."
+  (when (and seq (functionp op))
+    (let* ((stack (list (cons seq nil)))
+	   stack-curr seq-curr seq-par seq-pos path)
+      (while stack
+	(setq stack-curr (pop stack)
+	      seq-curr (car stack-curr)
+	      seq-par (cadr stack-curr)
+	      seq-pos (cddr stack-curr))
+	(while (not (eq seq-par (car path))) (pop path))
+	(when (and (funcall op seq-curr seq-pos path) (sequencep seq-curr))
+	  (let* ((len (length seq-curr)))
+	    (dotimes (i len)
+	      (push (cons (elt seq-curr i)
+			  (cons seq-curr i)) stack))))
+	(push seq-curr path)))))
+
+
+(defun sequence-equal (seq1 seq2)
+  "Return t if all the corresponding elements of SEQ1 and SEQ2 are equal.
+Ignore the sequence type."
+  (if (eq seq1 seq2) t
+    (let* ((seq1-p (sequencep seq1))
+	   (seq2-p (sequencep seq2)))
+      (cond
+       ((and seq1-p seq2-p)
+	(let* ((len (length seq1)) rlt)
+	  (when (eq len (length seq2))
+	    (setq rlt t)
+	    (catch 'tag-break
+	      (dotimes (i len)
+		(unless (sequence-equal (elt seq1 i) (elt seq2 i))
+		  (setq rlt nil)
+		  (throw 'tag-break nil)))))
+	  rlt))
+       ((not (or seq1-p seq2-p))
+	(equal seq1 seq2))
+       (t nil)))))
 
 (defun collect-non-nil-element (seq)
   "Return the list of the non-nil element in sequence SEQ."
   (when (and seq (sequencep seq))
-    (let* ((rlt nil)
-	   (len (length seq))
-	   el-curr)
+    (let* ((len (length seq))
+	   rlt el-curr)
       (dotimes (i len)
 	(when (setq el-curr (elt seq i))
 	  (push el-curr rlt)))
       (nreverse rlt))))
+;;; }}
 
 ;;; {{ Excute form with no output.
 ;;     TODO : Can't shadow file saving message ("Write ...")
@@ -126,6 +146,7 @@
          (message-unmute)))))
 ;; }}
 
+;;; {{ Character predictor
 (defsubst char-space-p (c)
   "Return t if C is a space character."
   (eq ?\s (char-syntax c)))
@@ -156,14 +177,12 @@ at the begging of buffer."
 	     (eq ?\$ c)
 	     (eq ?\- c)
 	     (eq ?\@ c)))))
+;;; }}
 
 (defun path-at-point (&optional buffer start-position)
   "Return the (beg path end) position of the path if find."
   (interactive)
-  (let* ((pos-start nil)
-         (pos-beg nil)
-         (pos-mid nil)
-         (pos-end nil))
+  (let* (pos-start pos-beg pos-mid pos-end)
     (save-excursion
       (when buffer (set-buffer buffer))
       (setq pos-start (if start-position start-position (point)))
@@ -240,7 +259,6 @@ at the begging of buffer."
                           ch-curr (char-after pos-curr))
                   (setq pos-end pos-curr)
                   (throw 'tag-break nil))))))))
-    ;; (message "%s %s %s" pos-beg pos-mid pos-end)
     (list pos-beg pos-mid pos-end)))
 
 (provide 'util-lib)
