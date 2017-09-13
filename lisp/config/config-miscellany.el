@@ -7,8 +7,6 @@
   (require 'hook-code)
   (require 'keymap-code))
 
-(require 'saveplace)
-(setq-default save-place t)
 
 (setq ;; Don't use lock files. (Don't create .#xxxx file)
       create-lockfiles nil
@@ -24,9 +22,14 @@
       ad-redefinition-action 'accept
       ;; Enable primary selected (mid mouse button selection)
       x-select-enable-primary t
-      ;; 
+      ;; File to store saveplace configuration
       save-place-file (expand-file-name "places" config-saveplace-directory)
+      ;; File to store smex configuration
+      smex-save-file (expand-file-name "smex-items" config-smex-directory)
       )
+
+(require 'saveplace)
+(setq-default save-place t)
 
 ;; {{ Enable X selection in tty terminal
 (code-add-advice

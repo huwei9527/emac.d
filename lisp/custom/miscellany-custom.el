@@ -6,6 +6,9 @@
 (code-defdir-config "saveplace"
   "The directory to store 'saveplace' config files. (place)")
 
+(code-defdir-config "smex"
+  "The directory to store 'smex' config files. (smex-items)")
+
 (defvar double-events-delay 0.2
   "Max time interval between two double events.")
 

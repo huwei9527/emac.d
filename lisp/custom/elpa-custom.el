@@ -13,6 +13,7 @@
     ;; ivy-hydra
     ;; fuzzy search sortting
     flx
+    smex
     ;; ivy minibuffer completion and counsel utils
     counsel
     ;; show keymap menu
