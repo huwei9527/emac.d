@@ -13,7 +13,8 @@
       ;; Repeat type C-SPC after C-u C-SPC will cycle the mark ring.
       set-mark-command-repeat-pop t
       ;; Set the default abbrev file.
-      abbrev-file-name (expand-file-name "abbrev-defs" config-abbrev-directory)
+      abbrev-file-name
+      (expand-file-name "abbrev-defs" config-abbrev-directory)
       ;; Do not allow duplicated item.
       history-delete-duplicates t
       ;; Creating new file needs confirmation.
@@ -23,11 +24,17 @@
       ;; Enable primary selected (mid mouse button selection)
       x-select-enable-primary t
       ;; File to store saveplace configuration
-      save-place-file (expand-file-name "places" config-saveplace-directory)
+      save-place-file
+      (expand-file-name "places" config-saveplace-directory)
       ;; File to store smex configuration
-      smex-save-file (expand-file-name "smex-items" config-smex-directory)
+      smex-save-file
+      (expand-file-name "smex-items" config-smex-directory)
+      ;; File to store ido configuration
+      ido-save-directory-list-file
+      (expand-file-name "ido.last" config-ido-directory)
       )
 
+;;; save exit point
 (require 'saveplace)
 (setq-default save-place t)
 

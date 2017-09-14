@@ -9,6 +9,9 @@
 (code-defdir-config "smex"
   "The directory to store 'smex' config files. (smex-items)")
 
+(code-defdir-config "ido"
+  "The directory to store 'ido' config files. (id.last)")
+
 (defvar double-events-delay 0.2
   "Max time interval between two double events.")
 
