@@ -12,6 +12,9 @@
 (code-defdir-config "ido"
   "The directory to store 'ido' config files. (id.last)")
 
+(code-defdir-config "recentf"
+  "The directory to store 'recentf' config files. (recentf)")
+
 (defvar double-events-delay 0.2
   "Max time interval between two double events.")
 
