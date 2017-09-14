@@ -8,7 +8,7 @@
 ;; (setq edebug-all-defs t)
 ;; (setq edebug-all-forms t)
 ;; (switch-to-buffer "*ShowFace*")
-(switch-to-buffer-other-window "*Messages*") (call-interactively 'other-window)
+;; (switch-to-buffer-other-window "*Messages*") (call-interactively 'other-window)
 ;; (find-file "test.txt")
 ;; (split-window-right)
 

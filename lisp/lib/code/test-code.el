@@ -3,7 +3,8 @@
 (defmacro test-debug (&rest body)
   "If 'test-debug-flag' is t, execute BODY. Otherwise, return nil."
   (declare (indent defun))
-  (if test-debug-flag
+  (if (and (boundp 'test-debug-flag)
+	   test-debug-flag)
       `(progn ,@body)
     nil))
 

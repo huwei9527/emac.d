@@ -15,6 +15,7 @@
 (require 'file-lib)
 (require 'company-custom)
 (require 'miscellany-custom)
+(require 'desktop-custom)
 
 (dolist (dir config-directory-list) (make-directory-safe (symbol-value dir)))
 

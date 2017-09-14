@@ -17,11 +17,15 @@
 /test1.txt
 /test.pdf
 /test_compile.el
-/company-statistics-cache.el
 
 # Configure file
 /recentf
 /tramp
+/abbrev_defs
+/places
+/smex-items
+/ido.last
+/company-statistics-cache.el
 
 # Don't ignore self
 !.gitignore

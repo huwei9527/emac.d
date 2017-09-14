@@ -37,7 +37,8 @@
       recentf-save-file
       (expand-file-name "recentf" config-recentf-directory)
       recentf-max-saved-items 1024
-      recentf-exclude '("\\.el\\.gz\\'")
+      recentf-exclude `("\\.el\\.gz\\'"
+			,config-packages-directory)
       ;; }}
       )
 
@@ -62,21 +63,22 @@
 (set-face-attribute 'default nil :height 120)
 
 ;;; Read only file.
-(add-hook 'find-file-hook
-          (lambda (&rest)
-            "Automatically set files in list read-only."
-            (catch 'tag-break
-              (when (uneditable-file-tail-regexp-p (buffer-file-name))
-                (read-only-mode 1)
-                (throw 'tag-break nil))
-              (dolist (dir file-custom-read-only-directory-list)
-                (when (file-in-directory-p buffer-file-name dir)
-                  (read-only-mode 1)
-                  (throw 'tag-break nil)))
-              (dolist (fn file-custom-read-only-file-list)
-                (when (string= buffer-file-name (expand-file-name fn))
-                  (read-only-mode 1)
-                  (throw 'tag-break nil))))))
+(code-add-hook
+ (find-file-hook)
+ (lambda (&rest)
+   "Automatically set files in list read-only."
+   (catch 'tag-break
+     (when (uneditable-file-tail-regexp-p (buffer-file-name))
+       (read-only-mode 1)
+       (throw 'tag-break nil))
+     (dolist (dir file-custom-read-only-directory-list)
+       (when (file-in-directory-p buffer-file-name dir)
+	 (read-only-mode 1)
+	 (throw 'tag-break nil)))
+     (dolist (fn file-custom-read-only-file-list)
+       (when (string= buffer-file-name (expand-file-name fn))
+	 (read-only-mode 1)
+	 (throw 'tag-break nil))))))
 
 ;; Ignore certain error.
 (setq command-error-function

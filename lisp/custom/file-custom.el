@@ -11,7 +11,7 @@
 		     "(*)")
 
 (code-defregexp-head auto-kill-buffer
-		     "(*Directory)")
+		     "(*Warning)")
 
 (defconst file-custom-read-only-file-list
   `("~/Projects/emacs.d/test1.txt")

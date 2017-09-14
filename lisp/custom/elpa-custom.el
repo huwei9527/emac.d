@@ -34,6 +34,7 @@
     company-statistics
     company-ycmd
     browse-kill-ring
+    workgroups2
     )
   "Package to be install.")
 
