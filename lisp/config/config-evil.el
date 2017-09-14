@@ -11,6 +11,8 @@
 (require 'util-lib)
 
 (eval-when-compile
+  (require 'keymap-code)
+  (require 'hook-code)
   (require 'evil-code))
 
 ;;; Set the custom evil initial state for major mode.
@@ -94,12 +96,6 @@
 (code-defkey-evil-global
  (motion insert)
  "C-e" move-end-of-line
- ;; "M-1" delete-other-windows
- ;; "M-2" split-window-below
- ;; "M-3" split-window-right
- ;; "M-4" other-window
- ;; "M-5" select-other-window
- ;; "M-6" quit-other-window
  )
 
 ;; Evil all state keymap
@@ -107,7 +103,7 @@
 ;; space 'SPC' leader keymap
 (code-defkey-evil-space-key
  nil
- "SPC" scroll-other-window
+ "SPC" scroll-other-window-mode
  "k" scroll-other-window-up
 )
 

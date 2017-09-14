@@ -3,10 +3,15 @@
 (require 'file-custom)
 (require 'sequence-lib)
 
-(defun scroll-other-window-up ()
-  "Scroll other window up"
+(defun scroll-other-window-up-one-line ()
+  "Scroll up other window by one line."
   (interactive)
-  (scroll-other-window '-))
+  (scroll-other-window 1))
+
+(defun scroll-other-window-down-one-line ()
+  "Scroll down other window by one line."
+  (interactive)
+  (scroll-other-window -1))
 
 (defun shell-command-stdin (cmd stdin &optional buf buf-error)
   "Execute CMD with STDIN as input."
