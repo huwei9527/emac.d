@@ -121,7 +121,7 @@
 
 ;; mode-specific-map: 'c-c'
 (code-defkey-ctl-c
- "SPC" ace-jump-mode)
+ [unknown] nil)
 
 ;; global key bindings.
 (code-defkey-global

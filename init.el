@@ -21,6 +21,7 @@
   (require 'config-auto-save)
   (require 'config-evil)
   (require 'config-ace-link)
+  (require 'config-ace-jump-mode)
   (require 'config-ivy)
   (require 'config-ffip)
   (require 'config-rainbow-delimiters)
