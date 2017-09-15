@@ -34,7 +34,10 @@
     company-statistics
     company-ycmd
     browse-kill-ring
-    workgroups2
+    workgroups
+    ;; workgroups2
+    ace-jump-mode
+    ace-link
     )
   "Package to be install.")
 

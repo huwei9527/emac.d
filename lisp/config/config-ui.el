@@ -2,6 +2,9 @@
 
 (require 'ui-custom)
 
+;; Set default font size in gui frame
+(set-face-attribute 'default nil :height 120)
+
 ;; Hide GUI.
 (and (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (and (fboundp 'tool-bar-mode) (tool-bar-mode -1))

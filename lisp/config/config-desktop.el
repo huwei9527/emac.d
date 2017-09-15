@@ -48,7 +48,7 @@
 
 (when (display-graphic-p)
   (desktop-save-mode 1)
-  (workgroups-mode 1)
+  ;; (workgroups-mode 1)
   )
 
 (provide 'config-desktop)

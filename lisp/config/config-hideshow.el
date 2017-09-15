@@ -4,7 +4,6 @@
   (require 'code))
 
 (require 'hideshow-lib)
-;; (require 'hideshow-org)
 
 (code-add-hook
  (c-mode-common-hook
@@ -12,7 +11,6 @@
   java-mode-hook
   lisp-mode-hook)
  hs-minor-mode
- ;; hs-org/minor-mode
  )
 
 (code-eval-after-load

@@ -11,7 +11,6 @@
 
 (defvar evil-custom-initial-state-alist
   `((messages-buffer-mode . motion)
-    ;; (help-mode . motion)
     (package-menu-mode . motion)
     (finder-mode . motion)
     (TeX-error-overview-mode . motion)

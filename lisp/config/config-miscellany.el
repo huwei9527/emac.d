@@ -61,9 +61,6 @@
 ;;; }}
 
 
-;; Set default font size in gui frame
-(set-face-attribute 'default nil :height 120)
-
 ;;; Read only file.
 (code-add-hook
  (find-file-hook)
@@ -121,6 +118,10 @@
 ;; goto-map: 'M-g'
 (code-defkey-meta-g
  "a" code-test-key-binding)
+
+;; mode-specific-map: 'c-c'
+(code-defkey-ctl-c
+ "SPC" ace-jump-mode)
 
 ;; global key bindings.
 (code-defkey-global
