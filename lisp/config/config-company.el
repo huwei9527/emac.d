@@ -28,15 +28,15 @@
    "RET" company-newline
    [tab] company-complete-selection
    [return] company-newline)
+ ;; company statistic
+ (setq company-statistics-file
+       (expand-file-name "company-statistics-cache.el"
+			 config-company-directory))
  (code-add-hook
   (company-mode-hook)
   company-statistics-mode)
  (setq company-require-match nil))
 
-;; company statistic
-(setq company-statistics-file
-      (expand-file-name "company-statistics-cache.el"
-			config-company-directory))
 
 
 (provide 'config-company)

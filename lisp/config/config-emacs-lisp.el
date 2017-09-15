@@ -8,18 +8,16 @@
  lisp-mode
  (code-defkey-ctl-c-local
   emacs-lisp-mode-map
-  "c" checkdoc))
-
-;; eldoc-mode
-(code-add-hook (emacs-lisp-mode-hook) eldoc-mode)
-
-;; hightlight current sexp
-(code-add-hook
- (emacs-lisp-mode-hook
-  lisp-interaction-mode-hook)
- hl-sexp-mode
- company-mode
- )
+  "c" checkdoc)
+ ;; eldoc-mode
+ (code-add-hook (emacs-lisp-mode-hook) eldoc-mode)
+ ;; hightlight current sexp
+ (code-add-hook
+  (emacs-lisp-mode-hook
+   lisp-interaction-mode-hook)
+  hl-sexp-mode
+  company-mode
+  ))
 
 ;;; company
 (code-eval-after-load
@@ -28,7 +26,7 @@
   (emacs-lisp-mode-hook
    lisp-interaction-mode-hook)
   (lambda ()
-    (setq company-backends
+    (set (make-local-variable 'company-backends)
 	  '((company-capf company-dabbrev-code company-keywords))))))
 
 (provide 'config-emacs-lisp)

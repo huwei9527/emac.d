@@ -2,10 +2,19 @@
 
 (require 'desktop-custom)
 (eval-when-compile
-  (require 'code))
+  (require 'hook-code)
+  (require 'code)
+  (require 'silence-code))
 
 (code-eval-after-load
  desktop
+ ;; (code-add-advice
+ ;;  (desktop-read)
+ ;;  :around
+ ;;  (lambda (orig-fun &rest args)
+ ;;    (code-silence-function
+ ;;     (delay-warning)
+ ;;     (apply orig-fun args))))
  (setq desktop-path `(,config-desktop-directory)
        desktop-base-file-name "emacs-desktop"
        desktop-base-lock-name "emacs-desktop-lock"
@@ -15,6 +24,8 @@
        ;; There is a bug when opening gui emacs after saving
        ;; desktop in tty emacs. Use workgroups2 to reload frames
        desktop-restore-frames nil
+       ;; desktop-restore-in-current-display t
+       ;; desktop-restore-forces-onscreen t
        desktop-globals-to-save
        `(file-name-history
 	 minibuffer-history
@@ -37,7 +48,8 @@
 
 (when (display-graphic-p)
   (desktop-save-mode 1)
-  (workgroups-mode 1))
+  (workgroups-mode 1)
+  )
 
 (provide 'config-desktop)
 ;;; config-desktop.el ends here

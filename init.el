@@ -25,11 +25,12 @@
   (require 'config-rainbow-delimiters)
   (require 'config-which-key)
   (require 'config-paredit)
-  (require 'config-emacs-lisp)
   (require 'config-hideshow)
   (require 'config-company)
   (require 'config-miscellany)
   (require 'config-desktop)
+  (require 'config-emacs-lisp)
+  (require 'config-tex)
   (require 'test)
   )
 

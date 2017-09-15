@@ -27,7 +27,7 @@
   ))
 
 (defmacro code-silence (&rest body)
-  "Run FORM with no message."
+  "Run BODY with no message."
   `(progn
      (let* ((standard-output nil) ;;(message-log-max nil)
 	    )
@@ -36,6 +36,15 @@
            (with-no-warnings
              ,@body)
          (code-silence-off)))))
+
+(defmacro code-silence-function (funs &rest body)
+  "Run BODY when setting FUNS to ignore"
+  `(progn
+     (code-add-advice-ignore ,funs)
+     (unwind-protect
+	 (progn
+	   ,@body)
+       (code-remove-advice-ignore ,funs))))
 
 (provide 'silence-code)
 ;;; silence-code.el ends here

@@ -13,6 +13,8 @@
  `((,(kbd "k") . scroll-other-window-down-one-line)
    (,(kbd "j") . scroll-other-window-up-one-line)
    (,(kbd "l") . scroll-other-window-down)
+   (,(kbd "n") . beginning-of-buffer-other-window)
+   (,(kbd "m") . end-of-buffer-other-window)
    (,(kbd "SPC") . scroll-other-window-with-space)))
 
 (code-defcmd-double-events

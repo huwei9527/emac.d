@@ -14,6 +14,7 @@
     ;; (help-mode . motion)
     (package-menu-mode . motion)
     (finder-mode . motion)
+    (TeX-error-overview-mode . motion)
     )
   "The alist of (mode . state) for evil to set the initial state.")
 

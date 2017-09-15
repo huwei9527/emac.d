@@ -38,6 +38,8 @@
       (expand-file-name "recentf" config-recentf-directory)
       recentf-max-saved-items 1024
       recentf-exclude `("\\.el\\.gz\\'"
+			"\\.\\(log\\|aux\\)\\'"
+			"_.*"
 			,config-packages-directory)
       ;; }}
       )

@@ -17,7 +17,7 @@
   :type 'integer
   :group 'smart-auto-save)
 
-(defcustom smart-auto-save-mute nil
+(defcustom smart-auto-save-mute t
   "Don't show message when save buffer."
   :type 'boolean
   :group 'smart-auto-save)

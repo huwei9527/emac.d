@@ -132,6 +132,7 @@ in byte compilation."
        ,(code-progn
 	 (dolist (form body)
 	   (code-item form)))))))
+(code-record-macro code-eval-after-load)
 ;; }}
 
 (defmacro code-define-regexp (name fil &optional type)

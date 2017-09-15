@@ -29,7 +29,7 @@
   "The list of major mode which will be skipped when 'next-buffer'")
 
 (defvar auto-killed-mode-list
-  '(dired-mode help-mode)
+  '(dired-mode help-mode special-mode)
   "The list of major mode which will be killed when 'close-other-window'")
 
 ;;; {{ X selection shell tool
