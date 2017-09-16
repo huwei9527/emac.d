@@ -38,6 +38,7 @@
     ;; workgroups2
     ace-jump-mode
     ace-link
+    flyspell-lazy
     )
   "Package to be install.")
 

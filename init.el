@@ -19,6 +19,7 @@
   (require 'config-elpa)
   (require 'config-ui)
   (require 'config-auto-save)
+  (require 'config-spell)
   (require 'config-evil)
   (require 'config-ace-link)
   (require 'config-ace-jump-mode)

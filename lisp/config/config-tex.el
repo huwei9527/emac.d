@@ -9,11 +9,17 @@
  (setq TeX-auto-save t
        TeX-parse-self t
        TeX-electric-math (cons "$" "$")
-       LaTeX-electric-left-right-brace t)
+       ;; LaTeX-electric-left-right-brace t
+       ;; TeX-electric-sub-and-superscript t
+       Tex-fold-auto t
+       TeX-fold-preserve-comments)
  (code-add-hook
   (TeX-mode-hook)
-  company-mode
+  LaTeX-math-mode
+  TeX-fold-mode
+  prettify-symbols-mode
   (lambda ()
+    (company-mode-on)
     (set (make-local-variable 'company-backends)
 	 '((company-auctex-macros company-auctex-symbols
 				  company-auctex-environments)

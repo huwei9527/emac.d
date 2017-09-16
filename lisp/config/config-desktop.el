@@ -46,9 +46,13 @@
        (expand-file-name "emacs-workgroups" config-desktop-directory)
        wg-mode-line-display-on nil))
 
+
 (when (display-graphic-p)
   (desktop-save-mode 1)
   ;; (workgroups-mode 1)
+  (setq wg-file (expand-file-name "emacs-wgs" config-desktop-directory))
+  (require 'workgroups)
+  (workgroups-mode 1)
   )
 
 (provide 'config-desktop)
