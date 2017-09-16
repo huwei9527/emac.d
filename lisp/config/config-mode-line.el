@@ -91,6 +91,8 @@
                "[" 'mode-line-position "]"
                ;; which-func and global-mode-string
                'mode-line-misc-info
+	       ;; temporary minor mode tag
+	       'mode-line-temporary-mode
                ;; ending character "-"
                'mode-line-end-spaces
                ))

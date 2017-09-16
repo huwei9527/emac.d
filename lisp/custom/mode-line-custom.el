@@ -25,6 +25,10 @@
   '((t (:inherit evil-custom-insert-state-tag)))
   "The face for overwrite tag in mode line")
 
+(defface mode-line-temporary-mode-tag
+  '((t (:inherit red-foreground)))
+  "The face for temporary mode tag in mode line")
+
 (defvar mode-line-overwrite-mode
   `(overwrite-mode
     ,(propertize "+"
@@ -75,6 +79,12 @@ mouse-1: Display Line and Column Mode Menu"))))))))
     (:eval (format "(%s)" (substring vc-mode 1))))
   "VC mode in mode line.")
 (put 'mode-line-vc-mode 'risky-local-variable t)
+
+(defvar mode-line-temporary-mode
+  `(overriding-local-map
+    (:propertize "*" face mode-line-temporary-mode-tag))
+  "Temporary mode in mode line")
+(put 'mode-line-temporary-mode 'risky-local-variable t)
 
 
 (provide 'mode-line-custom)
