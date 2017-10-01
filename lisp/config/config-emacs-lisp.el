@@ -4,6 +4,8 @@
   (require 'hook-code)
   (require 'keymap-code))
 
+(require 'util-lib)
+
 (code-eval-after-load
  lisp-mode
  (code-defkey-ctl-c-local
@@ -13,21 +15,15 @@
  (code-add-hook (emacs-lisp-mode-hook) eldoc-mode)
  ;; hightlight current sexp
  (code-add-hook
-  (emacs-lisp-mode-hook
-   lisp-interaction-mode-hook)
+  (emacs-lisp-mode-hook)
   hl-sexp-mode
-  company-mode
-  ))
-
-;;; company
-(code-eval-after-load
- company
- (code-add-hook
-  (emacs-lisp-mode-hook
-   lisp-interaction-mode-hook)
+  ;; company-mode
   (lambda ()
-    (set (make-local-variable 'company-backends)
-	  '((company-capf company-dabbrev-code company-keywords))))))
+    (unless (scratch-buffer-p)
+      (company-mode 1)
+      (set (make-local-variable 'company-backends)
+	   '((company-capf company-abbrev-code company-keywords)))))
+  ))
 
 (provide 'config-emacs-lisp)
 

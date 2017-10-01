@@ -4,8 +4,7 @@
   (require 'hook-code))
 
 (code-add-hook
- (prog-mode-hook
-  lisp-interaction-mode-hook)
+ (prog-mode-hook)
  rainbow-delimiters-mode)
 
 (provide 'config-rainbow-delimiters)

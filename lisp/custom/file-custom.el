@@ -19,7 +19,8 @@
 automatically.")
 
 (defconst file-custom-read-only-directory-list
-  `(,config-packages-directory)
+  `(,config-packages-directory
+    "~/Projects/linux/")
   "Read only directory list. When open file in these directory, set the buffer
 read only automatically.")
 
@@ -30,7 +31,11 @@ read only automatically.")
   "Max length of path (url, file path, etc) string.")
 
 (defvar file-custom-invalid-path-char
-  '(?\" ?\' ?\( ?\) ?\< ?\> ?\[ ?\] ?\` ?\{ ?\} ?\C-?)
+  '(?\" ?\'
+	?\( ?\)
+	?\< ?\>
+	?\[ ?\] ?\`
+	?\{ ?\} ?\C-?)
   "Invalid path constituent character.")
 
 (provide 'file-custom)

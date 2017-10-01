@@ -38,7 +38,10 @@
        `(help-mode
 	 dired-mode
 	 Info-mode
-	 package-menu-mode)))
+	 package-menu-mode)
+       desktop-files-not-to-save
+       "\\(^/[^/:]*:\\|(ftp)$\\|\\.log\\'\\)"
+       ))
 
 (code-eval-after-load
  workgroups2
@@ -48,12 +51,12 @@
 
 
 (when (display-graphic-p)
-  (desktop-save-mode 1)
+  ;; (desktop-save-mode 1)
   ;; (workgroups-mode 1)
   (setq wg-file (expand-file-name "emacs-wgs" config-desktop-directory)
 	wg-mode-line-on nil)
-  (require 'workgroups)
-  (workgroups-mode 1)
+  ;; (require 'workgroups)
+  ;; (workgroups-mode 1)
   )
 
 (provide 'config-desktop)

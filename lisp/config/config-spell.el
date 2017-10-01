@@ -15,12 +15,13 @@
 (code-add-hook
  (prog-mode-hook)
  (lambda ()
-   (set (make-local-variable 'ispell-extra-args)
-	'("--sug-mode=ultra"
-	  "--run-together"
-	  "--run-together-limit=16"
-	  "--run-together-min=2"))
-   (flyspell-prog-mode)))
+   (unless (scratch-buffer-p)
+     (set (make-local-variable 'ispell-extra-args)
+	  '("--sug-mode=ultra"
+	    "--run-together"
+	    "--run-together-limit=16"
+	    "--run-together-min=2"))
+     (flyspell-prog-mode))))
 (code-add-hook
  (text-mode-hook)
  flyspell-mode)

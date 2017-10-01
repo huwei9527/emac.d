@@ -7,6 +7,19 @@
 
 (require 'test-custom)
 
+
+(defmacro code-trace-function (funs)
+  "Trace function."
+  (code-progn
+   (dolist (fun funs)
+     (code-item
+      `(code-add-advice (,fun) :before
+			(lambda (&rest args)
+			  (message "Before %s" ,(symbol-name fun))))
+      `(code-add-advice (,fun) :after
+			(lambda (&rest args)
+			  (message "After %s" ,(symbol-name fun))))))))
+
 (defmacro display-in-help-window (buf-name &rest arg-forms)
   "Show content in help buffer BUF-NAME."
   `(with-help-window ,buf-name

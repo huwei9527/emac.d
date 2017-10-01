@@ -8,7 +8,8 @@
         )
   "Major mode list which disable line number.")
 
-(require 'ui-code)
+(eval-when-compile
+  (require 'ui-code))
 
 (code-defface-basic-color)
 

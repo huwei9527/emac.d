@@ -3,6 +3,10 @@
 (require 'file-custom)
 (require 'sequence-lib)
 
+(defun scratch-buffer-p (&optional buf)
+  "Detect whether BUF is *scratch* buffer."
+  (string= (buffer-name buf) "*scratch*"))
+
 (defun scroll-other-window-up-one-line ()
   "Scroll up other window by one line."
   (interactive)

@@ -33,7 +33,8 @@
 	    (throw 'tag-break nil)))))))
 
 (defun buffer-live-other-window-p (&optional window)
-  ""
+  "Detect whether buffer in WINDOW is also displayed in other live
+window."
   (or window (setq window (selected-window)))
   (when (window-live-p window)
     (let* ((buf (window-buffer window))

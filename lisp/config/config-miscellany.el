@@ -38,8 +38,8 @@
       (expand-file-name "recentf" config-recentf-directory)
       recentf-max-saved-items 1024
       recentf-exclude `("\\.el\\.gz\\'"
-			"\\.\\(log\\|aux\\)\\'"
-			"_.*"
+			"\\.\\(log\\|aux\\|rip\\)\\'"
+			"\\`_.*"
 			,config-packages-directory)
       ;; }}
       )
@@ -137,6 +137,10 @@
  )
 
 ;; (display-time-mode 1)
+(setq-default auto-fill-function 'do-auto-fill)
+
+;; add texlive info node
+(add-to-list 'Info-directory-list "/usr/local/texlive/2017/texmf-dist/doc/info")
 
 (provide 'config-miscellany)
 ; config-miscellany.el ends here

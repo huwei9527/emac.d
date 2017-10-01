@@ -31,7 +31,7 @@
   (require 'config-hideshow)
   (require 'config-company)
   (require 'config-miscellany)
-  (require 'config-desktop)
+  ;; (require 'config-desktop)
   (require 'config-emacs-lisp)
   (require 'config-tex)
   (require 'test)

@@ -39,6 +39,7 @@
     ace-jump-mode
     ace-link
     flyspell-lazy
+    popwin
     )
   "Package to be install.")
 
