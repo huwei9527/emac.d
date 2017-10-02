@@ -47,20 +47,35 @@ window."
 	      (throw 'tag-break t)))))
       rlt)))
 
+(defun temporary-buffer-p (&optional buf)
+  "Detected whether BUF is temporary buffer."
+  (let* ((buf-name (buffer-name buf)))
+    (or (memq major-mode auto-killed-mode-list)
+	(auto-kill-buffer-head-regexp-p buf-name))))
+
 (defun close-other-window ()
   "Close buffer in other window."
   (interactive)
-  (unless (one-window-p)
-    (save-selected-window
-      (let* ((old-buffer (current-buffer))
-	     buf-name)
-	(other-window 1)
-	(unless (buffer-live-other-window-p)
-	  (if (or (memq major-mode auto-killed-mode-list)
-		  (and (setq buf-name (buffer-name))
-		       (auto-kill-buffer-head-regexp-p buf-name)))
-	      (quit-window 'kill)
-	    (quit-window)))))))
+  (unless (and close-other-window-function
+	       (funcall close-other-window-function))
+    (unless (one-window-p)
+      (save-selected-window
+	(let* ((old-buffer (current-buffer))
+	       buf-name)
+	  (other-window 1)
+	  (let* ((prevs (window-prev-buffers)))
+	    ;; If the buffer is the last one in the window, delete the window
+	    (if (or (not (or prevs (window-next-buffers)))
+		    (and prevs (eq (length prevs) 1)
+			 (eq (caar prevs) (current-buffer))))
+		(delete-window)
+	      (let* ((old-win (selected-window)))
+		(if (temporary-buffer-p)
+		    (quit-window 'kill)
+		  (quit-window))
+		(while (and (window-live-p old-win)
+			    (temporary-buffer-p))
+		  (quit-window 'kill))))))))))
 
 (code-define-temporary-minor-mode
  switch-window

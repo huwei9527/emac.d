@@ -7,6 +7,10 @@
   "Detect whether BUF is *scratch* buffer."
   (string= (buffer-name buf) "*scratch*"))
 
+(defun message-buffer-p (&optional buf)
+  "Detect whether BUF is *Message* buffer."
+  (string= (buffer-name buf) "*Messages*"))
+
 (defun scroll-other-window-up-one-line ()
   "Scroll up other window by one line."
   (interactive)

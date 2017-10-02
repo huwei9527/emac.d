@@ -28,6 +28,9 @@
   '(dired-mode help-mode Info-mode)
   "The list of major mode which will be skipped when 'next-buffer'")
 
+(defvar-local close-other-window-function nil
+  "The function called for to re-arrange the window layout.")
+
 (defvar auto-killed-mode-list
   '(dired-mode help-mode special-mode Custom-mode)
   "The list of major mode which will be killed when 'close-other-window'")

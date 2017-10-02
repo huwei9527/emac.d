@@ -7,6 +7,17 @@
 
 (require 'test-custom)
 
+(defun test-message ()
+  ""
+  (interactive)
+  (save-selected-window
+    (other-window 1)
+    (message "%s\n%s\n"
+	     (window-prev-buffers)
+	     (window-next-buffers))))
+(code-defkey-ctl-c
+ "C-t" test-message)
+
 
 (defmacro code-trace-function (funs)
   "Trace function."
