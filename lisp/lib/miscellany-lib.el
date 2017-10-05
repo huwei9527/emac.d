@@ -49,33 +49,23 @@ window."
 
 (defun temporary-buffer-p (&optional buf)
   "Detected whether BUF is temporary buffer."
-  (let* ((buf-name (buffer-name buf)))
+  (or buf (setq buf (current-buffer)))
+  (with-current-buffer buf
     (or (memq major-mode auto-killed-mode-list)
-	(auto-kill-buffer-head-regexp-p buf-name))))
+	(auto-kill-buffer-head-regexp-p (buffer-name)))))
 
 (defun close-other-window ()
   "Close buffer in other window."
   (interactive)
-  (unless (and close-other-window-function
-	       (funcall close-other-window-function))
-    (unless (one-window-p)
-      (save-selected-window
-	(let* ((old-buffer (current-buffer))
-	       buf-name)
-	  (other-window 1)
-	  (let* ((prevs (window-prev-buffers)))
-	    ;; If the buffer is the last one in the window, delete the window
-	    (if (or (not (or prevs (window-next-buffers)))
-		    (and prevs (eq (length prevs) 1)
-			 (eq (caar prevs) (current-buffer))))
-		(delete-window)
-	      (let* ((old-win (selected-window)))
-		(if (temporary-buffer-p)
-		    (quit-window 'kill)
-		  (quit-window))
-		(while (and (window-live-p old-win)
-			    (temporary-buffer-p))
-		  (quit-window 'kill))))))))))
+  (unless (one-window-p)
+    (let* ((win-other (next-window)) closed)
+      ;; major-mode
+      (when close-other-window-function
+	(setq closed (funcall close-other-window-function)))
+      ;; general
+      (when (window-live-p win-other)
+	(save-selected-window
+	  (close-window 'temporary-buffer-p closed win-other))))))
 
 (code-define-temporary-minor-mode
  switch-window
@@ -96,9 +86,9 @@ window."
 (code-defcmd-double-events
  super-split-window
  "1 - 'split-window-right' 2 - 'split-window-below'"
- ((split-window-right))
  ((save-selected-window
-    (ivy-switch-buffer-other-window))))
+    (ivy-switch-buffer-other-window)))
+ ((split-window-right))) 
 
 (code-defcmd-double-events
  super-switch-window

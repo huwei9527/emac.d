@@ -7,14 +7,30 @@
 
 (require 'test-custom)
 
+(defun test-message-sibling ()
+  ""
+  (let* ((ch (window-child (window-parent))))
+    (while ch
+      (message "%s" ch)
+      (setq ch (window-next-sibling ch)))))
+
+(defun test-message-window-parameter ()
+  ""
+  (message "%s" (window-parameters)))
+
 (defun test-message ()
   ""
   (interactive)
   (save-selected-window
     (other-window 1)
-    (message "%s\n%s\n"
+    (message "%s\np: %s\nn: %s"
+	     (selected-window)
 	     (window-prev-buffers)
-	     (window-next-buffers))))
+	     (window-next-buffers))
+    (test-message-sibling)
+    (test-message-window-parameter)
+    ))
+
 (code-defkey-ctl-c
  "C-t" test-message)
 
@@ -30,6 +46,7 @@
       `(code-add-advice (,fun) :after
 			(lambda (&rest args)
 			  (message "After %s" ,(symbol-name fun))))))))
+(code-record-macro code-trace-function)
 
 (defmacro display-in-help-window (buf-name &rest arg-forms)
   "Show content in help buffer BUF-NAME."

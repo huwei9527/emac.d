@@ -6,6 +6,9 @@
   (require 'hook-code)
   (require 'keymap-code))
 
+(require 'tex-lib)
+(require 'test-lib)
+
 (code-eval-after-load
  tex
  (setq TeX-auto-save t
@@ -31,7 +34,8 @@
   reftex-mode
   (lambda ()
     ;; (code-define-key LaTeX-mode-map nil "$" self-insert-command)
-    (company-mode-on)
+    (company-mode 1)
+    (setq close-other-window-function 'tex-close-other-window)
     ;; (setq TeX-raise-frame-function #'x-focus-frame)
     (set (make-local-variable 'company-backends)
 	 '((company-auctex-macros company-auctex-symbols
@@ -39,6 +43,24 @@
 	   company-auctex-bibs
 	   company-auctex-labels
 	   (company-dabbrev company-keywords))))))
+
+(code-eval-after-load
+ tex-buf
+ (code-trace-function
+  (TeX-error
+   ;; TeX-warning
+   ;; TeX-error-overview
+   ;; TeX-LaTeX-sentinel
+   ))
+ (code-add-hook
+  (TeX-after-compilation-finished-functions)
+  tex-close-window-after-compilation-finished)
+ (code-add-advice
+  (TeX-command-run-all
+   TeX-command-buffer
+   TeX-command-master)
+  :before
+  tex-close-window-after-tex-command-advice))
 
 (code-eval-after-load
  evil

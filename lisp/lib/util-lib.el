@@ -5,11 +5,35 @@
 
 (defun scratch-buffer-p (&optional buf)
   "Detect whether BUF is *scratch* buffer."
+  (or buf (setq buf (current-buffer)))
   (string= (buffer-name buf) "*scratch*"))
 
 (defun message-buffer-p (&optional buf)
   "Detect whether BUF is *Message* buffer."
+  (or buf (setq buf (current-buffer)))
   (string= (buffer-name buf) "*Messages*"))
+
+(defun close-window (&optional kill first window)
+  "Close the buffer in WINDOW using predictor KILL."
+  (or window (setq window (selected-window)))
+  (let* (buf kill-or-bury closed)
+    (catch 'tag-bury
+      (while (window-prev-buffers window)
+	(setq buf (window-buffer window)
+	      kill-or-bury (cond
+			    ((eq kill nil) nil)
+			    ((eq kill t) t)
+			    ((fboundp kill) (funcall kill buf))
+			    (t (error "Wrong type of predictor."))))
+	(if (and first (not kill-or-bury))
+	    (throw 'tag-bury t)
+	  (quit-window kill-or-bury window)
+	  (or closed (setq closed t)))
+	(or first (setq first t))))
+    (when (and (window-live-p window)
+	       (not (window-prev-buffers window)))
+      (delete-window window))
+    closed))
 
 (defun scroll-other-window-up-one-line ()
   "Scroll up other window by one line."
