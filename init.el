@@ -34,6 +34,7 @@
   ;; (require 'config-desktop)
   (require 'config-emacs-lisp)
   (require 'config-tex)
+  (require 'config-python)
   (require 'test)
   )
 

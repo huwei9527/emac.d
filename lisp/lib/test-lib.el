@@ -18,9 +18,10 @@
   ""
   (message "%s" (window-parameters)))
 
-(defun test-message ()
+(defun test-message (&rest args)
   ""
-  (interactive)
+  (interactive "P")
+  (message "args %s" args)
   (save-selected-window
     (other-window 1)
     (message "%s\np: %s\nn: %s"

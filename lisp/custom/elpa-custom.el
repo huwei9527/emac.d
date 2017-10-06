@@ -40,6 +40,8 @@
     ace-link
     flyspell-lazy
     popwin
+    ;; python
+    elpy
     )
   "Package to be install.")
 

@@ -104,16 +104,20 @@ window."
   ((next-non-system-buffer)
    (switch-buffer-mode 1)))
 
-(defun super-tab ()
+(defun super-tab (arg-prefix)
   "Tab to do everything."
-  (interactive)
-  (let* ((point-last (point)))
-    (unless (and (char-at-point-word-p)
-		 (and (boundp 'company-mode) company-mode
-		      (code-silence (company-manual-begin))))
-      (call-interactively 'indent-for-tab-command)
-      (when (eq (point) point-last)
-	(call-interactively 'toggle-hideshow-block)))))
+  (interactive "P")
+  (if arg-prefix
+      (if (numberp arg-prefix)
+	  (insert-char ?\t arg-prefix)
+	(insert-char ?\t 1))
+    (let* ((point-last (point)))
+      (unless (and (char-at-point-word-p)
+		   (and (boundp 'company-mode) company-mode
+			(code-silence (company-manual-begin))))
+	(call-interactively 'indent-for-tab-command)
+	(when (eq (point) point-last)
+	  (call-interactively 'toggle-hideshow-block))))))
 
 ;;; {{ Use 'overriding-local-map'
 (defun set-overriding-local-map (keymap)

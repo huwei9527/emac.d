@@ -46,12 +46,6 @@
 
 (code-eval-after-load
  tex-buf
- (code-trace-function
-  (TeX-error
-   ;; TeX-warning
-   ;; TeX-error-overview
-   ;; TeX-LaTeX-sentinel
-   ))
  (code-add-hook
   (TeX-after-compilation-finished-functions)
   tex-close-window-after-compilation-finished)

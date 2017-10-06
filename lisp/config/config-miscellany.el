@@ -44,6 +44,8 @@
       ;; }}
       )
 
+(subword-mode 1)
+
 ;;; save exit point
 (require 'saveplace)
 (setq-default save-place t)

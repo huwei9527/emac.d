@@ -84,6 +84,7 @@
  "C-p" evil-previous-line
  "M-n" evil-complete-next
  "M-p" evil-complete-previous
+ "C-v" scroll-up-command
  "C-y" yank)
 
 ;; Normal state keymap
