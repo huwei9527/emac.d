@@ -44,6 +44,12 @@
       ;; }}
       )
 
+(code-add-advice
+ (yes-or-no-p)
+ :override
+ y-or-n-p)
+
+;;; Camel word surpport
 (subword-mode 1)
 
 ;;; save exit point

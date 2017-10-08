@@ -2,6 +2,7 @@
 
 (require 'test-code)
 (require 'sequence-lib)
+(require 'core-lib)
 
 (defmacro intern-format (ft &rest args)
   "Extend 'intern' with format FT string."
@@ -73,25 +74,6 @@
   (code-progn
    (code-item `(code-append ,key ,value))
    (while pairs (code-item `(code-pair ,(pop pairs) ,(pop pairs))))))
-
-(defun code-parse-list (sexp op)
-  "Parse the list, take operator on each element recursively."
-  (let* ((stack (list (cons sexp nil)))
-	 stack-curr sexp-curr sexp-parent sexp-parser
-	 path op-rlt)
-    (while stack
-      (setq stack-curr (pop stack)
-	    sexp-curr (car stack-curr)
-	    sexp-parent (cdr stack-curr))
-      (while (not (eq sexp-parent (car path)))
-	(pop path))
-      (when (and (funcall op sexp-curr path)
-		 (listp sexp-curr))
-	(setq sexp-parser sexp-curr)
-	(while sexp-parser
-	  (push (cons (car sexp-parser) sexp-curr) stack)
-	  (setq sexp-parser (cdr sexp-parser))))
-      (push sexp-curr path))))
 
 (defvar code-macro-list nil
   "The list of macros defined in 'code'.")

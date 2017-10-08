@@ -18,7 +18,6 @@
 
 (code-eval-after-load
  cus-edit
- (message "custom load")
  (code-define-key
    custom-mode-map nil
    "o" ace-link-custom

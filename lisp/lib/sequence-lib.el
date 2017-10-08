@@ -4,11 +4,11 @@
   "Parse the elements of the sequence SEQ recursively and apply 
 funtion OP to each element.
 
-OP must be a function take two argument: (OP el pos path) where
+OP must be a function take three arguments: (OP el pos path) where
 el - the current element during the parsing
 pos - the index of 'el' in its parent element
 path - the ancestor elements that contains 'el' in the reverse order
-Note that (car path) is the parent elment of 'el'.  If OP return non-nil, 
+Note that (car path) is the parent element of 'el'.  If OP return non-nil, 
 'el' will be parsed recursively. Otherwise 'el' will be dropped."
   (when (and seq (functionp op))
     (let* ((stack (list (cons seq nil)))

@@ -36,15 +36,34 @@
            (with-no-warnings
              ,@body)
          (code-silence-off)))))
+(code-record-macro code-silence)
 
 (defmacro code-silence-function (funs &rest body)
-  "Run BODY when setting FUNS to ignore"
+  "Run BODY when setting FUNS to 'ignore'"
   `(progn
      (code-add-advice-ignore ,funs)
      (unwind-protect
 	 (progn
 	   ,@body)
        (code-remove-advice-ignore ,funs))))
+(code-record-macro code-silence-function)
+
+(defmacro code-silence-function-true (funs &rest body)
+  "Run BODY when setting FUNS to 'ignore-true'"
+  `(progn
+     (code-add-advice-ignore-true ,funs)
+     (unwind-protect
+	 (progn
+	   ,@body)
+       (code-remove-advice-ignore-true ,funs))))
+
+(defmacro code-silence-y-or-n-p-with-y (&rest body)
+  "Run BODY with 'y-or-n-p' returning t."
+  `(code-silence-function-true (y-or-n-p) ,@body))
+
+(defmacro code-silence-y-or-n-p-with-n (&rest bocy)
+  "Run BODY with 'y-or-n-p' returning nil."
+  `(code-silence-function (y-or-n-p) ,@body))
 
 (provide 'silence-code)
 ;;; silence-code.el ends here

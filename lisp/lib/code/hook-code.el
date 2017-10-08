@@ -3,6 +3,8 @@
 (eval-when-compile
   (require 'code))
 
+(require 'core-lib)
+
 (defsubst code--gensym-symbol-list ()
   "Create temporary symbol interned in 'code-obarray'"
   (code--gensym "code--temporary-symbol"))
@@ -65,6 +67,14 @@
 (defmacro code-remove-advice-ignore (ad-list)
   "Remove advice to ignore functions in AD-LIST."
   `(code-remove-advice ,ad-list ignore))
+
+(defmacro code-add-advice-ignore-true (ad-list)
+  "Add advice to ignore functions in AD-LIST, but return t"
+  `(code-add-advice ,ad-list :override ignore-true))
+
+(defmacro code-remove-advice-ignore-true (ad-list)
+  "Remove advice ignore-true from functions in AD-LIST"
+  `(code-remove-advice ,ad-list ignore-true))
 
 (defmacro code-defsetter-command-advice (cmd-name cmd-list)
   "Define macro to set up or remove advice for comand in CMD-LIST."

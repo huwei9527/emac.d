@@ -14,6 +14,7 @@
          (expand-file-name "lisp/custom/global-custom.el" user-emacs-directory))
 
 (require 'test-custom)
+(require 'test-lib)
 
 (let* ((file-name-handler-alist nil)) ; Accelerate loading.
   (require 'config-elpa)
@@ -30,6 +31,7 @@
   (require 'config-paredit)
   (require 'config-hideshow)
   (require 'config-company)
+  (require 'config-yasnippet)
   (require 'config-miscellany)
   ;; (require 'config-desktop)
   (require 'config-emacs-lisp)

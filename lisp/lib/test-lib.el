@@ -24,29 +24,32 @@
   (message "args %s" args)
   (save-selected-window
     (other-window 1)
-    (message "%s\np: %s\nn: %s"
-	     (selected-window)
-	     (window-prev-buffers)
-	     (window-next-buffers))
-    (test-message-sibling)
-    (test-message-window-parameter)
+    (require 'config-yasnippet)
+    ;; (message "%s\np: %s\nn: %s"
+    ;; 	     (selected-window)
+    ;; 	     (window-prev-buffers)
+    ;; 	     (window-next-buffers))
+    ;; (test-message-sibling)
+    ;; (test-message-window-parameter)
     ))
 
 (code-defkey-ctl-c
  "C-t" test-message)
 
 
-(defmacro code-trace-function (funs)
+(defmacro code-trace-function (funs &optional before after)
   "Trace function."
   (code-progn
    (dolist (fun funs)
      (code-item
       `(code-add-advice (,fun) :before
 			(lambda (&rest args)
-			  (message "Before %s" ,(symbol-name fun))))
+			  (message "Before %s" ,(symbol-name fun))
+			  ,(when before before)))
       `(code-add-advice (,fun) :after
 			(lambda (&rest args)
-			  (message "After %s" ,(symbol-name fun))))))))
+			  (message "After %s" ,(symbol-name fun))
+			  ,(when after after)))))))
 (code-record-macro code-trace-function)
 
 (defmacro display-in-help-window (buf-name &rest arg-forms)

@@ -32,7 +32,8 @@
   "The function called for to re-arrange the window layout.")
 
 (defvar auto-killed-mode-list
-  '(dired-mode help-mode special-mode Custom-mode)
+  '(dired-mode help-mode special-mode Custom-mode process-menu-mode
+	       Buffer-menu-mode)
   "The list of major mode which will be killed when 'close-other-window'")
 
 ;;; {{ X selection shell tool

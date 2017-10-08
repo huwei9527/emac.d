@@ -5,6 +5,7 @@
         'Info-mode
         'completion-list-mode
         'compilation-mode
+	'inferior-python-mode
         )
   "Major mode list which disable line number.")
 

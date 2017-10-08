@@ -2,6 +2,7 @@
 
 (require 'file-custom)
 (require 'sequence-lib)
+(require 'core-lib)
 
 (defun scratch-buffer-p (&optional buf)
   "Detect whether BUF is *scratch* buffer."
