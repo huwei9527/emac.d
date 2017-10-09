@@ -144,12 +144,16 @@
 ;; Make help-mode override motion state map.
 (code-eval-after-load
  help-mode
- (evil-make-overriding-map help-mode-map 'motion))
+ (code-set-evil-initial-state help-mode motion))
 
 ;; Make package-menu-mode override motion state map.
 (code-eval-after-load
  package
- (evil-make-overriding-map package-menu-mode-map 'motion))
+ (code-set-evil-initial-state package-menu-mode motion))
+
+(code-eval-after-load
+ simple
+ (code-set-evil-initial-state special-mode motion))
 ;; }}
 
 (provide 'config-evil)

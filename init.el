@@ -32,6 +32,7 @@
   (require 'config-hideshow)
   (require 'config-company)
   (require 'config-yasnippet)
+  (require 'config-magit)
   (require 'config-miscellany)
   ;; (require 'config-desktop)
   (require 'config-emacs-lisp)

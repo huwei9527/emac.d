@@ -4,7 +4,8 @@
 (eval-when-compile
   (require 'code)
   (require 'hook-code)
-  (require 'keymap-code))
+  (require 'keymap-code)
+  (require 'evil-code))
 
 (require 'tex-lib)
 (require 'test-lib)
@@ -57,15 +58,10 @@
   tex-close-window-after-tex-command-advice))
 
 (code-eval-after-load
- evil
- (code-eval-after-load
-  tex-buf
-  (evil-set-initial-state 'TeX-output-mode 'motion)
-  (evil-make-overriding-map TeX-output-mode-map 'motion)
-  (evil-set-initial-state 'TeX-error-overview-mode 'motion)
-  (evil-make-overriding-map TeX-error-overview-mode-map 'motion)
-  ))
-
+ tex-buf
+ (require 'evil)
+ (code-set-evil-initial-state TeX-output-mode motion)
+ (code-set-evil-initial-state TeX-error-overview-mode motion))
 
 (provide 'config-tex)
 ;;; config-tex.el ends here

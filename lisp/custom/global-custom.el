@@ -14,7 +14,7 @@
 ;; Define config-lisp-directory, config-lisp-directory-name
 (code-defdir "lisp"
   "The directory where stores emacs config source files.
-user-emacs-directory/lisp.")
+'user-emacs-directory'/lisp.")
 
 
 ;; Set the load-path for configuration lisp.

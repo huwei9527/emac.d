@@ -1,23 +1,19 @@
 ;; -*- lexical-binding : t ; byte-compile-dynamic : t -*-
 
-(require 'util-lib)
+(require 'core-lib)
 
-(defun tf (el pos path)
+(defun tf (el)
   ""
-  (if (eq el 'c)
-      (progn
-	(setf (elt (car path) pos) 'fuck)
-	nil)
-    t))
+  (if (eq el 'j) (list 100) nil))
 
 (defun test (a)
   ""
   (message "%s" a)
-  (sequence-element-filter a 'tf)
+  (sequence-filter a 'tf)
   (message "%s" a))
 
-(test '(a (b) [c (d e) f] g))
-(test '(c (b c) [d (c [b c b] d) a] c))
+(test '(a (b) a [c a (d e) f] g (i . j)))
+(test '(c (b c) [d (i . j) (c [b c b] d) a] c))
 
 (provide 'sequence-test)
 ;;; sequence-test.el ends here

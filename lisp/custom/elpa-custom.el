@@ -42,6 +42,7 @@
     popwin
     ;; python
     elpy
+    magit
     )
   "Package to be install.")
 

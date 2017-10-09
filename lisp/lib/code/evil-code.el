@@ -198,5 +198,14 @@ A wrapper for (code--add-evil-hook hk-fun \"exit\" st)"
        (define-key evil-inner-text-objects-map ,key ',inner-name)
        (define-key evil-outer-text-objects-map ,key ',outer-name))))
 
+(defmacro code-set-evil-initial-state (mode state)
+  "Set the initial evil state as STATE for major-mode MODE, 
+and make it's keymap overriding map."
+  `(progn
+     (evil-set-initial-state ',mode ',state)
+     (evil-make-overriding-map
+      ,(intern-format "%s-map" (symbol-name mode)) ',state)))
+(code-record-macro code-set-evil-initial-state)
+
 (provide 'evil-code)
 ; evil-code.el ends here

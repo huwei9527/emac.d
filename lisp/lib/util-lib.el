@@ -1,7 +1,6 @@
 ;; -*- lexical-binding : t byte-compile-dynamic : t -*-
 
 (require 'file-custom)
-(require 'sequence-lib)
 (require 'core-lib)
 
 (defun scratch-buffer-p (&optional buf)
@@ -75,35 +74,26 @@
 (defun put-back-event (&optional events force)
   "Put events back to 'unread-command-events'"
   (or events (setq events (this-command-keys-vector)))
-  (setq events (collect-non-nil-element events))
-  (when force
-    (setq events (mapcar (lambda (c) (cons t c)) events)))
+  (setq events (remove-nil events))
+  ;; (when nil (setq events (mapcar (lambda (c) (cons t c)) events)))
   (setq unread-command-events
 	(append unread-command-events events)))
 
 ;;; {{ Character predictor
-(defsubst char-space-p (c)
-  "Return t if C is a space character."
-  (eq ?\s (char-syntax c)))
-
-(defsubst char-word-p (c)
-  "Return t if C is a word constituent."
-  (eq ?w (char-syntax c)))
-
-(defsubst char-path-delimiter-p (c)
+(defun char-path-delimiter-p (c)
   "Return t if C is a path delimiter"
   (or (eq c ?\/) (eq c ?\\)))
 
-(defsubst char-escape-p (c)
+(defun char-escape-p (c)
   "Return t if C is a escape character"
   (eq c ?\\))
 
-(defsubst char-not-path-p (c)
+(defun char-not-path-p (c)
   "Return t if C is not a path constituent."
   (or (and (<= 0 c) (<= c 32))
       (memq c file-custom-invalid-path-char)))
 
-(defsubst char-at-point-word-p ()
+(defun char-at-point-word-p ()
   "Return t if the charactor before point is space or point is
 at the begging of buffer."
   (and (not (eq (point) (line-beginning-position)))

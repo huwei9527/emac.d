@@ -11,7 +11,6 @@
 
 (defvar evil-custom-initial-state-alist
   `((messages-buffer-mode . motion)
-    (package-menu-mode . motion)
     (finder-mode . motion)
     )
   "The alist of (mode . state) for evil to set the initial state.")

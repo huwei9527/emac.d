@@ -6,6 +6,7 @@
   (require 'evil-code))
 
 (require 'test-custom)
+;; (require 'sequence-test)
 
 (defun test-message-sibling ()
   ""

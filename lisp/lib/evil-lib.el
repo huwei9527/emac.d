@@ -23,7 +23,5 @@
   ((scroll-other-window))
   ((scroll-other-window-mode -1)))
 
-
-
 (provide 'evil-lib)
 ; evil-lib.el ends here

@@ -1,7 +1,6 @@
 ;; -*- lexical-binding : t ;byte-compile-dynamic : t -*-
 
 (require 'test-code)
-(require 'sequence-lib)
 (require 'core-lib)
 
 (defmacro intern-format (ft &rest args)
@@ -85,18 +84,17 @@
   (if (symbolp macro)
       `(memq ',macro code-macro-list)
     `(memq ,macro code-macro-list)))
-(defun code-expandmacro (sexp pos path)
+(defun code-expandmacro (sexp)
   "Expand SEXP if it is a 'code' macro."
   (when (listp sexp)
     (let* ((sexp-head (car sexp)))
-      (when (and (not (listp sexp-head))
+      (when (and (symbolp sexp-head)
 		 (string-prefix-p "code-" (symbol-name sexp-head))
 		 (not (code-expandmacro-p (car sexp))))
 	(display-warning 'code-not-tracked
 			 (format "code macro not tracked: %s" sexp-head)))))
-  (if (and (listp sexp) (code-expandmacro-p (car sexp)))
-      (progn (setf (elt (car path) pos) (macroexpand-all sexp)) nil)
-    t))
+  (when (and (listp sexp) (code-expandmacro-p (car sexp)))
+    (list (macroexpand-all sexp))))
 
 (defmacro code-eval-after-load (package &rest body)
   "Run body after PACHAGE loads.
@@ -108,7 +106,7 @@ in byte compilation."
     (if (symbolp package)
 	(code-append `(quote ,package))
       (code-append package))
-    (sequence-element-filter body 'code-expandmacro)
+    (sequence-filter body 'code-expandmacro)
     (code-append
      `(quote
        ,(code-progn
