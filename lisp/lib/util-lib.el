@@ -18,7 +18,9 @@
   (or window (setq window (selected-window)))
   (let* (buf kill-or-bury closed)
     (catch 'tag-bury
-      (while (window-prev-buffers window)
+      (while (or (not first)
+		 (and (window-valid-p window)
+		      (window-prev-buffers window)))
 	(setq buf (window-buffer window)
 	      kill-or-bury (cond
 			    ((eq kill nil) nil)
@@ -30,7 +32,8 @@
 	  (quit-window kill-or-bury window)
 	  (or closed (setq closed t)))
 	(or first (setq first t))))
-    (when (and (window-live-p window)
+    (when (and (window-valid-p window)
+	       (window-live-p window)
 	       (not (window-prev-buffers window)))
       (delete-window window))
     closed))
