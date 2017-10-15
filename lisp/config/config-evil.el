@@ -73,7 +73,10 @@
  )
 
 ;; delete evil original key binding to reveal global key binding
+;; use global 'tab' binding
 (code-remove-key evil-motion-state-map ?\t)
+;; M-. find-tag, not evil-repeat-pop-next
+(code-remove-key (lookup-key evil-normal-state-map [?\e]) ?\.)
 
 ;; Insert state keymap
 (code-defkey-evil-global

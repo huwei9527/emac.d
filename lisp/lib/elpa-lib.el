@@ -122,10 +122,10 @@ Return:
 (defun compute-dependency-family ()
   "Construct necessary package list by dependency."
   (let* ((rlt nil)
-        (dep nil)
-        (dep-last nil)
-        (reqs nil)
-        (desc nil))
+	 (dep nil)
+	 (dep-last nil)
+	 (reqs nil)
+	 (desc nil))
     (dolist (pkg elpa-custom-packages-list)
       (when (package-installed-p pkg)
         (add-to-list 'rlt pkg)))
@@ -170,7 +170,11 @@ Return:
     (when delete-list
       (dolist (dl delete-list)
         (add-to-list 'rlt-alist (cons dl (elpa-delete dl)))))
-                                        ; Print result summary.
+    ;; upgrade dependent packages
+    (dolist (pkg dep)
+      (when (eq (setq rlt (elpa-upgrade pkg)) 'upgrade-succ)
+	(add-to-list 'rlt-alist (cons pkg 'upgrade-succ))))
+    ;; Print result summary.
     (when rlt-alist
       (dolist (pkg rlt-alist)
         (message "[%s] %s" (symbol-name (cdr pkg)) (symbol-name (car pkg)))))))

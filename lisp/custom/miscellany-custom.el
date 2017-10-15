@@ -25,7 +25,7 @@
   "The list store the keymaps that compose 'overriding-local-map'.")
 
 (defvar skipped-major-mode-list
-  '(dired-mode help-mode Info-mode)
+  '(dired-mode help-mode Info-mode inferior-python-mode)
   "The list of major mode which will be skipped when 'next-buffer'")
 
 (defvar-local close-other-window-function nil

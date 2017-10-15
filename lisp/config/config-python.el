@@ -5,6 +5,8 @@
   (require 'keymap-code)
   (require 'silence-code))
 
+(require 'python-lib)
+
 (code-eval-after-load
  python
  (setq python-shell-interpreter "python3")
@@ -30,7 +32,10 @@
   (lambda (rlt)
     (set-process-query-on-exit-flag (get-buffer-process rlt) nil)
     rlt))
- ;; Use new interpreter
+ (code-defkey-ctl-c-local
+  elpy-mode-map
+  "C-c" python-super-compile)
+ ;; Use new interpreter process every time
  (code-add-advice
   (elpy-shell-send-region-or-buffer)
   :before

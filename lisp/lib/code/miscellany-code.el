@@ -7,7 +7,7 @@
   "Define command with double events feature.
 
 If two duplicate events come in a short time, the command behaves
-diffently."
+differently."
   (declare (indent defun))
   (or delay (setq delay 'double-events-delay))
   `(defun ,cmd ()
@@ -35,6 +35,7 @@ modes. So it called 'temporary' minor mode."
        ,doc
        :global t
        :keymap `(,@,keymap
+		 ([?q] . (lambda () (interactive) (,',mode -1)))
 		 ([t] . (lambda () (interactive)
 			  (,',mode -1)
 			  (put-back-event nil 'force))))

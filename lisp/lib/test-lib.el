@@ -22,10 +22,11 @@
 (defun test-message (&rest args)
   ""
   (interactive "P")
-  (message "args %s" args)
+  ;; (message "args %s" args)
+  (message "test-message")
   (save-selected-window
-    (other-window 1)
-    (require 'config-yasnippet)
+    ;; (other-window 1)
+    ;; (require 'config-yasnippet)
     ;; (message "%s\np: %s\nn: %s"
     ;; 	     (selected-window)
     ;; 	     (window-prev-buffers)

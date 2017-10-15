@@ -40,6 +40,8 @@
       recentf-exclude `("\\.el\\.gz\\'"
 			"\\.\\(log\\|aux\\|rip\\)\\'"
 			"\\`_.*"
+			"__init__*"
+			,(expand-file-name "~/.local/lib")
 			,config-packages-directory)
       ;; }}
       )
