@@ -19,6 +19,8 @@
 /test_compile.el
 
 # Configure file
+/url/
+/eshell/
 /recentf
 /tramp
 /abbrev_defs

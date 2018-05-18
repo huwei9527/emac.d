@@ -27,7 +27,7 @@
     paredit
     paredit-everywhere
     rainbow-delimiters
-    hl-sexp
+    ;; hl-sexp
     ;; hideshow-org
     ;; hideshowvis
     company

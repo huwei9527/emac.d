@@ -88,7 +88,10 @@
  "M-n" evil-complete-next
  "M-p" evil-complete-previous
  "C-v" scroll-up-command
- "C-y" yank)
+ "C-y" yank
+ "C-r" undo-tree-redo
+ "C-k" kill-line
+ )
 
 ;; Normal state keymap
 (code-defkey-evil-global

@@ -34,6 +34,7 @@
  "C-i" counsel-info-lookup-symbol
  "u" counsel-unicode-char)
 
+(require 'ivy)
 (ivy-mode 1)
 
 (code-define-key
@@ -46,7 +47,7 @@
  (swiper
   counsel-git-grep))
 (setq ivy-initial-inputs-alist nil
-      ;; No '.'..' directories.
+      ;; No '.' '..' directories.
       ivy-extra-directories nil)
 
 (provide 'config-ivy)

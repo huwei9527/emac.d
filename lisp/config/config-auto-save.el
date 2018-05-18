@@ -12,6 +12,7 @@
       ;; Default recover-file directory.
       auto-save-list-file-prefix config-auto-save-alist-directory
       backup-by-copying t ; Make a new file as backup.
+      save-silently t
       version-control t
       kept-new-versions 8
       kept-old-versions 2

@@ -16,8 +16,9 @@
  ;; hightlight current sexp
  (code-add-hook
   (emacs-lisp-mode-hook)
-  hl-sexp-mode
+  ;; hl-sexp-mode
   ;; company-mode
+  show-paren-mode
   (lambda ()
     (unless (scratch-buffer-p)
       (company-mode 1)

@@ -150,7 +150,11 @@
 (setq-default auto-fill-function 'do-auto-fill)
 
 ;; add texlive info node
-(add-to-list 'Info-directory-list "/usr/local/texlive/2017/texmf-dist/doc/info")
+(print Info-default-directory-list)
+(print Info-directory-list)
+; (add-to-list 'Info-directory-list "~/.local/share/info")
+; (add-to-list 'Info-directory-list "~/.local/share/texlive/2018/texmf-dist/doc/info")
+(setq Info-additional-directory-list '("~/.local/share/info/emacs25"))
 
 (provide 'config-miscellany)
 ; config-miscellany.el ends here
