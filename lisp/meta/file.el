@@ -4,7 +4,17 @@
 
 ;;; Code:
 
-;; (setq /pre-create-directory-list nil)
+(defmacro /def-user-directory (sym-or-name &optional doc)
+  (declare (doc-string 2) (indent defun))
+  (:documentation
+   (format "Create variable for the directory in the `user-emacs-directory'.
+Just like `/%s-SYM-OR-NAME-%s'=$HOME/.emacs.d/SYM-OR-NAME."
+  /custom-name /directory-name))
+  (and (boundp '/pre-create-directory-list)
+       (push (/file-user-directory sym-or-name) /pre-create-directory-list))
+  `(defconst ,(/intern-directory
+	       (replace-regexp-in-string "/" "-" (/name sym-or-name)))
+     ,(/file-user-directory sym-or-name) ,(/name doc)))
 
 (defvar /config-name "config"
   "The sub-name of directory variable for configuration files.")
@@ -20,9 +30,6 @@ Just like $HOME/.emacs.d/%s/PATH" /config-name))
   (apply #'/intern-directory
 	 (format "%s-%s" /config-name (/name form)) args))
 
-(/def-user-directory (eval /config-name)
-  "The directory for user configuration files.")
-
 (defmacro /def-config-directory (sym-or-name &optional doc)
   (declare (doc-string 2) (indent defun))
   (:documentation
@@ -35,10 +42,6 @@ Just like `/%s-%s-SYM-OR-NAME-%s'=$HOME/.emacs.d/%s/SYM-OR-NAME"
      (defvar ,(/intern-config-directory sym-or-name)
        ,(/file-config-directory sym-or-name)
        ,(format "%s configure directory." (/name sym-or-name)))))
-
-(/def-config-directory auto-save "The directory")
-;; (pp /pre-create-directory-list)
-
 
 (provide '/meta/file)
 ;;; meta/file.el ends here

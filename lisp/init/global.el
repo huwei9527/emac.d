@@ -29,13 +29,6 @@ If FORM is list, return the name of result by evaling FROM."
      (t ignore)))
   form)
 
-(defun /value (form)
-  "Get the value by evaling FORM until result is not a list."
-  (declare (indent defun))
-  (while (listp form)
-    (setq form (eval form)))
-  form)
-
 (defun /file-directory (path &optional dir)
   "Get the absolute true PATH in DIR.
 PATH can be a symbol, the `symbol-name' of which will be used.
@@ -91,31 +84,31 @@ see `/intern-custom' for paramter explanation." /custom-name /directory-name))
   :group 'convenience
   :prefix (format "/%s" /custom-name))
 
-(defmacro /def-custom-var (var-or-name &optional init doc)
-  (declare (doc-string 3) (indent defun))
-  (:documentation (format "Define a variable `VAR-OR-NAME' for customization.
-Just like (defvar /%s-VAR-OR-NAME INIT DOC)." /custom-name))
-  `(defvar ,(/intern-custom var-or-name) ,(/value init) ,doc))
+;; (defmacro /def-custom-var (var-or-name &optional init doc)
+;;   (declare (doc-string 3) (indent defun))
+;;   (:documentation (format "Define a variable `VAR-OR-NAME' for customization.
+;; Just like (defvar /%s-VAR-OR-NAME INIT DOC)." /custom-name))
+;;   `(defvar ,(/intern-custom var-or-name) ,(/value init) ,doc))
 
-(defmacro /def-custom-const (const-or-name &optional init doc)
-  (declare (doc-string 3) (indent defun))
-  (:documentation (format "Define a constant `CONST-OR-NAME' for customization.
-Just like (defconst /%s-CONST-OR-NAME INIT DOC)" /custom-name))
-  `(defconst ,(/intern-custom const-or-name) ,(/value init) ,doc))
+;; (defmacro /def-custom-const (const-or-name &optional init doc)
+;;   (declare (doc-string 3) (indent defun))
+;;   (:documentation (format "Define a constant `CONST-OR-NAME' for customization.
+;; Just like (defconst /%s-CONST-OR-NAME INIT DOC)" /custom-name))
+;;   `(defconst ,(/intern-custom const-or-name) ,(/value init) ,doc))
 
-(defmacro /def-user-directory (sym-or-name &optional doc)
-  (declare (doc-string 2) (indent defun))
-  (:documentation
-   (format "Create variable for the directory in the `user-emacs-directory'.
-Just like `/%s-SYM-OR-NAME-%s'=$HOME/.emacs.d/SYM-OR-NAME."
-  /custom-name /directory-name))
-  (and (boundp '/pre-create-directory-list)
-       (push (/file-user-directory sym-or-name) /pre-create-directory-list))
-  `(defconst ,(/intern-directory
-	       (replace-regexp-in-string "/" "-" (/name sym-or-name)))
-     ,(/file-user-directory sym-or-name) ,(/name doc)))
+;; (defmacro /def-user-directory (sym-or-name &optional doc)
+;;   (declare (doc-string 2) (indent defun))
+;;   (:documentation
+;;    (format "Create variable for the directory in the `user-emacs-directory'.
+;; Just like `/%s-SYM-OR-NAME-%s'=$HOME/.emacs.d/SYM-OR-NAME."
+;;   /custom-name /directory-name))
+;;   (and (boundp '/pre-create-directory-list)
+;;        (push (/file-user-directory sym-or-name) /pre-create-directory-list))
+;;   `(defconst ,(/intern-directory
+;; 	       (replace-regexp-in-string "/" "-" (/name sym-or-name)))
+;;      ,(/file-user-directory sym-or-name) ,(/name doc)))
 
-(/def-user-directory (eval /lisp-name) "User code directory.")
+;; (/def-user-directory (eval /lisp-name) "User code directory.")
 
 (defmacro /def-lisp-directory (sym-or-name &optional doc)
   (declare (doc-string 2) (indent defun))
