@@ -5,7 +5,8 @@
 ;; ELPA
 (setq package-enable-at-startup nil)
 (setq package-archives
-      '(("gnu" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/") ;; Tsinghua mirror
+       ;; Tsinghua mirror
+      '(("gnu" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
         ("melpa" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
 ; Default ELPA's user package directory.
 (setq package-user-dir config-packages-directory)

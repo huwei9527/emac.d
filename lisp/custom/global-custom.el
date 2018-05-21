@@ -1,4 +1,9 @@
-;; -*- lexical-binding : t ; byte-compile-dynamic : t -*-
+;;; -*- lexical-binding : t ; byte-compile-dynamic : t -*-
+
+;;; Commentary:
+
+;;; Code:
+
 (eval-when-compile
   (require 'file-code
            (expand-file-name "lisp/lib/code/file-code.el" user-emacs-directory)))

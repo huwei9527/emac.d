@@ -2,12 +2,7 @@
 
 ;;; Code:
 
-
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
-(package-initialize)
+;; (package-initialize)
 
 (setq emacs-load-start-time (current-time))
 
@@ -16,6 +11,9 @@
 ;;; Commentary:
 ;; 
 
+(require '/init/global
+	 (expand-file-name "lisp/init/global.el" user-emacs-directory))
+
 (require 'global-custom
          ;; Specify the file because load-path is set after it is loaded.
          (expand-file-name "lisp/custom/global-custom.el" user-emacs-directory))
@@ -23,30 +21,34 @@
 (require 'test-custom)
 (require 'test-lib)
 
-(let* ((file-name-handler-alist nil)) ; Accelerate loading.
-  (require 'config-elpa)
-  (require 'config-ui)
-  (require 'config-auto-save)
-  (require 'config-spell)
-  (require 'config-evil)
-  (require 'config-ace-link)
-  (require 'config-ace-jump-mode)
-  (require 'config-ivy)
-  (require 'config-ffip)
-  (require 'config-rainbow-delimiters)
-  (require 'config-which-key)
-  (require 'config-paredit)
-  (require 'config-hideshow)
-  (require 'config-company)
-  (require 'config-yasnippet)
-  (require 'config-magit)
-  (require 'config-miscellany)
-  ;; (require 'config-desktop)
-  (require 'config-emacs-lisp)
-  (require 'config-tex)
-  (require 'config-python)
-  (require 'test)
-  )
+(if (display-graphic-p)
+    (/require-init graphic)
+  (/require-init terminal))
+
+;; (let* ((file-name-handler-alist nil)) ; Accelerate loading.
+;;   (require 'config-elpa)
+;;   (require 'config-ui)
+;;   (require 'config-auto-save)
+;;   (require 'config-spell)
+;;   (require 'config-evil)
+;;   (require 'config-ace-link)
+;;   (require 'config-ace-jump-mode)
+;;   (require 'config-ivy)
+;;   (require 'config-ffip)
+;;   (require 'config-rainbow-delimiters)
+;;   (require 'config-which-key)
+;;   (require 'config-paredit)
+;;   (require 'config-hideshow)
+;;   (require 'config-company)
+;;   (require 'config-yasnippet)
+;;   (require 'config-magit)
+;;   (require 'config-miscellany)
+;;   ;; (require 'config-desktop)
+;;   (require 'config-emacs-lisp)
+;;   (require 'config-tex)
+;;   (require 'config-python)
+;;   (require 'test)
+;;   )
 
 ;; (require 'evil-surround)
 ;; (require 'evil-visualstar)
