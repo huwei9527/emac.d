@@ -16,18 +16,34 @@ Just append `/' to the front of the format string."
   (declare (indent defun))
   (apply #'intern-format- (format "/%s" fmt) args))
 
-(defun /name (form)
-  "Get the name by evaling the FORM.
-If FORM is string, return the string.
-If FORM is symbol, return the `symbol-name'.
-If FORM is list, return the name of result by evaling FROM."
+(defun /value (form &optional depth)
+  "Recursively evaluate FORM at most DEPTH times.
+If the FORM are evaluated to itself at some time (e.g. interger,
+  string, etc), return its printed representation (format \"%s\"
+  FORM).
+If DEPTH is not an positive integer, set DEPTH to 65535. That is, the
+  maximal depth is 65535. Note that the recursively evaluation may
+  turn into infinite loop (e.g. cyclic reference), this number will
+  break the loop and print the result anyhow. Try to avoid such case
+  since the result is unpredictable."
   (declare (indent defun))
-  (while (not (stringp form))
-    (cond
-     ((symbolp form) (setq form (symbol-name form)))
-     ((listp form) (setq form (eval form)))
-     (t ignore)))
+  (or (and (integerp depth) (> depth 0)) (setq depth 65535))
+  (let* (old)
+    (while (not (or (equal form old) (eq depth 0)))
+      (setq old form)
+      (if (and (symbolp form) (not (boundp form)))
+	  (setq form nil)
+	(setq form (eval form)))
+      (setq depth (1- depth))))
   form)
+
+(defun /name (form)
+  "Get the name of the FORM.
+If FORM is symbol, return the `symbol-name'.  
+Othersise, return printed representation of `(/value FORM)'."
+  (declare (indent defun))
+  (or (symbolp form) (setq form (/value form)))
+  (format "%s" form))
 
 (defun /file-directory (path &optional dir)
   "Get the absolute true PATH in DIR.
@@ -54,7 +70,7 @@ Just like $HOME/.emacs.d/PATH"
   (declare (indent defun))
   (:documentation (format "Construct user code directory path.
 Just like $HOME/.emacs.d/%s/PATH" /lisp-name))
-  (/file-directory (/name path) (/file-user-directory /lisp-name)))
+  (/file-directory path (/file-user-directory /lisp-name)))
 
 (defun /intern-custom (form &rest args)
   (declare (indent defun))
@@ -84,28 +100,26 @@ see `/intern-custom' for paramter explanation." /custom-name /directory-name))
   :group 'convenience
   :prefix (format "/%s" /custom-name))
 
-(defmacro /def-lisp-directory (sym-or-name &optional doc)
+(defmacro /def-lisp-directory (sym/name &optional doc)
   (declare (doc-string 2) (indent defun))
   (:documentation
-   (format "Create `/%s-%s-SYM-OR-NAME-%s' and `/require-SYM-OR-NAME'.
+   (format "Create `/%s-%s-SYM/NAME-%s' and `/require-SYM/NAME'.
 This is used user file load."
 	   /custom-name /lisp-name /directory-name))
-  `(progn
-     (defconst ,(/intern-lisp-directory sym-or-name)
-       ,(/file-lisp-directory sym-or-name)
-       ,(format "%s code directory. %s"
-		(capitalize (/name sym-or-name)) doc))
-     (defmacro ,(/intern "require-%s" (/name sym-or-name)) (feature)
-       ,(format "Load %s/FEATURE file from %s directory."
-		(/name sym-or-name) (/name sym-or-name))
-       (declare (indent defun))
-       (let* ((ft (/intern "%s/%s" ,(/name sym-or-name) (/name feature)))
-	      (path (expand-file-name (/name feature)
-				      ,(/file-lisp-directory sym-or-name))))
-	 `(unless (featurep ',ft)
-	    (if (file-exists-p ,(format "%s.elc" path))
-		(require ',ft ,(format "%s.elc" path))
-	      (require ',ft ,(format "%s.el" path))))))))
+  (let* ((name (/name sym/name))
+	 (dir (/file-lisp-directory sym/name)))
+    `(progn
+       (defconst ,(/intern-lisp-directory sym/name) ,dir
+	 ,(format "%s code directory. %s" (capitalize name) doc))
+       (defmacro ,(/intern "require-%s" name) (feature)
+	 ,(format "Load %s/FEATURE file from %s directory." name name)
+	 (declare (indent defun))
+	 (let* ((ft (/intern "%s/%s" ,name (/name feature)))
+		(path (expand-file-name (/name feature) ,dir)))
+	   `(unless (featurep ',ft)
+	      (if (file-exists-p ,(format "%s.elc" path))
+		  (require ',ft ,(format "%s.elc" path))
+		(require ',ft ,(format "%s.el" path)))))))))
 
 (defmacro /provide ()
   "Provide the feature according to the name of user loading file.

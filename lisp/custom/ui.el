@@ -4,7 +4,9 @@
 
 ;;; Code:
 
-(eval-when-compile (/require-meta core))
+(eval-when-compile
+  (/require-meta core)
+  (/require-meta ui))
 
 (/def-custom-var font-height 120 "The height of font")
 (/def-custom-var inhibit-linum-mode-list

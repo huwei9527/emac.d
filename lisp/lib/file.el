@@ -58,8 +58,5 @@ If DEPTH is not a positive integer, the whole directory tree is searched."
     (add-to-list list path)
     (/add-subdirectory-to-list path list depth)))
 
-; (defvar ll nil) (/add-subdirectory-to-list /custom-testdir 'll 1) (pp ll)
-; (defvar lll nil) (/add-directory-to-list /custom-testdir 'lll 1) (pp lll)
-
 (/provide)
-;;; .el ends here
+;;; lib/file.el ends here

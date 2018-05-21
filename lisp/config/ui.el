@@ -36,7 +36,7 @@
                 (apply func args))))
 
 (/require-config theme)
-; (require 'config-mode-line)
+(/require-config mode-line)
 
 (/provide)
 ;;; config/ui.el ends here
