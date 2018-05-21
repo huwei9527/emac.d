@@ -35,7 +35,7 @@
               (or (memq major-mode /custom-inhibit-linum-mode-list)
                 (apply func args))))
 
-; (require 'config-theme)
+(/require-config theme)
 ; (require 'config-mode-line)
 
 (/provide)

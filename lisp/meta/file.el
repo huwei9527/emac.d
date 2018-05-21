@@ -37,7 +37,7 @@ Just like $HOME/.emacs.d/%s/PATH" /config-name))
 Just like `/%s-%s-SYM-OR-NAME-%s'=$HOME/.emacs.d/%s/SYM-OR-NAME"
 	   /custom-name /config-name /directory-name /config-name))
   (and (boundp '/pre-create-directory-list)
-       (push (/file-user-directory sym-or-name) /pre-create-directory-list))
+       (push (/file-config-directory sym-or-name) /pre-create-directory-list))
   `(progn
      (defvar ,(/intern-config-directory sym-or-name)
        ,(/file-config-directory sym-or-name)
