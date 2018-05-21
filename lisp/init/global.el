@@ -109,6 +109,8 @@ Just like (defconst /%s-CONST-OR-NAME INIT DOC)" /custom-name))
    (format "Create variable for the directory in the `user-emacs-directory'.
 Just like `/%s-SYM-OR-NAME-%s'=$HOME/.emacs.d/SYM-OR-NAME."
   /custom-name /directory-name))
+  (and (boundp '/pre-create-directory-list)
+       (push (/file-user-directory sym-or-name) /pre-create-directory-list))
   `(defconst ,(/intern-directory
 	       (replace-regexp-in-string "/" "-" (/name sym-or-name)))
      ,(/file-user-directory sym-or-name) ,(/name doc)))

@@ -4,6 +4,8 @@
 
 ;;; Code:
 
+;; (setq /pre-create-directory-list nil)
+
 (defvar /config-name "config"
   "The sub-name of directory variable for configuration files.")
 
@@ -27,12 +29,15 @@ Just like $HOME/.emacs.d/%s/PATH" /config-name))
    (format "Create variable for directory of configuration files.
 Just like `/%s-%s-SYM-OR-NAME-%s'=$HOME/.emacs.d/%s/SYM-OR-NAME"
 	   /custom-name /config-name /directory-name /config-name))
+  (and (boundp '/pre-create-directory-list)
+       (push (/file-user-directory sym-or-name) /pre-create-directory-list))
   `(progn
      (defvar ,(/intern-config-directory sym-or-name)
        ,(/file-config-directory sym-or-name)
        ,(format "%s configure directory." (/name sym-or-name)))))
 
 (/def-config-directory auto-save "The directory")
+;; (pp /pre-create-directory-list)
 
 
 (provide '/meta/file)
