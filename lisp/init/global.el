@@ -84,32 +84,6 @@ see `/intern-custom' for paramter explanation." /custom-name /directory-name))
   :group 'convenience
   :prefix (format "/%s" /custom-name))
 
-;; (defmacro /def-custom-var (var-or-name &optional init doc)
-;;   (declare (doc-string 3) (indent defun))
-;;   (:documentation (format "Define a variable `VAR-OR-NAME' for customization.
-;; Just like (defvar /%s-VAR-OR-NAME INIT DOC)." /custom-name))
-;;   `(defvar ,(/intern-custom var-or-name) ,(/value init) ,doc))
-
-;; (defmacro /def-custom-const (const-or-name &optional init doc)
-;;   (declare (doc-string 3) (indent defun))
-;;   (:documentation (format "Define a constant `CONST-OR-NAME' for customization.
-;; Just like (defconst /%s-CONST-OR-NAME INIT DOC)" /custom-name))
-;;   `(defconst ,(/intern-custom const-or-name) ,(/value init) ,doc))
-
-;; (defmacro /def-user-directory (sym-or-name &optional doc)
-;;   (declare (doc-string 2) (indent defun))
-;;   (:documentation
-;;    (format "Create variable for the directory in the `user-emacs-directory'.
-;; Just like `/%s-SYM-OR-NAME-%s'=$HOME/.emacs.d/SYM-OR-NAME."
-;;   /custom-name /directory-name))
-;;   (and (boundp '/pre-create-directory-list)
-;;        (push (/file-user-directory sym-or-name) /pre-create-directory-list))
-;;   `(defconst ,(/intern-directory
-;; 	       (replace-regexp-in-string "/" "-" (/name sym-or-name)))
-;;      ,(/file-user-directory sym-or-name) ,(/name doc)))
-
-;; (/def-user-directory (eval /lisp-name) "User code directory.")
-
 (defmacro /def-lisp-directory (sym-or-name &optional doc)
   (declare (doc-string 2) (indent defun))
   (:documentation
@@ -133,6 +107,16 @@ This is used user file load."
 		(require ',ft ,(format "%s.elc" path))
 	      (require ',ft ,(format "%s.el" path))))))))
 
+(defmacro /provide ()
+  "Provide the feature according to the name of user loading file.
+Suppose the name of the loading file is XXX/lisp/YYY/ZZZ.el, then the
+file provide the feature '/YYY/ZZZ by ommiting the lisp home directory
+and the file extension."
+  (declare (indent defun))
+  (let ((str (file-name-sans-extension load-file-name)))
+    (string-match "[^/]*/[^/]*\\'" str)
+    `(provide ',(/intern (match-string 0 str)))))
+
 (/def-lisp-directory init "Specific init file.")
 (/def-lisp-directory config "Configure packages.")
 (/def-lisp-directory custom "Customization options.")
@@ -141,5 +125,5 @@ This is used user file load."
 (/def-lisp-directory test "Test codes.")
 (/def-lisp-directory tool "Useful batch mode tool.")
 
-(provide '/init/global)
+(/provide)
 ;;; .el ends here

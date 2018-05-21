@@ -4,5 +4,5 @@
 
 ;;; Code:
 
-(/provide)
-;;; .el ends here
+(provide '/config/theme)
+;;; config/theme.el ends here

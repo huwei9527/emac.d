@@ -28,5 +28,5 @@
 		     /custom-config-package-describes-directory))
                 (apply func `(,pkg)))))
 
-(provide '/config/elpa)
+(/provide)
 ;;; config/elpa.el ends here

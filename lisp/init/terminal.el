@@ -15,5 +15,5 @@
 
 (switch-to-buffer "*Messages*")
 
-(provide '/init/terminal)
+(/provide)
 ;;; init/terminal.el ends here

@@ -62,5 +62,5 @@ package to you. The file is store in the package-user-dir directory
 by default which would dirty the directory. So I hack it to this
 directory by advice describe-package-1.")
 
-(provide '/custom/elpa)
+(/provide)
 ;;; custom/elpa.el ends here

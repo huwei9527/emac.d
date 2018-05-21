@@ -27,5 +27,5 @@ If VALUE is non-nil, eval INIT form." /custom-name))
   `(defconst ,(/intern-custom const-or-name)
      ,(if value (/value init) init) ,doc))
 
-(provide '/meta/core)
+(/provide)
 ;;; meta/core.el ends here

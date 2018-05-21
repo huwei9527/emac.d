@@ -43,5 +43,5 @@ Just like `/%s-%s-SYM-OR-NAME-%s'=$HOME/.emacs.d/%s/SYM-OR-NAME"
        ,(/file-config-directory sym-or-name)
        ,(format "%s configure directory." (/name sym-or-name)))))
 
-(provide '/meta/file)
+(/provide)
 ;;; meta/file.el ends here

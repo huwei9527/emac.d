@@ -41,5 +41,5 @@
 ;; (require 'hippie-expand)
 ;; (require 'flymake-find-file-hook)
 
-(provide '/init/graphic)
+(/provide)
 ;;; init/graphic.el ends here

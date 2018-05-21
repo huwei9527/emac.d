@@ -18,5 +18,5 @@
 
 ; (code-defface-basic-color)
 
-(provide '/custom/ui)
+(/provide)
 ;;; custom/ui.el ends here

@@ -38,5 +38,5 @@
 ; (require 'config-theme)
 ; (require 'config-mode-line)
 
-(provide '/config/ui)
+(/provide)
 ;;; config/ui.el ends here
