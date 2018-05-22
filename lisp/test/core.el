@@ -4,7 +4,9 @@
 
 ;;; Code:
 
-(eval-when-compile (/require-meta ui))
+(/require-meta core)
+
+
 
 (/provide)
-;;; custom/mode-line.el ends here
+;;; test/core.el ends here

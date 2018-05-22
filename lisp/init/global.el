@@ -4,19 +4,22 @@
 
 ;;; Code:
 
-(defun intern-format- (fmt &rest args)
+(defun /--intern-format (fmt &rest args)
   "Intern the format string (format FMT @ARGS).
-Just like (intern (format FMT @ARGS))."
+Just like (intern (format FMT @ARGS)), but FMT can be anything
+  besides string, then the printed representation will be used instead."
   (declare (indent defun))
-  (intern (apply #'format fmt args)))
+  (intern (apply #'format (format "%s" fmt) args)))
 
-(defun /intern (fmt &rest args)
-  "Intern the format string in user namespace (/).
-Just append `/' to the front of the format string."
+(defconst /--namespace-prefix "/" "Prefix of the name of user lisp code.")
+
+(defun /--intern (fmt &rest args)
   (declare (indent defun))
-  (apply #'intern-format- (format "/%s" fmt) args))
+  (:documentation (format "Prepend `%s' to the format string and intern it.
+See `/--intern-format'." /--namespace-prefix))
+  (apply #'/--intern-format (format "%s%s" /--namespace-prefix fmt) args))
 
-(defun /value (form &optional depth)
+(defun /--value (form &optional depth)
   "Recursively evaluate FORM at most DEPTH times.
 If the FORM are evaluated to itself at some time (e.g. interger,
   string, etc), return its printed representation (format \"%s\"
@@ -37,85 +40,79 @@ If DEPTH is not an positive integer, set DEPTH to 65535. That is, the
       (setq depth (1- depth))))
   form)
 
-(defun /name (form)
-  "Get the name of the FORM.
+(defun /--name (form)
+  "The name of the FORM.
 If FORM is symbol, return the `symbol-name'.  
-Othersise, return printed representation of `(/value FORM)'."
+Othersise, return printed representation of `(/--value FORM)'.
+See `/--value'."
   (declare (indent defun))
-  (or (symbolp form) (setq form (/value form)))
+  (or (symbolp form) (setq form (/--value form)))
   (format "%s" form))
 
 (defun /file-directory (path &optional dir)
   "Get the absolute true PATH in DIR.
-PATH can be a symbol, the `symbol-name' of which will be used.
+If PATH is a symbol, the `symbol-name' will be used.
 If DIR is nil, the `default-directory' is used.
-True path means following all the symbolic link to the real directory."
+True path is the path following the symbolic link."
   (declare (indent defun))
-  (file-truename (file-name-as-directory (expand-file-name (/name path) dir))))
+  (file-truename (file-name-as-directory (expand-file-name (/--name path) dir))))
 
 (defun /file-user-directory (path)
-  "Construct directory in `user-emacs-directory'.
-Just like $HOME/.emacs.d/PATH"
+  "Construct directory in `user-emacs-directory' ($HOME/.emacs.d/PATH)."
   (declare (indent defun))
   (/file-directory path user-emacs-directory))
 
-(defvar /custom-name "custom"
-  "The sub-name of variables and constants for user customization.")
-(defvar /directory-name "directory"
-  "The sub-name of directory variable for user customization.")
-(defvar /lisp-name "lisp"
-  "The sub-name of directory variable for source code files.")
+(defconst /--custom-name "custom" "The subname of custom variable.")
+(defconst /--directory-name "directory" "The subname of directory variable.")
+(defconst /--lisp-name "lisp" "The subname of lisp code directory variable.")
 
-(defun /file-lisp-directory (path)
+(defun /--file-lisp-directory (path)
   (declare (indent defun))
-  (:documentation (format "Construct user code directory path.
-Just like $HOME/.emacs.d/%s/PATH" /lisp-name))
-  (/file-directory path (/file-user-directory /lisp-name)))
+  (:documentation
+   (format "User lisp code directory ($HOME/.emacs.d/%s/PATH)." /--lisp-name))
+  (/file-directory path (/file-user-directory /--lisp-name)))
 
-(defun /intern-custom (form &rest args)
+(defun /--intern-custom (form &rest args)
   (declare (indent defun))
-  (:documentation (format "Intern FORM as user custom variable.
-Just like `/%s-FORM'.
-If FORM is a symbol, ARGS must be nil and the `symbol-name' of FORM is used.
-If FORM is string, FORM can be a format string and ARGS is the format
-  parameter." /custom-name))
-  (apply #'/intern (format "%s-%s" /custom-name (/name form)) args))
+  (:documentation (format "Prepend %s to user format string and intern it.
+See `/--intern'." /--custom-name))
+  (apply #'/--intern (format "%s-%s" /--custom-name (/--name form)) args))
 
-(defun /intern-directory (form &rest args)
+(defun /--intern-directory (form &rest args)
   (declare (indent defun))
-  (:documentation (format "Intern FORM as user directory variable.
-Just like `/%s-FORM-%s'.
-see `/intern-custom' for paramter explanation." /custom-name /directory-name))
-  (apply #'/intern-custom (format "%s-%s" (/name form) /directory-name) args))
+  (:documentation (format "Append %s to custom format string and intern it.
+See `/--intern-custom'." /--directory-name))
+  (apply #'/--intern-custom
+	 (format "%s-%s" (/--name form) /--directory-name) args))
 
-(defun /intern-lisp-directory (form &rest args)
+(defun /--intern-lisp-directory (form &rest args)
   (declare (indent defun))
-  (:documentation (format "Intern FORM as user code directory variable.
-Just like `/%s-list-FORM-%s'.
-see `/intern-custom' for paramter explanation." /custom-name /directory-name))
-  (apply #'/intern-directory (format "%s-%s" /lisp-name (/name form)) args))
+  (:documentation
+   (format "Prepend %s to the directory format string and intern it.
+See `/--intern-directory'." /--lisp-name))
+  (apply #'/--intern-directory
+	 (format "%s-%s" /--lisp-name (/--name form)) args))
 
 (defgroup /user nil
   "The user init file configuration group."
   :group 'convenience
-  :prefix (format "/%s" /custom-name))
+  :prefix (format "%s%s" /--namespace-prefix /--custom-name))
 
-(defmacro /def-lisp-directory (sym/name &optional doc)
+(defmacro /def-lisp-directory (form &optional doc)
   (declare (doc-string 2) (indent defun))
-  (:documentation
-   (format "Create `/%s-%s-SYM/NAME-%s' and `/require-SYM/NAME'.
-This is used user file load."
-	   /custom-name /lisp-name /directory-name))
-  (let* ((name (/name sym/name))
-	 (dir (/file-lisp-directory sym/name)))
+  (:documentation (format "Create `%s' and `/require-FORM'.
+Utility tool function to load user lisp file."
+			  (/--intern-lisp-directory 'FORM)))
+  (let* ((name (/--name form)) (dir (/--file-lisp-directory form)))
     `(progn
-       (defconst ,(/intern-lisp-directory sym/name) ,dir
-	 ,(format "%s code directory. %s" (capitalize name) doc))
-       (defmacro ,(/intern "require-%s" name) (feature)
-	 ,(format "Load %s/FEATURE file from %s directory." name name)
+       (defconst ,(/--intern-lisp-directory form) ,dir
+	 ,(format "%s code directory.\n%s" (capitalize name) doc))
+       (defmacro ,(/--intern "require-%s" name) (feature)
+	 ,(format "Load %s/FEATURE from %s directory." name name)
 	 (declare (indent defun))
-	 (let* ((ft (/intern "%s/%s" ,name (/name feature)))
-		(path (expand-file-name (/name feature) ,dir)))
+	 (let* ((name (/--name feature))
+		(ft (/--intern "%s/%s" ,name name))
+		(path (expand-file-name name ,dir)))
 	   `(unless (featurep ',ft)
 	      (if (file-exists-p ,(format "%s.elc" path))
 		  (require ',ft ,(format "%s.elc" path))
@@ -129,15 +126,15 @@ and the file extension."
   (declare (indent defun))
   (let ((str (file-name-sans-extension load-file-name)))
     (string-match "[^/]*/[^/]*\\'" str)
-    `(provide ',(/intern (match-string 0 str)))))
+    `(provide ',(/--intern (match-string 0 str)))))
 
-(/def-lisp-directory init "Specific init file.")
-(/def-lisp-directory config "Configure packages.")
-(/def-lisp-directory custom "Customization options.")
-(/def-lisp-directory lib "Useful functions.")
-(/def-lisp-directory meta "Code generators (macro).")
+(/def-lisp-directory init "Init file.")
+(/def-lisp-directory config "Packages configuration.")
+(/def-lisp-directory custom "User options.")
+(/def-lisp-directory lib "Utility functions.")
+(/def-lisp-directory meta "Utility macros.")
 (/def-lisp-directory test "Test codes.")
-(/def-lisp-directory tool "Useful batch mode tool.")
+(/def-lisp-directory tool "Batch utility tool.")
 
 (/provide)
 ;;; .el ends here

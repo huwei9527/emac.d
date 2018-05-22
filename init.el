@@ -18,8 +18,8 @@
          ;; Specify the file because load-path is set after it is loaded.
          (expand-file-name "lisp/custom/global-custom.el" user-emacs-directory))
 
-(require 'test-custom)
-(require 'test-lib)
+; (require 'test-custom)
+; (require 'test-lib)
 
 (if (display-graphic-p)
     (/require-init graphic)

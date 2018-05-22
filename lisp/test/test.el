@@ -1,7 +1,13 @@
-;; -*- lexical-binding : t ; byte-compile-dynamic : t -*-
+;;; -*- lexical-binding : t ; byte-compile-dynamic : t -*-
 
-(require 'test-lib)
-;; (require 'sequence-test)
+;;; Commentary:
 
-(provide 'test)
-;;; test.el ends here
+;;; Code:
+
+(/require-lib test)
+; (/require-test global)
+; (/require-test core)
+(/require-test ui)
+
+(/provide)
+;;; test/test.el ends here

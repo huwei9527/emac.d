@@ -6,10 +6,21 @@
 
 (eval-when-compile (/require-meta core))
 
-(defvar /fgname "foreground")
-(defvar /bgname "background")
+(defvar /--fgname "foreground" "Foreground face subname")
+(defvar /--bgname "background" "Background face subname")
 
-(defvar /color-alist
+(defun /--intern-face (&optional fg bg)
+  (declare (indent defun))
+  (:documentation (format "Intern face name string.
+If fg and bg are both non-nil, use `FG-BG'.
+If fg is nil and bg is non-nil, use `BG-%s'.
+If fg is non-nil and bg is nil, use `FG-%s'.
+If fg and bg are both nil, user `nil'." /--fgname /--bgname))
+  (if fg (if bg (/--intern "%s-%s" (/--name fg) (/--name bg))
+	   (/--intern "%s-%s" (/--name fg) /--fgname))
+    (and bg (/--intern "%s-%s" (/--name bg) /--bgname))))
+
+(defvar /--color-alist
   ;;            256          t
   '((white    "color-255" "#ffffff")
     (black    "color-16"  "#000000")
@@ -22,10 +33,7 @@
     )
   "Face color alist.")
 
-(defvar /face-list nil "")
-(defvar /attrs (car /color-alist))
-
-(defmacro /defface--single (attrs f/b)
+(defmacro /defface--single (attrs &optional fg)
   (declare (indent defun))
   (:documentation
    (format "Define face containing one single color.
@@ -33,41 +41,28 @@ ATTRS is a list of form (name tty hex):
  name (symbol) - face name `name-F/B'
  tty  (string) - tty display color
  hex  (string) - fall through color
-F/B is one of \"%s\" for \"%s\"" /fgname /bgname))
-  (let* ((attrs (symbol-value attrs))
-	 (cr (nth 0 attrs))
-         (name (symbol-name cr))
-         (tty (nth 1 attrs))
-         (hex (nth 2 attrs))
-         (sym-fb (/intern ":%s" f/b))
-         (sym-face (/intern "%s-%s" name f/b)))
-    (push sym-face /face-list)
-    `(defface ,sym-face
-       '((((class color) (type tty) (min-colors 256)) ,sym-fb ,tty)
-         (t ,sym-fb ,hex))
-       ,(format "%s-%s face. tty : %s; t : %s" name f/b tty hex))))
+If FG is non-nil, the single color is set to foreground and F/B is
+  %s, otherwise the single color is set to background and F/B is %s."
+	   /--fgname /--bgname))
+  (let* ((attrs (/--list attrs)) (tty (nth 1 attrs)) (hex (nth 2 attrs))
+         prop face)
+    (if fg (setq prop :foreground face (/--intern-face (nth 0 attrs) nil))
+      (setq prop :background face (/--intern-face nil (nth 0 attrs))))
+    (and (boundp '/--face-list) (push face /--face-list))
+    `(defface ,face
+       '((((class color) (type tty) (min-colors 256)) ,prop ,tty)
+         (t ,prop ,hex))
+       ,(format "Single face %s.\ntty : %s; t : %s" face tty hex))))
 
-(pp (macroexpand '(/defface--single /attrs /fgname)))
-
-(defmacro code-defface-foreground (cr-list)
-  ""
-  `(code-defface-foreground-or-background-raw ,cr-list "foreground"))
-
-(defmacro code-defface-background (cr-list)
-  ""
-  `(code-defface-foreground-or-background-raw ,cr-list "background"))
-
-(defmacro code-defface-foreground-and-background-raw (fg-list bg-list)
-  (let* ((fg (car fg-list))
-         (bg (car bg-list))
-         (fg-name (symbol-name fg))
-         (bg-name (symbol-name bg))
-         (sym-face (intern-format "%s-%s" fg-name bg-name)))
-    (push sym-face code-basic-color-face-list)
-    `(defface ,sym-face
-       '((t :inherit (,(intern-format "%s-foreground" fg-name)
-                      ,(intern-format "%s-background" bg-name))))
-       ,(format "%s-%s face." (capitalize fg-name) (capitalize bg-name)))))
+(defmacro /defface--double (fattrs battrs)
+  (let* ((fattrs (/--list fattrs)) (battrs (/--list battrs))
+	 (fname (car fattrs)) (bname (car battrs))
+         (face (/--intern-face fname bname)))
+    (and (boundp '/--face-list) (push face /--face-list))
+    `(defface ,face
+       '((t :inherit (,(/--intern-face fname nil) ,(/--intern-face nil bname))))
+       ,(format "Double face %s.\ntty : (%s %s); t : (%s %s)" face
+		(nth 1 fattrs) (nth 1 battrs) (nth 2 fattrs) (nth 2 battrs)))))
 
 (defmacro code-defface-basic-color ()
   "Define face with basic colors."

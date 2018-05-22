@@ -4,44 +4,50 @@
 
 ;;; Code:
 
-(defmacro /def-user-directory (sym/name &optional doc)
+(defun /--intern-user-directory (form &rest args)
+  (declare (indent defun))
+  (:documentation
+   (format "Use FORM as the directory format string and intern it.
+The character '/' in FORM is replaced by '-' before intern it.
+See `/--intern-directory'"))
+  (apply #'/--intern-directory
+	 (replace-regexp-in-string "/" "-" (/--name form)) args))
+
+(defmacro /def-user-directory (form &optional doc)
+  (declare (doc-string 2) (indent defun))
+  (:documentation (format "Create %s and set to $HOME/.emacs.d/FORM."
+			  (/--intern-user-directory 'FORM)))
+  (and (boundp '/--pre-create-directory-list)
+       (push (/file-user-directory form) /--pre-create-directory-list))
+  `(defconst ,(/--intern-user-directory form) ,(/file-user-directory form) ,doc))
+
+(defvar /--config-name "config"
+  "The subname of configuration directory variable.")
+
+(defun /--file-config-directory (path)
+  (declare (indent defun))
+  (:documentation
+   (format "User configure directory path ($HOME/.emacs.d/%s/PATH)."
+	   /--config-name))
+  (/file-directory path (/file-user-directory /--config-name)))
+
+(defun /--intern-config-directory (form &rest args)
+  (declare (indent defun))
+  (:documentation
+   (format "Prepend %s to directory format string and intern it.
+See `/--intern-directory'." /--config-name))
+  (apply #'/--intern-directory
+	 (format "%s-%s" /--config-name (/--name form)) args))
+
+(defmacro /def-config-directory (form &optional doc)
   (declare (doc-string 2) (indent defun))
   (:documentation
-   (format "Create variable for the directory in the `user-emacs-directory'.
-Just like `/%s-SYM/NAME-%s'=$HOME/.emacs.d/SYM/NAME."
-  /custom-name /directory-name))
-  (and (boundp '/pre-create-directory-list)
-       (push (/file-user-directory sym/name) /pre-create-directory-list))
-  `(defconst ,(/intern-directory
-	       (replace-regexp-in-string "/" "-" (/name sym/name)))
-     ,(/file-user-directory sym/name) ,doc))
-
-(defvar /config-name "config"
-  "The sub-name of directory variable for configuration files.")
-
-(defun /file-config-directory (path)
-  (declare (indent defun))
-  (:documentation (format "Construct user configure directory path.
-Just like $HOME/.emacs.d/%s/PATH" /config-name))
-  (/file-directory path (/file-user-directory /config-name)))
-
-(defun /intern-config-directory (form &rest args)
-  (declare (indent defun))
-  (apply #'/intern-directory (format "%s-%s" /config-name (/name form)) args))
-
-(defmacro /def-config-directory (sym/name &optional doc)
-  (declare (doc-string 2) (indent defun))
-  (:documentation
-   (format "Create variable for directory of configuration files.
-Just like `/%s-%s-SYM/NAME-%s'=$HOME/.emacs.d/%s/SYM/NAME"
-	   /custom-name /config-name /directory-name /config-name))
-  (and (boundp '/pre-create-directory-list)
-       (push (/file-config-directory sym/name) /pre-create-directory-list))
-  `(progn
-     (defvar ,(/intern-config-directory sym/name)
-       ,(/file-config-directory sym/name)
-       ,(format "%s configure directory.\n%s"
-		(capitalize (/name sym/name)) doc))))
+   (format "Create %s and set to $HOME/.emacs.d/%s/FORM"
+	   (/--intern-config-directory 'FORM) /--config-name))
+  (and (boundp '/--pre-create-directory-list)
+       (push (/--file-config-directory form) /--pre-create-directory-list))
+  `(defvar ,(/--intern-config-directory form) ,(/--file-config-directory form)
+     ,(format "%s configure directory.\n%s" (capitalize (/--name form)) doc)))
 
 (/provide)
 ;;; meta/file.el ends here

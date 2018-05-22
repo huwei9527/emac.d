@@ -11,8 +11,6 @@
   (string-match-p /custom-dotdirectory-regexp
                   (file-name-nondirectory (directory-file-name path))))
 
-; (print (/dotdirectoryp "aaa"))
-
 (defun /subdirectory-1 (path)
   "Return list of the sub-directories of path at depth 1."
   (let* ((dirs nil))
