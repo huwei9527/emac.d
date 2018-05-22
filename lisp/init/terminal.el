@@ -8,11 +8,13 @@
 ;; 	 (expand-file-name "lisp/init/global.el" user-emacs-directory))
 
 (defvar /--pre-create-directory-list nil)
+
 ;; (/require-meta file)
 (/require-config elpa)
 (/require-config ui)
 (/require-test test)
-(pp /--pre-create-directory-list)
+
+;(pp /--pre-create-directory-list)
 
 (switch-to-buffer "*Messages*")
 

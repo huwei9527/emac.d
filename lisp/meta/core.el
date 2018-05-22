@@ -32,20 +32,56 @@ If DEPTH is non-nil, (/--value INIT DEPTH)." (/--intern-custom 'FORM)))
      ,(if depth (/--value init depth) init) ,doc))
 ;;; }}
 
-;;; {{ private temporary symbol
-(defvar /obarray (make-vector 107 0)
-  "Private obarray to store interned symbol. 
-These symbol can be get by name and won't conflict with any normal
-interned symbols.")
-
-(defun /gensym (name)
-  "Intern a symbol of name NAME in `/obarray'."
-  (declare (indent defun))
-  (intern name /obarray))
-;;; }}
-
 ;;; {{ sexp constructor.
+(defvar /--sexp-list (make-symbol "/--sexp-list")
+  "Store the list of sexp during the sexp construction")
+(set /--sexp-list nil)
 
+(defmacro /--sexp (&rest body)
+  "Create a sexp from BODY.
+The sexp is store in `/--sexp-list' and `/--sexp-list' is set to nil
+  before evaluate BODY."
+  (declare (indent defun))
+  `(let* ((,/--sexp-list nil)) ,@body (nreverse ,/--sexp-list)))
+
+(defmacro /--sexp-append-1 (expr)
+  "Append EXPR to `/--sexp-list'."
+  (declare (indent defun))
+  `(push ,expr ,/--sexp-list))
+
+(defmacro /--sexp-append (&rest exprs)
+  "Append EXPRS to `/--sexp-list'."
+  (declare (indent defun))
+  `(dolist (e ',exprs) (/--sexp-append-1 e)))
+
+(defalias '/--sexp-exec #'/--sexp-append "Append SEXPS to `progn' list.")
+
+(defmacro /--sexp-progn (&rest body)
+  "Create a `progn' form."
+  (declare (indent defun))
+  `(/--sexp (/--sexp-append-1 'progn) ,@body))
+
+(defmacro /--sexp-progn-exec (&rest body)
+  "Create a `progn' form.
+BODY is wrapped in `/--sexp-exec' form so other constructor has no effect."
+  (declare (indent defun))
+  `(/--sexp-progn (/--sexp-exec ,@body)))
+
+(defmacro /--sexp-cond (&rest body)
+  "Create a `cond' form."
+  (declare (indent defun))
+  `(/--sexp (/--sexp-append-1 'cond) ,@body))
+
+(defmacro /--sexp-cond-case (&rest body)
+  "Create a `cond' form.
+BODY is wrapped in `/--sexp-exec' form so other constructor has no
+  effect. BODY should be a list of form (csexp forms)."
+  `(/--sexp-cond (/--sexp-exec ,@body)))
+
+(defmacro /--sexp-case (csexp &rest body)
+  "Create a `case' form."
+  (declare (indent defun))
+  `(/--sexp-append (,csexp ,@body)))
 ;;; }}
 
 (/provide)

@@ -5,9 +5,8 @@
 ;;; Code:
 
 (/require-lib test)
-; (/require-test global)
-(/require-test core)
-; (/require-test ui)
+
+(/def-custom-var /testdir "~/Projects/test/abcd" "Doc testdir")
 
 (/provide)
-;;; test/test.el ends here
+;;; test/file.el ends here
