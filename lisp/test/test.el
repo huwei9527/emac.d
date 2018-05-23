@@ -6,8 +6,8 @@
 
 (/require-lib test)
 ; (/require-test global)
-(/require-test core)
-; (/require-test ui)
+; (/require-test core)
+(/require-test ui)
 
 (/provide)
 ;;; test/test.el ends here

@@ -64,25 +64,17 @@ If FG is non-nil, the single color is set to foreground and F/B is
        ,(format "Double face %s.\ntty : (%s %s); t : (%s %s)" face
 		(nth 1 fattrs) (nth 1 battrs) (nth 2 fattrs) (nth 2 battrs)))))
 
-(defmacro code-defface-basic-color ()
-  "Define face with basic colors."
-  (let* ((wb-alist (list (car code-color-alist)
-                         (cadr code-color-alist)))
-         (cr-alist (nthcdr 2 code-color-alist)))
-    (code-progn
-     (dolist (list-cr code-color-alist)
-       (code-item `(code-defface-foreground ,list-cr)
-                  `(code-defface-background ,list-cr)))
-     (code-item `(code-defface-foreground-and-background-raw
-                  ,(car wb-alist) ,(cadr wb-alist))
-                `(code-defface-foreground-and-background-raw
-                  ,(cadr wb-alist) ,(car wb-alist)))
-     (dolist (list-wb wb-alist)
-       (dolist (list-cr cr-alist)
-         (code-item `(code-defface-foreground-and-background-raw
-                      ,list-cr ,list-wb)
-                    `(code-defface-foreground-and-background-raw
-                      ,list-wb ,list-cr)))))))
+(defmacro /defface-simple ()
+  "Define simple faces."
+  (let* ((wb-alist (list (car /--color-alist) (cadr /--color-alist)))
+         (cr-alist (nthcdr 2 /--color-alist)))
+    (/--sexp-progn
+      (dolist (attrs /--color-alist)
+	(/--sexp-append
+	  ; `(/defface--single ,attrs 'fg)
+	  `(/defface--single ,attrs))
+	; (/--sexp-append-1 `(/defface--single ,attrs 'fg))
+	))))
 
 
 (/provide)

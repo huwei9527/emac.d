@@ -26,6 +26,12 @@
 ;;   (dolist (e (1 2 3))
 ;;     (print e)))
 
+;; (setq lst nil)
+;; (print lst)
+;; (dolist (e '(1 2 3))
+;;   (push `(aaa ,e) lst))
+;; (print lst)
+
 (defmacro testb ()
   "Test b."
   (/--sexp
@@ -35,8 +41,10 @@
 
 (defmacro testc ()
   "Test c."
-  (/--sexp-progn-exec
-    (message "a") (message "b") (message "c")))
+  (/--sexp-progn
+    ; (/--sexp-append-1 '(message "a%s" 1234))
+    (/--sexp-append
+      '(message "b") '(message "c"))))
 
 (defmacro testd ()
   "Test d."
@@ -44,11 +52,17 @@
     ((boundp 'a) (message "bound a"))
     (t (message "a") (message "b"))))
 
-(/ppmacroexpand-all (/--sexp-append a b c))
-(/ppmacroexpand-all (/--sexp-progn (/--sexp-append-1 a)))
-(/ppmacroexpand-all (testd))
+(defmacro teste (&rest body)
+  "Test e."
+  `(let ((,/--sexp-list nil))
+     (dolist (e ,body) (push e ,/--sexp-list))
+     ))
+
+;(/ppmacroexpand-all (/--sexp-append a b c))
+;(/ppmacroexpand-all (/--sexp-progn (/--sexp-append a)))
+(/ppmacroexpand-all (testc))
 (setq a 100)
-(testd)
+(testc)
 (/message-test-end)
 
 (/provide)
