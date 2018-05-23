@@ -44,11 +44,7 @@ If DEPTH is non-nil, (/--value INIT DEPTH)." (/--intern-custom 'FORM)))
 The sexp is store in `/--sexp-list' and `/--sexp-list' is set to nil
   before evaluate BODY."
   (declare (indent defun))
-  `(let* ((,/--sexp-list nil))
-     ,@body
-     (setq ,/--sexp-list (nreverse ,/--sexp-list))
-     ; (print ,/--sexp-list)
-     ,/--sexp-list))
+  `(let* ((,/--sexp-list nil)) ,@body (nreverse ,/--sexp-list)))
 
 (defmacro /--sexp-append-1 (expr)
   "Append EXPR to `/--sexp-list'."
@@ -58,7 +54,6 @@ The sexp is store in `/--sexp-list' and `/--sexp-list' is set to nil
 (defmacro /--sexp-append (&rest exprs)
   "Append EXPRS to `/--sexp-list'."
   (declare (indent defun))
-  ; (/--sexp-progn (dolist (e exprs) (/--sexp-append-1 `(/--sexp-append-1 ,e))))
   `(setq ,/--sexp-list (apply #'/prepend ,/--sexp-list ,@exprs nil))
   )
 

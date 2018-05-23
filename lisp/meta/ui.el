@@ -66,15 +66,24 @@ If FG is non-nil, the single color is set to foreground and F/B is
 
 (defmacro /defface-simple ()
   "Define simple faces."
-  (let* ((wb-alist (list (car /--color-alist) (cadr /--color-alist)))
-         (cr-alist (nthcdr 2 /--color-alist)))
+  (let* (white black colors)
     (/--sexp-progn
+      ;; single color face
       (dolist (attrs /--color-alist)
 	(/--sexp-append
-	  ; `(/defface--single ,attrs 'fg)
-	  `(/defface--single ,attrs))
-	; (/--sexp-append-1 `(/defface--single ,attrs 'fg))
-	))))
+	  `(/defface--single ,attrs 'fg) `(/defface--single ,attrs)))
+      (setq colors /--color-alist
+	    white (car colors) colors (cdr colors)
+	    black (car colors) colors (cdr colors))
+      ;; black and white face
+      (/--sexp-append
+	`(/defface--double ,white ,black) `(/defface--double ,black ,white))
+      ;; black color face
+      (dolist (battrs `(,white ,black))
+	(dolist (cattrs colors)
+	  (/--sexp-append
+	    `(/defface--double ,battrs ,cattrs)
+	    `(/defface--double ,cattrs ,battrs)))))))
 
 
 (/provide)

@@ -18,7 +18,8 @@
         )
   "Major mode list which disable line number.")
 
-; (code-defface-basic-color)
+;; construct simple color face.
+(/defface-simple)
 
 (/provide)
 ;;; custom/ui.el ends here
