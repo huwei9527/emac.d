@@ -6,7 +6,7 @@
 
 (let* ((file-name-handler-alist nil)) ; Accelerate loading.
   ; (require-init 'init/global)
-  (/require-init terminal)
+  ; (/require-init terminal)
   (require 'config-elpa)
   (require 'config-ui)
   (require 'config-auto-save)

@@ -23,7 +23,8 @@
 
 (if (display-graphic-p)
     (/require-init graphic)
-  (/require-init terminal))
+  (/require-init terminal)
+  )
 
 ;; (let* ((file-name-handler-alist nil)) ; Accelerate loading.
 ;;   (require 'config-elpa)

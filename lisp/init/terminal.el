@@ -9,7 +9,7 @@
 
 (defvar /--pre-create-directory-list nil)
 
-;; (/require-meta file)
+(/require-meta file)
 (/require-config elpa)
 (/require-config ui)
 (/require-config auto-save)
