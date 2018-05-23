@@ -21,7 +21,7 @@
 (/def-custom-var auto-save-interval auto-save-interval
   "The interval between auto-save." 1)
 
-(/def-custom-var auto-save-silently nil
+(/def-custom-var auto-save-silently t
   "If non-nil, avoid messages when saving files.")
 
 (/provide)

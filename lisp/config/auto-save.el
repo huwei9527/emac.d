@@ -27,6 +27,8 @@
              (not (/uneditable-file-p name)))))
 
 (/require-lib auto-save)
+(/idle-save-mode)
+(/focus-save-mode)
 
 (/provide)
 ;;; config/auto-save.el ends here

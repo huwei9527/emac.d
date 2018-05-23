@@ -10,6 +10,7 @@
 ; (/require-test core)
 ; (/require-test ui)
 (/require-test auto-save)
+; (/require-test hook)
 
 (/provide)
 ;;; test/test.el ends here

@@ -32,11 +32,14 @@
   (/save-buffer /custom-auto-save-silently))
 
 (define-minor-mode /idle-save-mode
-  "Toggle auto-saving in the current buffer (Auto Save mode).
+  "Toggle idle-saving in the current buffer (Idle Save mode).
 With a prefix argument ARG, enable Auto Save mode if ARG is
 positive, and disable it otherwise.
 
-If called from Lisp, enable the mode if ARG is omitted or nil."
+If called from Lisp, enable the mode if ARG is omitted or nil.
+
+When Idle Save mode is on, all the modified and editable buffer will
+  be saved."
   :init-value nil
   :lighter nil
   :keymap nil
@@ -49,6 +52,32 @@ If called from Lisp, enable the mode if ARG is omitted or nil."
     (when /--auto-save-idle-timer
       (cancel-timer /--auto-save-idle-timer)
       (setq /--auto-save-idle-timer nil))))
+
+(eval-when-compile (/require-meta hook))
+
+(define-minor-mode /focus-save-mode
+  "Toggle focus-saving in the current buffer (Focus Save mode).
+With a prefix argument ARG, enable Auto Save mode if ARG is
+positive, and disable it otherwise.
+
+If called from Lisp, enable the mode if ARG is omitted or nil.
+
+When Focus Save mode is on, the current modified buffer will be saved
+before losing focus."
+  :init-value nil
+  :lighter nil
+  :keymap nil
+  :global t
+  (if /focus-save-mode
+      (progn
+	(/advice-add-buffer-change :before /auto-save-buffer-advice)
+	(/advice-add-window-switch :before /auto-save-buffer-advice)
+	(/add-hook-focus-loss /auto-save-buffer-advice))
+    (/advice-remove-buffer-change /auto-save-buffer-advice)
+    (/advice-remove-windwo-switch /auto-save-buffer-advice)
+    (/remove-hook-focus-loss /auto-save-buffer-advice)))
+
+
 
 (/provide)
 ;;; lib/auto-save.el ends here

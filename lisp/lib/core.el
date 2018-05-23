@@ -4,6 +4,16 @@
 
 ;;; Code:
 
+(defun /true (&rest _ingore)
+  "Ignore any arguments and return t.
+This is contrast with `ignore' which always return nil."
+  t)
+
+(defun /false (&rest _ignore)
+  "Ignore any arguments and return nil.
+This is the opposite of `/true'"
+  nil)
+
 (defun /prepend (list &rest args)
   "Return a list by pushing ARGS in the front of LIST in the coming order.
 The last argument is the first element of result list."

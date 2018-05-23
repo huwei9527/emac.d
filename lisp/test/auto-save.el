@@ -8,7 +8,8 @@
 
 (/message-test-start)
 (setq /custom-auto-save-interval 2)
-(/idle-save-mode)
+; (/idle-save-mode)
+; (/focus-save-mode)
 (/message-test-end)
 
 (/provide)
