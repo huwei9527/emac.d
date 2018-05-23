@@ -6,6 +6,24 @@
 
 (/require-lib core)
 
+(defvar /--predictor-name "p" "The subname of predictor symbol.")
+
+(defun /--intern-predictor (form &rest args)
+  (declare (indent defun))
+  (:documentation (format "Append %s to the user variable and intern it.
+See `/intern'." /--predictor-name))
+  (apply #'/--intern (format "%s-%s" (/--name form) /--predictor-name) args))
+
+(defvar /--regexp-name "regexp" "The subname of regular expression variable.")
+
+(defun /--intern-regexp (form &rest args)
+  (declare (indent defun))
+  (:documentation
+   (format "Append %s to the custom format string and intern it.
+See `/--intern-custom'." /--regexp-name))
+  (apply #'/--intern-custom
+	 (format "%s-%s" (/--name form) /--regexp-name) args))
+
 (defun /--string (form)
   "Evaluate FORM adaptively until FORM is a string.
 The function assumes that form will eventually turn into a string."

@@ -6,6 +6,9 @@
 
 (/require-meta core)
 
+(print (/regexp-quote "(abcd)"))
+(print (/regexp-quote "`..?'"))
+
 (/message-test-start)
 (defvar vara (make-symbol "unintern-symbol") "Test")
 (defmacro testma ()

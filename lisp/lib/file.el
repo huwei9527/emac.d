@@ -4,19 +4,26 @@
 
 ;;; Code:
 
+(eval-when-compile (/require-meta file))
 (/require-custom file)
 
-(defun /dotdirectoryp (path)
-  "Return non-nil if PATH is a system dot directory, otherwise return nil."
-  (string-match-p /custom-dotdirectory-regexp
-                  (file-name-nondirectory (directory-file-name path))))
+(defsubst /file-name (path)
+  "Return the filename of PATH.
+If PATH is a directory, the system directory character is ommited."
+  (file-name-nondirectory (directory-file-name path)))
+
+(defsubst /file-name-match (path regexp)
+  "Return non-nil if the non-directory filename of PATH match REGEXP."
+  (string-match-p regexp (/file-name path)))
+
+(/def-file-name-predictor-all)
 
 (defun /subdirectory-1 (path)
   "Return list of the sub-directories of path at depth 1."
   (let* ((dirs nil))
     (dolist (fn (directory-files path 'full))
       (when (file-directory-p fn)
-        (unless (/dotdirectoryp fn)
+        (unless (/dotdirectory-p fn)
           (push fn dirs))))
     dirs))
 

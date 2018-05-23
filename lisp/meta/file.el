@@ -4,6 +4,10 @@
 
 ;;; Code:
 
+(/require-meta core)
+(/require-lib core)
+(require 'cl)
+
 (defun /--intern-user-directory (form &rest args)
   (declare (indent defun))
   (:documentation
@@ -48,6 +52,50 @@ See `/--intern-directory'." /--config-name))
        (push (/--file-config-directory form) /--pre-create-directory-list))
   `(defvar ,(/--intern-config-directory form) ,(/--file-config-directory form)
      ,(format "%s configure directory.\n%s" (capitalize (/--name form)) doc)))
+
+(defmacro /def-file-name-regexp (form regexp doc)
+  (declare (doc-string 3) (indent defun))
+  (:documentation (format "Construct a variable %s.
+The variable is set to `(/file-name-regexp-quote regexp)'."
+			  (/--intern-regexp 'FORM)))
+  `(defvar ,(/--intern-regexp form) ,(/regexp-quote regexp) ,doc))
+
+(defmacro /def-file-name-predictor (form doc)
+  (declare (dot-string 2) (indent defun))
+  (:documentation (format "Construct a predictor %s.
+The predictor user regexp `%s' to check."
+  (/--intern-predictor 'FORM) (/--intern-regexp 'FORM)))
+  `(defun ,(/--intern-predictor form) (path)
+     ,doc
+     (string-match-p ,(/--intern-regexp form)
+		     (file-name-nondirectory (directory-file-name path)))))
+
+(defvar /--file-name-regexp-alist
+  '((dotdirectory "`..?'" "system '.' and '..' directory")
+    (uneditable-file "((~|#)|(.(exe|pdf|zip)))'" "emacs uneditable file")
+    (system-buffer "`(*)" "system buffer")
+    (auto-killed-buffer "`(*(Warning|AAA|BBB))" "auto killed buffer")
+    )
+  "The alist of the filename regexp and predictor.")
+
+(defmacro /def-file-name-regexp-all ()
+  "Construct regexp variables from `/--file-name-regexp-alist'."
+  (declare (indent defun))
+  (/--sexp-progn
+    (dolist (attrs /--file-name-regexp-alist)
+      (/--sexp-exec
+	`(/def-file-name-regexp ,(car attrs) ,(cadr attrs)
+	   ,(format "The regular expression for %s." (caddr attrs)))))))
+
+(defmacro /def-file-name-predictor-all ()
+  "Construct regexp predictor from `/--file-name-regexp-alist'."
+  (declare (indent defun))
+  (/--sexp-progn
+    (dolist (attrs /--file-name-regexp-alist)
+      (/--sexp-exec
+	`(/def-file-name-predictor ,(car attrs)
+	   ,(format "Return non-nil if PATH is %s, otherwise return nil."
+		    (caddr attrs)))))))
 
 (/provide)
 ;;; meta/file.el ends here

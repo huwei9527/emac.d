@@ -12,6 +12,7 @@
 ;; (/require-meta file)
 (/require-config elpa)
 (/require-config ui)
+(/require-config auto-save)
 (/require-test test)
 
 ;(pp /--pre-create-directory-list)
