@@ -63,5 +63,29 @@ If DEPTH is not a positive integer, the whole directory tree is searched."
     (add-to-list list path)
     (/add-subdirectory-to-list path list depth)))
 
+(defun /save-buffer (&optional silent)
+  "Save the current buffer.
+Return t if the save actually performed, otherwise return nil.
+If SILENT is nil, avoid message when saving."
+  (if (and buffer-file-name			       ;; Vaid buffer
+	   (buffer-modified-p)			       ;; Modified
+	   (not (/uneditable-file-p buffer-file-name)) ;; Emacs editable
+	   (file-writable-p buffer-file-name)	       ;; Write permission
+	   )
+      (progn
+	(if silent (with-temp-message "" (save-buffer)) (save-buffer))
+	t)
+    nil))
+
+(defun /save-buffer-all (&optional silent)
+  "Save all the buffers.
+Return the number of buffers actually saved."
+  (let* ((cnt 0))
+    (save-excursion
+      (dolist (buf (buffer-list))
+	(set-buffer buf)
+	(and (/save-buffer silent) (setq cnt (1+ cnt)))))
+    cnt))
+
 (/provide)
 ;;; lib/file.el ends here

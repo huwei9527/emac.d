@@ -15,5 +15,14 @@
 (/def-config-directory auto-save-alist
   "The directory to save Emacs recover file. (uid-username~)")
 
+(/def-custom-var auto-save-idle-time 1
+  "The idle seconds to start auto save.")
+
+(/def-custom-var auto-save-interval auto-save-interval
+  "The interval between auto-save." 1)
+
+(/def-custom-var auto-save-silently nil
+  "If non-nil, avoid messages when saving files.")
+
 (/provide)
 ;;; custom/auto-save.el ends here

@@ -61,7 +61,7 @@ The variable is set to `(/file-name-regexp-quote regexp)'."
   `(defvar ,(/--intern-regexp form) ,(/regexp-quote regexp) ,doc))
 
 (defmacro /def-file-name-predictor (form doc)
-  (declare (dot-string 2) (indent defun))
+  (declare (doc-string 2) (indent defun))
   (:documentation (format "Construct a predictor %s.
 The predictor user regexp `%s' to check."
   (/--intern-predictor 'FORM) (/--intern-regexp 'FORM)))

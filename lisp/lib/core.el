@@ -20,5 +20,9 @@ The last argument is the first element of result list."
 *  => \\\\*, aterisk character"
   (replace-regexp-in-string "[()|.*`']" "\\\\\\&" string))
 
+(defun /time-since (last)
+  "Seconds between current time and LAST."
+  (time-to-seconds (time-since last)))
+
 (/provide)
 ;;; lib/core.el ends here

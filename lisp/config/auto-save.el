@@ -26,5 +26,7 @@
         (and (normal-backup-enable-predicate name)
              (not (/uneditable-file-p name)))))
 
+(/require-lib auto-save)
+
 (/provide)
 ;;; config/auto-save.el ends here
