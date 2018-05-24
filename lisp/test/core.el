@@ -52,8 +52,8 @@
 (defmacro testd ()
   "Test d."
   (/--sexp-cond-case
-    ((boundp 'a) (message "bound a"))
-    (t (message "a") (message "b"))))
+    '((boundp 'a) (message "bound a"))
+    '(t (message "a") (message "b"))))
 
 (defmacro teste (&rest body)
   "Test e."
@@ -63,9 +63,28 @@
 
 ;(/ppmacroexpand-all (/--sexp-append a b c))
 ;(/ppmacroexpand-all (/--sexp-progn (/--sexp-append a)))
-(/ppmacroexpand-all (testc))
+; (/ppmacroexpand-all (testc))
 (setq a 100)
-(testc)
+; (testc)
+
+(defvar aaa 1)
+(message "before aaa: %s" aaa)
+
+(eval-after-load '"~/.emacs.d/test_compile"
+  '(testd))
+
+(eval-after-load "~/.emacs.d/test_compile"
+  '(setq aaa 2))
+(message "eval aaa: %s" aaa)
+
+(load "/home/hw/Projects/emacs.d/test_compile.el")
+; (message "load aaa: %s" aaa)
+
+(/ppmacroexpand-all (/eval-after-load abcd a b c d))
+(/eval-after-load abcd a b c d)
+
+
+
 (/message-test-end)
 
 (/provide)

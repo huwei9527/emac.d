@@ -36,6 +36,15 @@ The function assumes that form will eventually turn into a string."
   (declare (indent defun))
   (while (not (listp form)) (setq form (eval form))) form)
 
+(defun /--quote (form)
+  "Quote FORM is form is not a `quote' expression."
+  (declare (indent defun))
+  (and (or (symbolp form)     ;; Quote symbol.
+	                      ;; Quote unquoted list.
+	   (and (listp form) (not (eq 'quote (car form)))))
+       (setq form `(quote ,form)))
+  form)
+
 ;;; {{ Create variable with /custom prefix
 (defmacro /def-custom-var (form &optional init doc depth)
   (declare (doc-string 3) (indent defun))
@@ -75,12 +84,13 @@ The sexp is store in `/--sexp-list' and `/--sexp-list' is set to nil
   `(setq ,/--sexp-list (apply #'/prepend ,/--sexp-list ,@exprs nil))
   )
 
-(defalias '/--sexp-exec #'/--sexp-append "Append SEXPS to `pron' list.")
-
+;; progn
 (defmacro /--sexp-progn (&rest body)
   "Create a `progn' form."
   (declare (indent defun))
   `(/--sexp (/--sexp-append-1 'progn) ,@body))
+
+(defalias '/--sexp-exec #'/--sexp-append "Append SEXPS to `pron' list.")
 
 (defmacro /--sexp-progn-exec (&rest body)
   "Create a `progn' form.
@@ -88,6 +98,7 @@ BODY is wrapped in `/--sexp-exec' form so other constructor has no effect."
   (declare (indent defun))
   `(/--sexp-progn (/--sexp-exec ,@body)))
 
+;; cond
 (defmacro /--sexp-cond (&rest body)
   "Create a `cond' form."
   (declare (indent defun))
@@ -97,6 +108,7 @@ BODY is wrapped in `/--sexp-exec' form so other constructor has no effect."
   "Create a `cond' form.
 BODY is wrapped in `/--sexp-exec' form so other constructor has no
   effect. BODY should be a list of form (csexp forms)."
+  (declare (indent defun))
   `(/--sexp-cond (/--sexp-exec ,@body)))
 
 (defmacro /--sexp-case (csexp &rest body)
@@ -104,6 +116,19 @@ BODY is wrapped in `/--sexp-exec' form so other constructor has no
   (declare (indent defun))
   `(/--sexp-append (,csexp ,@body)))
 ;;; }}
+
+;; eval-after-load
+(defmacro /eval-after-load (package &rest body)
+  "Evaluate BODY after load PACKAGE.
+The expressions in BODY are quoted automatically, which is unlike tool
+tool macros such as `/--sexp-pron-exec', `/--sexp-exec', etc, because
+this macro is intended for the top level use, not for building macros."
+  (declare (indent defun))
+  (/--sexp
+    (/--sexp-append 'eval-after-load (/--quote package)
+      `(quote ,(/--sexp-progn
+		 (dolist (form body)
+		   (/--sexp-append-1 form)))))))
 
 (/provide)
 ;;; meta/core.el ends here

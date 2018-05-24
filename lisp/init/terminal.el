@@ -10,9 +10,11 @@
 (defvar /--pre-create-directory-list nil)
 
 (/require-meta file)
-(/require-config elpa)
-(/require-config ui)
-(/require-config auto-save)
+(/require-config
+  elpa
+  ui
+  auto-save
+  spell)
 (/require-test test)
 
 ;(pp /--pre-create-directory-list)

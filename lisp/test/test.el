@@ -5,12 +5,14 @@
 ;;; Code:
 
 (/require-lib test)
-; (/require-test global)
-; (/require-test file)
-; (/require-test core)
-; (/require-test ui)
-(/require-test auto-save)
-; (/require-test hook)
+(/require-test
+  ;global
+  ;file
+  core
+  ;ui
+  ;auto-save
+  ;hook
+  )
 
 (/provide)
 ;;; test/test.el ends here
