@@ -86,14 +86,53 @@
 (/--def-hook-setter focus-loss focus-out-hook suspend-hook
 		    evil-normal-state-entry-hook)
 
-(defconst /--verbose-functions '(message))
+(defconst /--verbose-functions '(message) "Verbose function list.")
 (defmacro /progn-silently (&rest body)
-  ""
+  "Evaluate BODY silently by advising `/--verbose-functions' to `ignore'."
   (declare (indent defun))
   (/--sexp-progn
     (/--sexp-append-1 `(/advice-add-false ,@/--verbose-functions))
     (dolist (form body) (/--sexp-append-1 form))
     (/--sexp-append-1 `(/advice-remove-false ,@/--verbose-functions))))
+
+(defmacro /with-no-message (&rest body)
+  "Evaluate BODY without message to the minibuffer.
+Message still logged in the *Messages* buffer."
+  (declare (indent defun))
+  (/--sexp-progn-exec `(let* ((inhibit-message t)) ,@body)))
+
+(defconst /--old-y-or-n-p (symbol-function 'y-or-n-p)
+  "Definition of `y-or-n-p' functions.")
+(defconst /--old-yes-or-no-p (symbol-function 'yes-or-no-p)
+  "Definition of `yes-or-no-p' functions.")
+(defconst /--old-true (symbol-function '/true) "Defeintion of `/true'")
+(defconst /--old-false (symbol-function '/false) "Defeintion of `/false'")
+
+(defmacro /with-yes (&rest body)
+  "Inhibit `y-or-n-p' and `yes-or-no-p' function when evaluating BODY.
+The two functions won't promot and will always return t."
+  (declare (indent defun))
+  (/--sexp-progn
+    (/--sexp-append
+      `(fset 'y-or-n-p /--old-true)
+      `(fset 'yes-or-no-p /--old-true))
+    (dolist (form body) (/--sexp-append-1 form))
+    (/--sexp-append
+      `(fset 'y-or-n-p /--old-y-or-n-p)
+      `(fset 'yes-or-no-p /--old-yes-or-no-p))))
+
+(defmacro /with-no (&rest body)
+  "Inhibit `y-or-n-p' and `yes-or-no-p' function when evaluating BODY.
+The two functions won't promot and will always return nil."
+  (declare (indent defun))
+  (/--sexp-progn
+    (/--sexp-append
+      `(fset 'y-or-n-p /--old-false)
+      `(fset 'yes-or-no-p /--old-false))
+    (dolist (form body) (/--sexp-append-1 form))
+    (/--sexp-append
+      `(fset 'y-or-n-p /--old-y-or-n-p)
+      `(fset 'yes-or-no-p /--old-yes-or-no-p))))
 
 (/provide)
 ;;; meta/hook.el ends here

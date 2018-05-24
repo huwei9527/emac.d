@@ -12,21 +12,20 @@
 (/eval-after-load flyspell
   (flyspell-lazy-mode 1)
   (add-to-list 'ispell-extra-args "--sug-mode=ultra")
-  (/add-hook (flyspell-mode-hook) /spell-set-personal-dictionary)
   (setq flyspell-large-region 1)
+  (/add-hook (flyspell-mode-hook) /spell-set-personal-dictionary)
+  ;; Inhibit saving message, Ispell process message
+  (/advice-add (ispell-init-process ispell-kill-ispell ispell-pdict-save)
+    :around
+    (lambda (fun &rest args)
+      "Silent functions."
+      (/with-no-message (apply fun args))))
+  ;; Don't ask to save personal dictionary. Save directly.
+  (/advice-add (ispell-pdict-save) :around
+    (lambda (fun &rest args)
+      "Inhibit `y-or-n-p'."
+      (/with-yes (apply fun args))))
   )
-
-;; (/advice-add (ispell-internal-change-dictionary
-;; 	      ) :before
-;;   (lambda (&rest args)
-;;     (message "internal-change-dictionary: %s" args)
-;;     ))
-
-;; (/advice-add (ispell-start-process)
-;;   (lambda (&rest args)
-;;     (message "start-process: %s" args)))
-
-
 
 (setq flyspell-issue-message-flag nil)
 (setq ispell-personal-dictionary

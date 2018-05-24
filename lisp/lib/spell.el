@@ -34,6 +34,7 @@
   ""
   (interactive)
   (ispell-internal-change-dictionary)
+  (ispell-kill-ispell t)
   (ispell-init-process))
 
 (/provide)

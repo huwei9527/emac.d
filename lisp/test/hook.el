@@ -42,6 +42,10 @@
 ;; (advice-add 'smile :before #'ignore)
 ;; (advice-add 'previous-buffer :after #'ignore)
 (/progn-silently (message "a") (message "b"))
+(/with-no-message (message "a") (message "b"))
+(/with-yes (print (y-or-n-p "ABCD: ")) (print (yes-or-no-p "ABCD*: ")))
+(/with-no (print (y-or-n-p "ABCD: ")) (print (yes-or-no-p "ABCD*: ")))
+; (print (y-or-n-p "DEFG:")) (print (yes-or-no-p "DEFG*:"))
 
 (/message-test-end)
 
