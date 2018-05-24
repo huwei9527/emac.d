@@ -64,27 +64,36 @@
 	 ,(format "Remove functions in FUNS from all %s hooks." name)
 	 `(/remove-hook ,',hooks ,@funs)))))
 
-(defmacro /advice-add-false (flist)
-  "Add `/false' advice to all functions in FLIST."
-  `(/advice-add ,flist :override /false))
+(defmacro /advice-add-false (&rest funs)
+  "Add `/false' advice to all functions in FUNS."
+  `(/advice-add ,funs :override /false))
 
-(defmacro /advice-remove-false (flist)
-  "Remove `/false' advice from all functions in FLIST."
-  `(/advice-remove ,flist /false))
+(defmacro /advice-remove-false (&rest funs)
+  "Remove `/false' advice from all functions in FUNS."
+  `(/advice-remove ,funs /false))
 
-(defmacro /advice-add-true (flist)
-  "Add `/true' advice to all functions in FLIST."
-  `(/advice-add ,flist :override /true))
+(defmacro /advice-add-true (&rest funs)
+  "Add `/true' advice to all functions in FUNS."
+  `(/advice-add ,funs :override /true))
 
-(defmacro /advice-remove-true (flist)
-  "Remove `/true' advice from all functions in FLIST."
-  `(/advice-remove ,flist /true))
+(defmacro /advice-remove-true (&rest funs)
+  "Remove `/true' advice from all functions in FUNS."
+  `(/advice-remove ,funs /true))
 
 (/--def-advice-setter buffer-change switch-to-buffer)
 (/--def-advice-setter window-switch other-window
 		      windmove-left windmove-right windmove-up windmove-down)
 (/--def-hook-setter focus-loss focus-out-hook suspend-hook
 		    evil-normal-state-entry-hook)
+
+(defconst /--verbose-functions '(message))
+(defmacro /progn-silently (&rest body)
+  ""
+  (declare (indent defun))
+  (/--sexp-progn
+    (/--sexp-append-1 `(/advice-add-false ,@/--verbose-functions))
+    (dolist (form body) (/--sexp-append-1 form))
+    (/--sexp-append-1 `(/advice-remove-false ,@/--verbose-functions))))
 
 (/provide)
 ;;; meta/hook.el ends here

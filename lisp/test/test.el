@@ -11,8 +11,8 @@
   ;core
   ;ui
   ;auto-save
-  ;hook
-  spell
+  hook
+  ;spell
   )
 
 

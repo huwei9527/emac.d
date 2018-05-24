@@ -126,9 +126,7 @@ this macro is intended for the top level use, not for building macros."
   (declare (indent defun))
   (/--sexp
     (/--sexp-append 'eval-after-load (/--quote package)
-      `(quote ,(/--sexp-progn
-		 (dolist (form body)
-		   (/--sexp-append-1 form)))))))
+      `(quote ,(/--sexp-progn (dolist (form body) (/--sexp-append-1 form)))))))
 
 (/provide)
 ;;; meta/core.el ends here

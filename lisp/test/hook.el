@@ -27,10 +27,10 @@
 (/advice-remove /flist :before smile1 smile2)
 (/add-hook /hlist smile1 smile2)
 (/remove-hook /hlist smile2 smile2)
-(/advice-add-false /flist)
-(/advice-remove-false /flist)
-(/advice-add-true /flist)
-(/advice-remove-true /flist)
+(/advice-add-false switch-to-buffer)
+(/advice-remove-false switch-to-buffer)
+(/advice-add-true switch-to-buffer)
+(/advice-remove-true switch-to-buffer)
 (/--def-advice-setter buffer-change switch-to-buffer other-window)
 (/advice-add-buffer-change :after smile1 smile2)
 (/advice-remove-buffer-change :after smile1 smile2)
@@ -41,6 +41,7 @@
 ;; (advice-add 'other-window :before #'ignore)
 ;; (advice-add 'smile :before #'ignore)
 ;; (advice-add 'previous-buffer :after #'ignore)
+(/progn-silently (message "a") (message "b"))
 
 (/message-test-end)
 
