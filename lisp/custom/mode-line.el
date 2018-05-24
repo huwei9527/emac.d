@@ -79,7 +79,7 @@ mouse-1: Display Line and Column Mode Menu"))))))))
 
 (defvar /mode-line-temporary-mode
   `(overriding-local-map
-    (:propertize "*" face mode-line-temporary-mode-tag))
+    (:propertize "*" face /mode-line-temporary-mode-tag))
   "Temporary mode in mode line")
 (put '/mode-line-temporary-mode 'risky-local-variable t)
 

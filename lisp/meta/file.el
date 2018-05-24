@@ -65,16 +65,23 @@ The variable is set to `(/file-name-regexp-quote regexp)'."
   (:documentation (format "Construct a predictor %s.
 The predictor user regexp `%s' to check."
   (/--intern-predictor 'FORM) (/--intern-regexp 'FORM)))
-  `(defun ,(/--intern-predictor form) (path)
+  `(defun ,(/--intern-predictor form) (&optional path)
      ,doc
-     (string-match-p ,(/--intern-regexp form)
-		     (file-name-nondirectory (directory-file-name path)))))
+     (let* ((name (cond
+		   ((stringp path) (file-name-nondirectory
+				    (directory-file-name path)))
+		   ((null path) (buffer-name))
+		   ((bufferp path) (buffer-name path))
+		   (t ""))))
+       (string-match-p ,(/--intern-regexp form) name))))
 
 (defvar /--file-name-regexp-alist
   '((dotdirectory "`..?'" "system '.' and '..' directory")
     (uneditable-file "((~|#)|(.(exe|pdf|zip)))'" "emacs uneditable file")
     (system-buffer "`(*)" "system buffer")
     (auto-killed-buffer "`(*(Warning|AAA|BBB))" "auto killed buffer")
+    (scratch-buffer "`*scratch*'" "scratch buffer")
+    (message-buffer "`*Messages*'" "message buffer")
     )
   "The alist of the filename regexp and predictor.")
 
@@ -94,7 +101,11 @@ The predictor user regexp `%s' to check."
     (dolist (attrs /--file-name-regexp-alist)
       (/--sexp-exec
 	`(/def-file-name-predictor ,(car attrs)
-	   ,(format "Return non-nil if PATH is %s, otherwise return nil."
+	   ,(format "Return non-nil if PATH is %s, otherwise return nil.
+If PATH is buffer, the buffer name is used.
+If PATH is nil, the current buffer name is used.
+If PATH is a string, the filename with directory stripped is used.
+If PATH is a directory, the last sub directory name is used."
 		    (caddr attrs)))))))
 
 (/provide)

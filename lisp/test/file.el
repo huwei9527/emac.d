@@ -23,8 +23,9 @@
 (/test-editable "/a/b/c.exe~")
 (/test-editable "/a/b/c.exe#")
 (/test-editable "/a/b#/cafdaf")
+(print (/path-to-file-name "a/b/c/d"))
 
-(/ppmacroexpand (/def-file-name-regexp-all))
+; (/ppmacroexpand (/def-file-name-regexp-all))
 
 (/provide)
 ;;; test/file.el ends here

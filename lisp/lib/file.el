@@ -7,6 +7,22 @@
 (eval-when-compile (/require-meta file))
 (/require-custom file)
 
+(defun /path-to-file-name (path)
+  "Transform path name PATH to file name.
+Replace the system directory symbol '/' with '!'.
+If PATH is a relative path, expand it in the default directory. The
+  final PATH is chased through all the symbolic link."
+  (setq path (file-truename (expand-file-name path)))
+  (subst-char-in-string ?/ ?! (replace-regexp-in-string "!" "!!" path)))
+
+(defun /file-or-buffer-name (&rest buf)
+  "Return the filename of the buffer BUF.
+If no file is related to the buffer, return the buffer name."
+  (or buf (setq buf (current-buffer)))
+  (if (buffer-file-name buf)
+      (file-truename (buffer-file-name buf))
+    (buffer-name buf)))
+
 (defsubst /file-name (path)
   "Return the filename of PATH.
 If PATH is a directory, the system directory character is ommited."
