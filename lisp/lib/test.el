@@ -12,6 +12,16 @@
   "Show test stop message."
   (message "%s: test end." load-file-name))
 
+(defun /hello-world (&rest args)
+  "Message `Hello world'."
+  (interactive)
+  (message "Hello world!"))
+
+(defun /print-arguments (&rest args)
+  "Print the arguments."
+  (interactive)
+  (print args))
+
 (defvar /--debug-flag nil "Debug flag.")
 
 (defun /--debugp ()

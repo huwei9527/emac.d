@@ -34,5 +34,15 @@ The last argument is the first element of result list."
   "Seconds between current time and LAST."
   (time-to-seconds (time-since last)))
 
+(defun /evenp (n)
+  "Return t if N is even."
+  (declare (indent defun))
+  (eq (% n 2) 0))
+
+(defun /oddp (n)
+  "Return t if N is odd."
+  (declare (indent defun))
+  (eq (% n 2) 1))
+
 (/provide)
 ;;; lib/core.el ends here

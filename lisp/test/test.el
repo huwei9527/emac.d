@@ -8,11 +8,12 @@
 (/require-test
   ;global
   ;file
-  ;core
+  core
   ;ui
   ;auto-save
-  hook
+  ;hook
   ;spell
+  ;evil
   )
 
 

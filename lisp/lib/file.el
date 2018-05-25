@@ -9,10 +9,8 @@
 
 (defun /path-to-file-name (path)
   "Transform path name PATH to file name.
-Replace the system directory symbol '/' with '!'.
-If PATH is a relative path, expand it in the default directory. The
-  final PATH is chased through all the symbolic link."
-  (setq path (file-truename (expand-file-name path)))
+Replace the system directory symbol '/' with '!'."
+  ; (setq path (file-truename (expand-file-name path)))
   (subst-char-in-string ?/ ?! (replace-regexp-in-string "!" "!!" path)))
 
 (defun /file-or-buffer-name (&rest buf)

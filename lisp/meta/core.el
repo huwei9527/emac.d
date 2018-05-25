@@ -62,6 +62,32 @@ If DEPTH is non-nil, (/--value INIT DEPTH)." (/--intern-custom 'FORM)))
 ;;; }}
 
 ;;; {{ sexp constructor.
+(defun /--list-quote-all (list)
+  "Return a list by quoting all elements in LIST."
+  (mapcar (lambda (e) `(quote ,e)) list))
+
+(defun /--list-quote-alternately (list &optional even)
+  "Return a list by alternately quoting elements in LIST.
+If EVEN is non-nil, start from first index, otherwise start from the
+  second index."
+  (declare (indent defun))
+  (let* ((idx (if even 1 0)))
+    (mapcar (lambda (e)
+	      (if (/oddp (setq idx (1+ idx))) `(quote ,e) e))
+	    list)))
+
+(defun /--list-quote-odd (list)
+  "Return a list by quoting all elements in odd index in LIST.
+The start index is 1."
+  (declare (indent defun))
+  (/--list-quote-alternately list))
+
+(defun /--list-quote-even (list)
+  "Return a list by quoting all elements in even index in LIST.
+The start index is 1."
+  (declare (indent defun))
+  (/--list-quote-alternately list 'even))
+
 (defvar /--sexp-list (make-symbol "/--sexp-list---")
   "Store the list of sexp during the sexp construction")
 (set /--sexp-list nil)
@@ -78,11 +104,26 @@ The sexp is store in `/--sexp-list' and `/--sexp-list' is set to nil
   (declare (indent defun))
   `(push ,expr ,/--sexp-list))
 
+(defmacro /--sexp-append-1-literally (expr)
+  "Append EXPR to `/--sexp-list' without evaluating it."
+  (declare (indent defun))
+  `(push ',expr ,/--sexp-list))
+
 (defmacro /--sexp-append (&rest exprs)
   "Append EXPRS to `/--sexp-list'."
   (declare (indent defun))
-  `(setq ,/--sexp-list (apply #'/prepend ,/--sexp-list ,@exprs nil))
-  )
+  `(setq ,/--sexp-list (apply #'/prepend ,/--sexp-list ,@exprs nil)))
+
+(defmacro /--sexp-append-literally (&rest exprs)
+  "Append EXPRS to `/--sexp-list' without evaluating all its subexpression."
+  (declare (indent defun))
+  `(/--sexp-append ,@(/--list-quote-all exprs)))
+
+(defmacro /--sexp-append-literally-odd (&rest exprs)
+  "Append EXPRS to `/--sexp-list' without evaluating its subexpression
+in odd index.
+The index starts from 1."
+  `(/--sexp-append ,@(/--list-quote-odd exprs)))
 
 ;; progn
 (defmacro /--sexp-progn (&rest body)
@@ -115,6 +156,16 @@ BODY is wrapped in `/--sexp-exec' form so other constructor has no
   "Create a `case' form."
   (declare (indent defun))
   `(/--sexp-append (,csexp ,@body)))
+
+(defmacro /--sexp-setq (&rest body)
+  "Create a `setq' form"
+  (declare (indent defun))
+  `(/--sexp (/--sexp-append-1 'setq) ,@body))
+
+(defalias '/--sexp-pair #'/--sexp-append-literally-odd
+  "Create `key value' items in `setq' form.
+Like `setq', key doesn't need to quote and value will be evaluated.")
+
 ;;; }}
 
 ;; eval-after-load

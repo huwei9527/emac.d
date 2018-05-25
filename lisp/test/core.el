@@ -68,21 +68,40 @@
 ; (testc)
 
 (defvar aaa 1)
-(message "before aaa: %s" aaa)
+;(message "before aaa: %s" aaa)
 
 (eval-after-load '"~/.emacs.d/test_compile"
   '(testd))
 
 (eval-after-load "~/.emacs.d/test_compile"
   '(setq aaa 2))
-(message "eval aaa: %s" aaa)
+; (message "eval aaa: %s" aaa)
 
-(load "/home/hw/Projects/emacs.d/test_compile.el")
+; (load "/home/hw/Projects/emacs.d/test_compile.el")
 ; (message "load aaa: %s" aaa)
 
-(/ppmacroexpand-all (/eval-after-load abcd a b c d))
-(/eval-after-load abcd a b c d)
+;(/ppmacroexpand-all (/eval-after-load abcd a b c d))
+;(/eval-after-load abcd a b c d)
 
+(when nil
+  (message "%s" (/--list-quote-all '(a b c d)))
+  (message "%s" (/--list-quote-odd '(a b c d)))
+  (message "%s" (/--list-quote-even '(a b c d))))
+
+; (/ppmacroexpand-all (/--sexp (/--sexp-append-1-literally a) (/--sexp-append-1-literally b)))
+; (/--sexp (/--sexp-append-1-literally a) (/--sexp-append-1-literally b))
+; (/ppmacroexpand-all (/--sexp (/--sexp-append-literally 1 2 3)))
+; (print (/--sexp (/--sexp-append-literally a b c d e f g)))
+;; (/ppmacroexpand-all (/--sexp (/--sexp-append-literally-odd 1 2 3 4)))
+;; (print (/--sexp (/--sexp-append-literally-odd a 'b c 'd)))
+
+(defmacro teste (a c b d)
+  "Test e"
+  (/--sexp-setq
+   (/--sexp-pair a c b d)))
+; (/--sexp-setq (/--sexp-pair a 123 b 456))
+(teste a 123 b 456)
+; (message "a = %s b = %s" a b)
 
 
 (/message-test-end)

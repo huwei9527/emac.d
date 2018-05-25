@@ -16,8 +16,8 @@
   "Default personal dictionary filename.")
 
 (/def-custom-var spell-personal-regexp-alist
-  `(("test.txt\\'" "test")
-    ("est.txt" "testnew"))
+  `(("test.txt\\'" . "test")
+    ("est.txt" . "testnew"))
   "Specific spell check personal dictionary for each filename regexp.
 Each entry is a list. 
 The first element is the regexp. 
@@ -29,7 +29,9 @@ The second element is the filename for that major mode. If the second
 (/def-custom-var spell-personal-mode-alist
   '((c-mode)
     (java-mode)
-    (python-mode))
+    (python-mode)
+    (tex-mode)
+    (emacs-lisp-mode))
   "Specific spell check personal dictionary file for major modes.
 Each entry is a list. 
 The first element is the major mode symbol. 

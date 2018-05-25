@@ -9,12 +9,13 @@
 
 (defvar /--pre-create-directory-list nil)
 
-(/require-meta file)
+; (/require-meta file)
 (/require-config
   elpa
   ui
   auto-save
-  spell)
+  spell
+  evil)
 (/require-test test)
 
 ;(pp /--pre-create-directory-list)
