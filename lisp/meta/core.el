@@ -162,9 +162,8 @@ BODY is wrapped in `/--sexp-exec' form so other constructor has no
   (declare (indent defun))
   `(/--sexp (/--sexp-append-1 'setq) ,@body))
 
-(defalias '/--sexp-pair #'/--sexp-append-literally-odd
-  "Create `key value' items in `setq' form.
-Like `setq', key doesn't need to quote and value will be evaluated.")
+(defalias '/--sexp-pair #'/--sexp-append
+  "Create `key value' items in `setq' form.")
 
 ;;; }}
 

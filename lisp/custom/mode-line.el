@@ -21,7 +21,8 @@
 (defface /mode-line-line-column-number '((t (:inherit /blue-foreground)))
   "The face for line number and column number in mode line.")
 
-(defface /mode-line-overwrite-tag '((t (:inherit evil-custom-insert-state-tag)))
+(defface /mode-line-overwrite-tag
+  '((t (:inherit /mode-line-evil-insert-state-tag)))
   "The face for overwrite tag in mode line")
 
 (defface /mode-line-temporary-mode-tag '((t (:inherit /red-foreground)))

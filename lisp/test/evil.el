@@ -19,6 +19,7 @@
 ; (/add-hook-evil-entry-state /evil-show-state)
 ; (/add-hook-evil-exit-state /evil-show-state)
 ; (/defface-evil-mode-line-tag)
+(/ppmacroexpand (/setup-evil-state-tags))
 (/message-test-end)
 
 (/provide)

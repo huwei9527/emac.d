@@ -98,10 +98,10 @@
 (defmacro teste (a c b d)
   "Test e"
   (/--sexp-setq
-   (/--sexp-pair a c b d)))
-; (/--sexp-setq (/--sexp-pair a 123 b 456))
-(teste a 123 b 456)
-; (message "a = %s b = %s" a b)
+   (/--sexp-pair 'a c 'b d)))
+(print (/--sexp-setq (/--sexp-pair 'a (+ 123 100) 'b (+ 456 100))))
+(teste a (1+  123) b (1- 456))
+(message "a = %s b = %s" a b)
 
 
 (/message-test-end)

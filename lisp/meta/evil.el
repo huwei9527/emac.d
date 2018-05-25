@@ -50,6 +50,8 @@ If ST is nil, add to all the evil state exit hook."
   (declare (indent defun))
   `(/add-hook--evil-state ,fun 'exit ,st))
 
+
+;;; {{ Evil mode line tag
 (defvar /--evil-mode-line-tag-alist
   '((normal .   (:tag "N" :color black))
     (insert .   (:tag "I" :color red))
@@ -81,10 +83,31 @@ If ST is nil, add to all the evil state exit hook."
 		      (/--name state))))))))
 
 (defmacro /setup-evil-state-tags ()
-  ""
+  "Set the face of evil mode line tag."
   (declare (indent defun))
-  (dolist (state /--evil-state-list)
-    ))
+  (/--sexp-setq
+    (dolist (attrs /--evil-mode-line-tag-alist)
+      (let* ((state (car attrs)))
+	(/--sexp-pair (/--intern-format "evil-%s-state-tag" state)
+		      (propertize (plist-get (cdr attrs) :tag)
+				  'face
+				  (/--intern-evil-mode-line-face state)))))))
+;;; }}
+
+;;; {{ Text objext
+;; https://stackoverflow.com/questions/18102004/emacs-evil-mode-how-to-create-a-new-text-object-to-select-words-with-any-non-sp
+(defmacro /def-evil-text-object (key start end)
+  "Define new text object and bind it to text object map."
+  (declare (indent defun))
+  (let* ((inner (make-symbol "inner")) (outer (make-symbol "outer")))
+    (/--sexp-progn-exec
+      `(evil-define-text-object ,inner (cnt &optional beg end type)
+	 (evil-select-paren ,start ,end beg end type cnt nil))
+      `(evil-define-text-object ,outer (cnt &optional beg end type)
+	 (evil-select-paren ,start ,end beg end type cnt t))
+      `(define-key evil-inner-text-objects-map ,key ',inner)
+      `(define-key evil-outer-text-objects-map ,key ',outer))))
+;;; }}
 
 
 
