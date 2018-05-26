@@ -14,6 +14,7 @@
   ;hook
   ;spell
   evil
+  ;keymap
   )
 
 

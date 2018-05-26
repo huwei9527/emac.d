@@ -7,11 +7,13 @@
 (defun /true (&rest _ingore)
   "Ignore any arguments and return t.
 This is contrast with `ignore' which always return nil."
+  (interactive)
   t)
 
 (defun /false (&rest _ignore)
   "Ignore any arguments and return nil.
 This is the opposite of `/true'"
+  (interactive)
   nil)
 
 (defun /prepend (list &rest args)
