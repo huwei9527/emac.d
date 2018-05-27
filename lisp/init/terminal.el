@@ -20,7 +20,8 @@
   ace-jump-mode
   ivy
   ffip
-  rainbow-delimiters)
+  rainbow-delimiters
+  which-key)
 (/require-test test)
 
 ;(pp /--pre-create-directory-list)
