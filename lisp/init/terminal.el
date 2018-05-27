@@ -22,7 +22,9 @@
   ffip
   rainbow-delimiters
   which-key
-  paredit)
+  paredit
+  ;hideshow
+  )
 (/require-test test)
 
 ;(pp /--pre-create-directory-list)
