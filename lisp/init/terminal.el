@@ -17,7 +17,8 @@
   spell
   evil
   ace-link
-  ace-jump-mode)
+  ace-jump-mode
+  ivy)
 (/require-test test)
 
 ;(pp /--pre-create-directory-list)
