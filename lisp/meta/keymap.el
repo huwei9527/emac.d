@@ -141,6 +141,11 @@ See `/def-keys' for argument usage.\n%s" keymap (if doc doc ""))
      `(/def-keys ,',keymap ,prefix ,@bindings)))
 
 ;;; {{ Set specific keymaps
+(defmacro /def-keys-mode (mode &optional prefix &rest bindings)
+  "Define key bindings in `MODE-map'."
+  (declare (indent defun))
+  `(/def-keys ,(/--intern-mode-map mode) ,prefix ,@bindings))
+
 (/--def-specific-keymap-macro global global-map)
 (/--def-specific-keymap-macro ctl-x ctl-x-map)
 (/--def-specific-keymap-macro ctl-c mode-specific-map)

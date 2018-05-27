@@ -15,7 +15,8 @@
   ui
   auto-save
   spell
-  evil)
+  evil
+  ace-link)
 (/require-test test)
 
 ;(pp /--pre-create-directory-list)
