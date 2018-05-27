@@ -19,7 +19,8 @@
   ace-link
   ace-jump-mode
   ivy
-  ffip)
+  ffip
+  rainbow-delimiters)
 (/require-test test)
 
 ;(pp /--pre-create-directory-list)
