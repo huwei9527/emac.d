@@ -21,7 +21,8 @@
   ivy
   ffip
   rainbow-delimiters
-  which-key)
+  which-key
+  paredit)
 (/require-test test)
 
 ;(pp /--pre-create-directory-list)
