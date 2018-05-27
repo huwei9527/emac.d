@@ -18,7 +18,8 @@
   evil
   ace-link
   ace-jump-mode
-  ivy)
+  ivy
+  ffip)
 (/require-test test)
 
 ;(pp /--pre-create-directory-list)
