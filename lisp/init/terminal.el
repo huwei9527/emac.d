@@ -25,6 +25,7 @@
   paredit
 					;hideshow
   company
+  yasnippet
   )
 (/require-test test)
 
