@@ -77,6 +77,7 @@ If DEPTH is not a positive integer, the whole directory tree is searched."
     (add-to-list list path)
     (/add-subdirectory-to-list path list depth)))
 
+;;; {{ buffer
 (defun /save-buffer (&optional silent)
   "Save the current buffer.
 Return t if the save actually performed, otherwise return nil.
@@ -100,6 +101,7 @@ Return the number of buffers actually saved."
 	(set-buffer buf)
 	(and (/save-buffer silent) (setq cnt (1+ cnt)))))
     cnt))
+;;; }}
 
 (/provide)
 ;;; lib/file.el ends here

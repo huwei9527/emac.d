@@ -44,6 +44,5 @@ When Emacs opens a file in these directory, the corresponding buffer is
 	?\{ ?\})
   "Invalid path constituest character.")
 
-
 (/provide)
 ;;; custom/file.el ends here

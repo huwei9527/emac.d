@@ -13,8 +13,11 @@
     )
   "The alist of (mode . state) for evil to set the initial state.")
 
+;; Define faces used in the mode line for evil state tag.
 (/defface-evil-mode-line-tag)
-; (code-defkey-evil-prefix-key)
+
+;; Define leader key maps.
+(/def-evil-leader-keys)
 
 
 (/provide)

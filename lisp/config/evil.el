@@ -13,6 +13,7 @@
 
 (require 'evil)
 (/require-custom evil)
+(/require-lib evil)
 
 ;; Set the custom evil initial state for major mode.
 (dolist (cus /custom-evil-initial-state-alist)

@@ -15,6 +15,7 @@
   ;spell
   evil
   ;keymap
+  ;dynamic
   )
 
 

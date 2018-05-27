@@ -6,22 +6,6 @@
 
 (/require-meta keymap)
 
-(defvar /--test-key-binding-count 0
-  "Count the times that invoking `/show-key-binding'")
-
-(defun /show-key-binding (&rest args)
-  "Show the key binding invoke this command."
-  (interactive)
-  (message "%s[%d]: (k: %s) (v: %s)"
-	   this-command (setq /--test-key-binding-count
-			      (1+ /--test-key-binding-count))
-	   (this-command-keys) (this-command-keys-vector)))
-
-(defun /key-string (keys &optional prefix)
-  "Show key string"
-  (setq keys (/--key-sequence keys))
-  (format "%s %s" keys (key-description keys)))
-
 (/message-test-start)
 (when nil
   (message "11: %s" (kbd "a b c d"))
@@ -57,6 +41,20 @@
     (message "%s" a)))
 
 (when nil
+  (let* ((c `("1234" . /show-key-binding))
+	 (l (lambda () (interactive) (message "Thank you.")))
+	 (k (/--key-sequence "a"))
+	 (s "a"))
+    (message "%s %s %s %s" (consp c) (consp l) (listp c) (listp l))
+    (defmacro /test-command ()
+      ""
+      `(define-key /test-minor-mode-map
+	 ,(kbd "c") ,(/--key-definition s)))
+    (print (/--key-definition s))
+    (/test-command)
+    ))
+
+(when nil
   ; (/ppmacroexpand (/--def-key global-map C-c C-c /show-key-binding))
   ; (/--def-keys global-map C-c C-c /show-key-binding)
   ; (/ppmacroexpand (/--def-key global-map C-c C-c nil))
@@ -69,6 +67,14 @@
 
 (when nil
   (when nil
+    (/--def-keys global-map
+		  "\C-c\C-c" #'/show-key-binding
+		  "\C-c\C-v" #'/show-key-binding))
+  (when nil
+    (/def-keys global-map C-c
+		C-v /show-key-binding
+		C-c /show-key-binding))
+  (when nil
     (/def-keys global-map C-c
       C-c /show-key-binding
       C-v /show-key-binding
@@ -78,27 +84,28 @@
     (/def-keys global-map
       "C-c C-c" /show-key-binding
       "C-c ab" /show-key-binding))
-  (/def-keys global-map)
-  (/def-keys global-map C-c)
-  ; (/def-keys global-map nil aaa)
-  (setq map (/--lookup-key global-map 'C-c))
-  (message "map: %s" map)
-  (message "map-p: %s" (keymapp map))
-  (message "map-sp: %s" (symbolp map))
-  (message "map-lp: %s" (listp map))
-  (message "map-sp: %s" (symbolp (symbol-function map)))
-  (message "map-lp: %s" (listp (symbol-function map)))
-  (message "key before: %s" (/--lookup-key map 'C-v))
-  (message "map %s" (symbol-function map))
-  ; (/--remove-keys global-map 'C-v 'C-c)
-  ; (/remove-keys global-map C-c\ C-v "C-c C-n")
-  (/remove-keys global-map ab)
-  (message "key after: %s" (/--lookup-key map 'C-v))
-  (message "map %s" (symbol-function map))
+  (when nil
+    (/def-keys global-map)
+    (/def-keys global-map C-c)
+    ;(/def-keys global-map nil aaa)
+    (setq map (/--lookup-key global-map 'C-c))
+    (message "map: %s" map)
+    (message "map-p: %s" (keymapp map))
+    (message "map-sp: %s" (symbolp map))
+    (message "map-lp: %s" (listp map))
+    (message "map-sp: %s" (symbolp (symbol-function map)))
+    (message "map-lp: %s" (listp (symbol-function map)))
+    (message "key before: %s" (/--lookup-key map 'C-v))
+    (message "map %s" (symbol-function map))
+    (/--remove-keys global-map 'C-v 'C-c)
+    (/remove-keys global-map C-c\ C-v "C-c C-n")
+    (/remove-keys global-map ab)
+    (message "key after: %s" (/--lookup-key map 'C-v))
+    (message "map %s" (symbol-function map)))
   )
 
-(when t
-  (when nil
+(when nil
+  (when t
     (/def-keys-global C-c
 		      C-v /show-key-binding
 		      C-n /show-key-binding)

@@ -7,9 +7,11 @@
 (/require-lib core)
 
 (defun /--kbd (keys)
-  "Extend `kbd' to symbols."
+  "Extend `kbd' to symbol and character."
   (declare (indent defun))
-  (kbd (/--name keys)))
+  (if (characterp keys)
+      (vector keys)
+    (kbd (/--name keys))))
 
 (defun /--key-sequence (keys &optional prefix)
   "Create new key sequence [PREFIX KEYS].
@@ -36,38 +38,69 @@ If KEYMAP is represented as a symbol, return its `symbol-function'."
   ;; `lookup-key' returns a number if the KEYS is too long. Make it nil.
   (if (numberp keymap) nil keymap))
 
-(defmacro /--def-keys (keymap prefix keys &optional def)
-  "Binding (PREFIX KEYS) to DEF in KEYMAP."
+(defun /--key-definition (def)
+  "Return the binding which can be used in keymaps."
   (declare (indent defun))
-  (let* ((keys (/--key-sequence keys prefix))
-	 (def (cond
-	       ((symbolp def) `(function ,def))
-	       ((stringp def) (/--key-sequence def))
-	       ;((null def) def) ((vectorp def) def) ((listp def) def)
-	       ;((t (error "Unknown binding: %s" def)))
-	       (t def))))
-    `(define-key ,keymap ,keys ,def)))
+  (cond ((symbolp def) `(function ,def))
+	((stringp def) (/--key-sequence def))
+	((keymapp def) `(quote ,def))
+	((listp def) (let* ((first (car def)))
+		       (if (or (stringp first)     ; (STRING . DEFN)
+			       (keymapp first)     ; (MAP    . CHAR)
+			       (eq 'closure first) ; (CLOSURE)
+			       ;(eq 'lambda first) lambda is eval to itself.
+			       )
+			   `(quote ,def)
+			 def)))
+	(t def)))
+
+(defun /--bindings (prefix  bindings)
+  "Construct bindings by add PREFIX to the keys in BINDINGS.
+If PREFIX is omitted which happens when length of BINDINGS is
+  odd (in this case PREFIX is counted as a key of key-binding
+  pair), PREFIX is `push'ed to bindings.  
+Otherwise, PREFIX is add to the keys in BINDINGS using
+  `/--key-sequence'.  
+In either case, key in key-binding is uniformed by `/--key-sequence'. 
+the binding in key-binding pair is uniformed by `/--key-definition'."
+  (let* ((idx 0))
+    (when (/oddp (length bindings))
+      (push prefix bindings)
+      (setq prefix nil))
+    (mapcar (lambda (e) (if (/oddp (setq idx (1+ idx)))
+			    (/--key-sequence e prefix)
+			  (/--key-definition e)))
+	    bindings)))
+
+(defmacro /--sexp-def-key (&rest body)
+  "Evaluate BODY in the (prefix binding) settings.
+See `/--bindings' for details of (prefix binding).
+Only when prefix and bindings are both non-nil, uniformed the bindings
+  and evaluate BODY."
+  (declare (indent defun))
+  `(if prefix
+       (if bindings
+	   (let* ((bindings (/--bindings prefix bindings)))
+	     ,@body)
+	 nil)
+     (assert (null bindings))
+     nil))
+
+(defmacro /--def-keys (keymap &rest bindings)
+  "Extend `define-key' to multiple pairs of bindings.
+The key-binding pair in BINDINGS are note filtered by `/--key-sequence'
+  and `/--key-definition'."
+  (declare (indent defun))
+  (/--sexp-progn
+    (while bindings
+      (/--sexp-exec
+	`(define-key ,keymap ,(pop bindings) ,(pop bindings))))))
 
 (defmacro /def-keys (keymap &optional prefix &rest bindings)
-  "Do the binding BINDINGS in PRIFIX map in KEYMAP.
-If PREFIX is omitted, then the length of BINDINGS must be odd since
-  PREFIX is counted as the start of bindings."
+  "Define key bindings in BINDINGS with PREFIX in KEYMAP.
+See `/--bindings' for argument usage."
   (declare (indent defun))
-  (if prefix
-      (if bindings
-	  (/--sexp-progn
-	    ;; Take care the case when PREFIX is ommited.
-	    ;; It is determined by the length of BINDINGS.
-	    (when (/oddp (length bindings))
-	      (/--sexp-exec
-		`(/--def-keys ,keymap nil ,prefix ,(pop bindings)))
-	      (setq prefix nil))
-	    (while bindings
-	      (/--sexp-exec
-		`(/--def-keys ,keymap ,prefix
-		   ,(pop bindings) ,(pop bindings)))))
-	nil)
-    (assert (null bindings))))
+  (/--sexp-def-key `(/--def-keys ,keymap ,@bindings)))
 
 (defun /--remove-keys (keymap keys &optional prefix)
   "Remove (PREFIX KEYS) from KEYMAP by removing the corresponding

@@ -22,6 +22,31 @@
   (interactive)
   (print args))
 
+(defvar /--test-key-binding-count 0
+  "Count the times that invoking `/show-key-binding'")
+
+(defun /message-this-command ()
+  "Show this command."
+  (message "%s[%d]: (k: %s) (v: %s)"
+	   this-command (setq /--test-key-binding-count
+			      (1+ /--test-key-binding-count))
+	   (this-command-keys) (this-command-keys-vector)))
+
+(defun /show-key-binding (&rest args)
+  "Show the key binding invoke this command."
+  (interactive)
+  (/message-this-command))
+
+(defun /show-key-binding-1 (&rest args)
+  "Show the key binding invoke this command."
+  (interactive)
+  (/message-this-command))
+
+(defun /key-string (keys &optional prefix)
+  "Show key string"
+  (setq keys (/--key-sequence keys))
+  (format "%s %s" keys (key-description keys)))
+
 (defvar /--debug-flag nil "Debug flag.")
 
 (defun /--debugp ()
@@ -48,6 +73,15 @@
   "Load test file."
   (interactive "M")
   (load (expand-file-name name /custom-lisp-test-directory)))
+
+(define-minor-mode /test-minor-mode
+  "Test minor mode."
+  :init-value nil
+  :lighter nil
+  :keymap `(("a" . /show-key-binding))
+  :global nil
+  (if /test-minor-mode (message "/test-minor-mode ON.")
+    (message "/test-minor-mode OFF.")))
 
 (/provide)
 ;;; lib/test.el ends here
