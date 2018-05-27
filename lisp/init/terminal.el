@@ -23,7 +23,8 @@
   rainbow-delimiters
   which-key
   paredit
-  ;hideshow
+					;hideshow
+  company
   )
 (/require-test test)
 
