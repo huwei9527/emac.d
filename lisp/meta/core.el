@@ -178,5 +178,12 @@ this macro is intended for the top level use, not for building macros."
     (/--sexp-append 'eval-after-load (/--quote package)
       `(quote ,(/--sexp-progn (dolist (form body) (/--sexp-append-1 form)))))))
 
+;; swap
+(defmacro /swap (var1 var2)
+  "Swap two variable VAR1 VAR2."
+  (declare (indent defun))
+  (let* ((tmp (make-symbol "tmp")))
+    `(setq ,tmp ,var1 ,var1 ,var2 ,var2 ,tmp)))
+
 (/provide)
 ;;; meta/core.el ends here

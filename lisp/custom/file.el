@@ -36,7 +36,7 @@ When Emacs opens a file in these directory, the corresponding buffer is
   "File size threshold over which the `linum-mode' is turned off." 1)
 
 (/def-custom-var max-path-length 2048 "The max length of path string.")
-(/def-custom-var invalid-path-char
+(/def-custom-var invalid-path-char-list
   '(?\" ?\' ?\` ?\C-?
 	?\( ?\)
 	?\< ?\>

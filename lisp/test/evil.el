@@ -53,6 +53,15 @@
   (/ppmacroexpand (/evil-set-initial-state-and-make-override
   major-mode nil)))
 
+(when nil
+  (/def-evil-text-object f nil
+    (let* ((region (bounds-of-thing-at-point 'filename)))
+      (evil-range (car region) (cdr region)))
+    ))
+
+(when nil
+  (/def-evil-text-object-thing-at-point f inner url))
+
 
 (/message-test-end)
 

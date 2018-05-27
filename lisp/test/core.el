@@ -5,11 +5,15 @@
 ;;; Code:
 
 (/require-meta core)
+(/require-lib core)
 
-(print (/regexp-quote "(abcd)"))
-(print (/regexp-quote "`..?'"))
 
 (/message-test-start)
+
+(when nil
+  (print (/regexp-quote "(abcd)"))
+  (print (/regexp-quote "`..?'")))
+
 (defvar vara (make-symbol "unintern-symbol") "Test")
 (defmacro testma ()
   "Test unintern-symbol."
@@ -95,13 +99,65 @@
 ;; (/ppmacroexpand-all (/--sexp (/--sexp-append-literally-odd 1 2 3 4)))
 ;; (print (/--sexp (/--sexp-append-literally-odd a 'b c 'd)))
 
-(defmacro teste (a c b d)
-  "Test e"
-  (/--sexp-setq
-   (/--sexp-pair 'a c 'b d)))
-(print (/--sexp-setq (/--sexp-pair 'a (+ 123 100) 'b (+ 456 100))))
-(teste a (1+  123) b (1- 456))
-(message "a = %s b = %s" a b)
+(when nil
+  (defmacro teste (a c b d)
+    "Test e"
+    (/--sexp-setq
+      (/--sexp-pair 'a c 'b d)))
+  (print (/--sexp-setq (/--sexp-pair 'a (+ 123 100) 'b (+ 456 100))))
+  (teste a (1+  123) b (1- 456))
+  (message "a = %s b = %s" a b))
+
+(when nil
+  (message "even: %s %s" (/evenp 1) (/evenp 2))
+  (message "odd : %s %s" (/oddp 101) (/oddp 102))
+  (let* ((tmp 1) (var 2))
+    (message "before: tmp %s var %s" tmp var)
+    (/swap tmp var)
+    (message "after: tmp %s var %s" tmp var)))
+
+(when t
+  (let* ((cnt 0))
+    (when nil
+      (/test-char "a" /--character)
+      (/test-char ?a /--character)
+      (/test-char ab /--character)
+      (/test-char "ab" /--character)
+      )
+    (when nil
+      (/test-char ?\\ /char-escape-p)
+      (/test-char / /char-escape-p)
+      (/test-char \\ /char-escape-p)
+      (/test-char "\\" /char-escape-p)
+      (/test-char "\\a" /char-escape-p)
+      )
+    (when nil
+      (/test-char " " /char-space-p)
+      (/test-char ?- /char-space-p)
+      (/test-char \  /char-space-p)
+      (/test-char ?\t /char-space-p)
+      (/test-char ?\r /char-space-p)
+      (/test-char ?\n /char-space-p)
+      (/test-char a /char-space-p)
+      )
+    (when nil
+      (/test-char a /char-word-p)
+      (/test-char A /char-word-p)
+      (/test-char 1 /char-word-p)
+      (/test-char ?_ /char-word-p)
+      (/test-char ?1 /char-word-p)
+      (/test-char ?9 /char-word-p)
+      )
+    (when t
+      (/test-char a /char-symbol-p)
+      (/test-char ?1 /char-symbol-p)
+      (/test-char _ /char-symbol-p)
+      (/test-char - /char-symbol-p)
+      (/test-char + /char-symbol-p)
+      (/test-char * /char-symbol-p)
+      (/test-char / /char-symbol-p)
+      )
+    ))
 
 
 (/message-test-end)

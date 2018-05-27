@@ -21,7 +21,7 @@ This is the opposite of `/true'"
 The last argument is the first element of result list."
   (dolist (e args) (push e list)) list)
 
-(defun /regexp-quote (string)
+(defsubst /regexp-quote (string)
   "Return a regexp string match STRING in following rules.
 `  => \\\\`, begin
 '  => \\\\', end
@@ -32,19 +32,51 @@ The last argument is the first element of result list."
 *  => \\\\*, aterisk character"
   (replace-regexp-in-string "[()|.*`']" "\\\\\\&" string))
 
-(defun /time-since (last)
+(defsubst /time-since (last)
   "Seconds between current time and LAST."
   (time-to-seconds (time-since last)))
 
-(defun /evenp (n)
+(defsubst /evenp (n)
   "Return t if N is even."
   (declare (indent defun))
   (eq (% n 2) 0))
 
-(defun /oddp (n)
+(defsubst /oddp (n)
   "Return t if N is odd."
   (declare (indent defun))
   (eq (% n 2) 1))
+
+;;; {{ character prediction
+(defun /--character (c)
+  "Return a character of C.
+If C is a character, return it.
+If C is a symbol, return the first character of the symbol-name.
+If C is a string, return the first character of the string.
+Otherwise nil."
+  (if c (cond ((characterp c) c)
+	      ((symbolp c) (elt (symbol-name c) 0))
+	      ((stringp c) (elt c 0))
+	      (t nil))
+    nil))
+
+(defun /char-space-p (c)
+  "Return t if C is a space character."
+  (eq ?\s (char-syntax (/--character c))))
+
+(defun /char-escape-p (c)
+  "Return t if C is a escape character."
+  (eq ?\\ (char-syntax (/--character c))))
+
+(defun /char-word-p (c)
+  "Return t if C is a word constituent."
+  (eq ?w (char-syntax (/--character c))))
+
+(defun /char-symbol-p (c)
+  "Return t if C is a symbol constituent.
+This is the extra character which constitute word besides those the
+  type of which is Word."
+  (eq ?_ (char-syntax (/--character c))))
+;;; }}
 
 (/provide)
 ;;; lib/core.el ends here

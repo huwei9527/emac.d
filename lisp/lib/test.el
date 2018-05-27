@@ -83,5 +83,11 @@
   (if /test-minor-mode (message "/test-minor-mode ON.")
     (message "/test-minor-mode OFF.")))
 
+(defmacro /test-char (c fun)
+  "Test char-p"
+  (declare (indent defun))
+  `(message "[%d] %s: %s"
+	    (setq cnt (1+ cnt)) ,(/--name c) ,(apply fun (list c))))
+
 (/provide)
 ;;; lib/test.el ends here

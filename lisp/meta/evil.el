@@ -100,7 +100,7 @@ If ST is nil, add to all the evil state exit hook."
 
 ;;; {{ Text objext
 ;; https://stackoverflow.com/questions/18102004/emacs-evil-mode-how-to-create-a-new-text-object-to-select-words-with-any-non-sp
-(defmacro /def-evil-text-object (key start end)
+(defmacro /def-evil-text-object-regexp (key start end)
   "Define new text object and bind it to text object map."
   (declare (indent defun))
   (let* ((inner (make-symbol "inner")) (outer (make-symbol "outer")))
@@ -111,6 +111,34 @@ If ST is nil, add to all the evil state exit hook."
 	 (evil-select-paren ,start ,end beg end type cnt t))
       `(define-key evil-inner-text-objects-map ,key ',inner)
       `(define-key evil-outer-text-objects-map ,key ',outer))))
+
+(defun /--intern-evil-text-object-map (io)
+  "Intern evil text object map."
+  (/--intern-format "evil-%s-text-objects-map" (/--name io)))
+
+(defmacro /def-evil-text-object (key type &rest body)
+  "Define a evil text object using BODY.
+KEY is the invoke KEY.
+TYPE is the symbol of inner or outer, or nil which stands for list of
+  (inner, outer)."
+  (declare (indent defun))
+  (/--sexp-progn
+    (if type
+	(or (listp type) (setq type (list type)))
+      (setq type '(inner outer)))
+    (dolist (io type)
+      (let* ((ob (make-symbol (symbol-name io))))
+	(/--sexp-exec
+	  `(evil-define-text-object ,ob (cnt &optional beg end type)
+	     ,@body)
+	  `(/def-keys ,(/--intern-evil-text-object-map io) ,key ,ob))))))
+
+(defmacro /def-evil-text-object-thing-at-point (key type thing)
+  "Define a evil text object using `bounds-of-thing-at-point'."
+  (declare (indent defun))
+  `(/def-evil-text-object ,key ,type
+     (let* ((region (bounds-of-thing-at-point ',thing)))
+       (evil-range (car region) (cdr region)))))
 ;;; }}
 
 ;;; {{ Key map

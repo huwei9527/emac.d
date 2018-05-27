@@ -6,6 +6,7 @@
 
 (eval-when-compile (/require-meta file))
 (/require-custom file)
+(/require-lib core)
 
 (defun /path-to-file-name (path)
   "Transform path name PATH to file name.
@@ -101,6 +102,19 @@ Return the number of buffers actually saved."
 	(set-buffer buf)
 	(and (/save-buffer silent) (setq cnt (1+ cnt)))))
     cnt))
+;;; }}
+
+;;; {{
+(defun /char-path-delimiter-p (c)
+  "Return t if C is a path delimiter."
+  (setq c (/--character c))
+  (or (eq ?\/ c) (eq ?\\ c)))
+
+(defun /char-path-p (c)
+  "Return t if C is a path constituent."
+  (setq c (/--character c))
+  (not (or (<= 0 c 32)
+	   (memq c /custom-invalid-path-char-list))))
 ;;; }}
 
 (/provide)
