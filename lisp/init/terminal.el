@@ -16,7 +16,8 @@
   auto-save
   spell
   evil
-  ace-link)
+  ace-link
+  ace-jump-mode)
 (/require-test test)
 
 ;(pp /--pre-create-directory-list)
