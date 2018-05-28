@@ -26,6 +26,7 @@
 					;hideshow
   company
   yasnippet
+  magit
   )
 (/require-test test)
 
