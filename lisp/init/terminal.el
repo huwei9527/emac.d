@@ -31,6 +31,7 @@
   file
   buffer
   miscellany
+  emacs-lisp
   )
 (/require-test test)
 
