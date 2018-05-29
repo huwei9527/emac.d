@@ -13,8 +13,8 @@
   ;auto-save
   ;hook
   ;spell
-  evil
-  ;keymap
+  ;evil
+  keymap
   ;dynamic
   )
 

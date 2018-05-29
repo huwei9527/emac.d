@@ -101,6 +101,14 @@ Message still logged in the *Messages* buffer."
   (declare (indent defun))
   (/--sexp-progn-exec `(let* ((inhibit-message t)) ,@body)))
 
+(defmacro /advice-add-silence (&rest funs)
+  "Make functions in FUNS execute with no message."
+  `(/advice-add ,funs :around /call-silently))
+
+(defmacro /advice-remove-silence (&rest funs)
+  ""
+  `(/advice-remove ,funs /call-silently))
+
 (defconst /--old-y-or-n-p (symbol-function 'y-or-n-p)
   "Definition of `y-or-n-p' functions.")
 (defconst /--old-yes-or-no-p (symbol-function 'yes-or-no-p)

@@ -23,16 +23,26 @@
   rainbow-delimiters
   which-key
   paredit
-					;hideshow
+  ;hideshow
   company
   yasnippet
   magit
+  select
+  file
+  buffer
+  miscellany
   )
 (/require-test test)
 
 ;(pp /--pre-create-directory-list)
 
 (switch-to-buffer "*Messages*")
+;; (switch-to-buffer "*AAA")
+;; (switch-to-buffer "*BBB")
+;; (split-window-right)
+;; (other-window 1)
+;; (switch-to-buffer "*Messages*")
+
 
 (/provide)
 ;;; init/terminal.el ends here

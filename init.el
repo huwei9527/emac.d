@@ -21,6 +21,8 @@
 ; (require 'test-custom)
 ; (require 'test-lib)
 
+(/require-custom core)
+
 (if (display-graphic-p)
     (/require-init graphic)
   (/require-init terminal)

@@ -59,6 +59,7 @@
   C-f ; evil-scroll-page-down => forward-char 
   C-b ; evil-scroll-page-up   => backward-char 
   C-v ; evil-visual-block     => scroll-up-command
+  C-e ; evil-scroll-line-down => move-end-of-line
   ?\t ; evil-jump-forward     => indent-for-tab-command
   )
 
@@ -77,6 +78,7 @@
   C-y ; evil-copy-from-above      => yank
   C-r ; evil-paste-from-register  => isearch-backward
   C-v ; quoted-insert             => scroll-up-command
+  C-e ; evil-copy-from-below      => move-end-of-line
   )
 
 (/def-keys-evil-state motion
@@ -93,7 +95,7 @@
 ;;; leader key
 ;; - SPC -
 (/def-keys-evil-space-leader motion
-  a /show-key-binding)
+  SPC /scroll-other-window-transient-mode)
 
 ;; - , -
 (/def-keys-evil-comma-leader motion

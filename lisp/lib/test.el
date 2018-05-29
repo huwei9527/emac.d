@@ -81,7 +81,8 @@
   :keymap `(("a" . /show-key-binding))
   :global nil
   (if /test-minor-mode (message "/test-minor-mode ON.")
-    (message "/test-minor-mode OFF.")))
+    (message "/test-minor-mode OFF."))
+  )
 
 (defmacro /test-char (c fun)
   "Test char-p"

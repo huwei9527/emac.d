@@ -53,6 +53,13 @@ See `/--intern-directory'." /--config-name))
   `(defvar ,(/--intern-config-directory form) ,(/--file-config-directory form)
      ,(format "%s configure directory.\n%s" (capitalize (/--name form)) doc)))
 
+(defmacro /config-file-path (file &optional conf)
+  (declare (indent defun))
+  (:documentation (format "Return the path of FILE in `%s'"
+			  (/--intern-config-directory 'CONF)))
+  (or conf (setq conf file))
+  `(expand-file-name ,(/--name file) ,(/--intern-config-directory conf)))
+
 (defmacro /def-file-name-regexp (form regexp doc)
   (declare (doc-string 3) (indent defun))
   (:documentation (format "Construct a variable %s.
@@ -79,7 +86,8 @@ The predictor user regexp `%s' to check."
   '((dotdirectory "`..?'" "system '.' and '..' directory")
     (uneditable-file "((~|#)|(.(exe|pdf|zip)))'" "emacs uneditable file")
     (system-buffer "`(*)" "system buffer")
-    (auto-killed-buffer "`(*(Warning|AAA|BBB))" "auto killed buffer")
+    (temporary-buffer-prefix "`(*(Warning|AAA|BBB))"
+			     "temporary buffer prefix")
     (scratch-buffer "`*scratch*'" "scratch buffer")
     (message-buffer "`*Messages*'" "message buffer")
     )

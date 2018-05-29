@@ -11,7 +11,6 @@
 (defun /path-to-file-name (path)
   "Transform path name PATH to file name.
 Replace the system directory symbol '/' with '!'."
-  ; (setq path (file-truename (expand-file-name path)))
   (subst-char-in-string ?/ ?! (replace-regexp-in-string "!" "!!" path)))
 
 (defun /file-or-buffer-name (&rest buf)
@@ -21,6 +20,13 @@ If no file is related to the buffer, return the buffer name."
   (if (buffer-file-name buf)
       (file-truename (buffer-file-name buf))
     (buffer-name buf)))
+
+(defun /file-in-directory-p (file dir)
+  "Return non-nil if FILE is in DIR.
+Subdirectory is also counted."
+  (string-prefix-p (file-name-as-directory
+		    (file-truename (expand-file-name dir)))
+		   (file-truename (expand-file-name file))))
 
 (defsubst /file-name (path)
   "Return the filename of PATH.

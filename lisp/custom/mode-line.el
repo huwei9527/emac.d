@@ -25,8 +25,8 @@
   '((t (:inherit /mode-line-evil-insert-state-tag)))
   "The face for overwrite tag in mode line")
 
-(defface /mode-line-temporary-mode-tag '((t (:inherit /red-foreground)))
-  "The face for temporary mode tag in mode line")
+(defface /mode-line-transient-minor-mode-tag '((t (:inherit /red-foreground)))
+  "The face for transient minor mode tag in mode line")
 
 (defvar /mode-line-overwrite-mode
   `(overwrite-mode
@@ -78,11 +78,12 @@ mouse-1: Display Line and Column Mode Menu"))))))))
   "VC mode in mode line.")
 (put '/mode-line-vc-mode 'risky-local-variable t)
 
-(defvar /mode-line-temporary-mode
-  `(overriding-local-map
-    (:propertize "*" face /mode-line-temporary-mode-tag))
-  "Temporary mode in mode line")
-(put '/mode-line-temporary-mode 'risky-local-variable t)
+(defvar /mode-line-transient-minor-mode
+  `(overriding-terminal-local-map
+    (:propertize /custom-transient-minor-mode-mode-line-tag
+		 face /mode-line-transient-minor-mode-tag))
+  "Transient minor mode in mode line")
+(put '/mode-line-transient-minor-mode 'risky-local-variable t)
 
 (/provide)
 ;;; custom/mode-line.el ends here

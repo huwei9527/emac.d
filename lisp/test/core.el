@@ -12,7 +12,11 @@
 
 (when nil
   (print (/regexp-quote "(abcd)"))
-  (print (/regexp-quote "`..?'")))
+  (print (/regexp-quote "`..?'"))
+  (print (/regexp-quote "`..?'" "(a)" "(b)"))
+  (print (/regexp-quote `("(a)" "(b)")))
+  ;(print (/regexp-quote "(a)" '("(A)" "(B)")))
+  )
 
 (defvar vara (make-symbol "unintern-symbol") "Test")
 (defmacro testma ()
@@ -116,7 +120,7 @@
     (/swap tmp var)
     (message "after: tmp %s var %s" tmp var)))
 
-(when t
+(when nil
   (let* ((cnt 0))
     (when nil
       (/test-char "a" /--character)
@@ -158,6 +162,24 @@
       (/test-char / /char-symbol-p)
       )
     ))
+
+(when nil
+  (let* ((sec 1))
+    (message "curr: %s %s" (current-time) (float-time))
+    (message "curr: %s" (current-time-string))
+    (message "add : %s %s" (time-add 1 nil) (float-time (time-add 1 nil)))
+    ))
+
+(when t
+  (/def-double-keys-event-command
+   dtest
+   ((/show-key-binding)
+    (message "normal"))
+   ((/show-key-binding)
+    (message "double")) "doc")
+  (/def-keys-evil-state motion C-c dtest)
+  (/def-keys-evil-state motion a /show-key-binding)
+  )
 
 
 (/message-test-end)

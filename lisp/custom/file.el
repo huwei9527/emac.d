@@ -35,6 +35,22 @@ When Emacs opens a file in these directory, the corresponding buffer is
   (* /custom-big-file-line-threshold 64)
   "File size threshold over which the `linum-mode' is turned off." 1)
 
+(/def-config-directory abbrev "e.g,  abbrev_defs")
+(/def-config-directory saveplace "e.g, place")
+(/def-config-directory smex "e.g, smex-items")
+(/def-config-directory ido "e.g., id.last")
+(/def-config-directory recentf "e.g. recentf")
+
+(/def-custom-var recentf-exclude-list
+  (/regexp-quote ".el.gz'"
+		 ".(log|aux|rip)'"
+		 "`_"
+		 "__init__"
+		 (expand-file-name "~/Codes")
+		 (expand-file-name "~/.local/lib")
+		 /custom-packages-directory))
+
+
 (/def-custom-var max-path-length 2048 "The max length of path string.")
 (/def-custom-var invalid-path-char-list
   '(?\" ?\' ?\` ?\C-?

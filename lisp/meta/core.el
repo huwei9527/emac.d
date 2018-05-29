@@ -185,5 +185,31 @@ this macro is intended for the top level use, not for building macros."
   (let* ((tmp (make-symbol "tmp")))
     `(setq ,tmp ,var1 ,var1 ,var2 ,var2 ,tmp)))
 
+;; double keys event
+(defvar /--double-keys-event-interval 0.2 ;(/ double-click-time 1000.0)
+  "Interval seconds to distinguish normal event and double keys event.")
+
+(defmacro /def-double-keys-event-command
+    (name cmd cmd2 doc &optional interval)
+  "Define a double keys event command.
+A double keys event command is a command that when invoked, it will continue
+    read events in a time INTERVAL. If the events is the same as the events that
+    invokes this command, it will execute the double events command CMD2,
+    otherwise it will execute normal command CMD."
+  (declare (doc-string 4) (indent defun))
+  (or interval (setq interval /--double-keys-event-interval))
+  `(defun ,(/--intern name) ()
+     ,doc
+     (interactive)
+     (let* ((keys (this-command-keys-vector))
+	    (events (/wait-for-events ,interval (length keys))))
+       ;(message "keys: %s %s" keys (key-description keys))
+       ;(message "even: %s %s" events (key-description events))
+       (if (equal keys events)
+	   (progn ,@cmd2)
+	 ,@cmd (/put-back-events events)))))
+
+
+
 (/provide)
 ;;; meta/core.el ends here

@@ -126,6 +126,11 @@ This is different from assigning `nil' or `undefined' to that entry."
   (declare (indent defun))
   (/--intern "def-keys-%s" (/--name name)))
 
+(defun /--intern-mode (name)
+  "Intern `NAME-mode'.\nSee `/--intern-format'."
+  (declare (indent defun))
+  (/--intern-format "%s-mode" (/--name name)))
+
 (defun /--intern-mode-map (mode)
   "Intern `MODE-map'.\nSee `/--intern-format'."
   (declare (indent defun))
@@ -162,6 +167,38 @@ See `/def-keys' for argument usage.\n%s" keymap (if doc doc ""))
   (declare (indent defun))
   `(/def-keys ,(/--intern-mode-map mode) C-c ,@bindings))
 ;;; }}
+
+(defun /--intern-transient-minor-mode (mode)
+  "Intern `/MODE-transient-mode'.\nSee `/--intern'."
+  (/--intern (/--intern-mode (format "%s-transient" (/--name mode)))))
+
+(defun /--intern-transient-minor-mode-toggle (mode)
+  (:documentation (format "Intern `%s-toggle'.\nSee `/--intern'."
+			  (/--intern-transient-minor-mode 'MODE)))
+  (/--intern-format "%s-toggle" (/--intern-transient-minor-mode mode)))
+
+(defmacro /def-transient-minor-mode (mode doc keymap &optional tag)
+  "Define a transient minor mode using KEYMAP."
+  (declare (doc-string 2) (indent defun))
+  (let* ((mode (/--intern-transient-minor-mode mode))
+	 (toggle (/--intern-transient-minor-mode-toggle mode))
+	 (map (/--intern-mode-map mode)))
+    (/--sexp-progn-exec
+      `(define-minor-mode ,mode
+	 ,doc
+	 :init-value nil
+	 :lighter nil
+	 :global nil
+	 :keymap ,keymap
+	 (if ,mode
+	     (progn
+	       (set-transient-map ,map t ',toggle)
+	       (setq /custom-transient-minor-mode-mode-line-tag ,tag))
+	   (setq /custom-transient-minor-mode-mode-line-tag nil)))
+      `(defun ,toggle ()
+	 ,(format "Toggle %s." mode)
+	 (call-interactively ',mode))
+      `(/advice-add-silence ,mode))))
 
 
 (/provide)

@@ -118,6 +118,12 @@
   (/def-keys-ctl-c-prefix global-map C-n /show-key-binding)
   (/def-keys-ctl-c-mode messages-buffer-mode ab /show-key-binding)
   )
+
+(when t
+  (/def-keys-evil-state motion a (lambda () (interactive) (message "fuck")))
+  (/def-transient-minor-mode abcd "abcde" `(([?a] . /show-key-binding)) 1234)
+  )
+
 (/message-test-end)
 
 (/provide)
