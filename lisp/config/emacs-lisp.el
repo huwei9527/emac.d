@@ -4,19 +4,19 @@
 
 ;;; Code:
 
-(eval-when-compile (/require-meta hook keymap))
+(eval-when-compile (/require-meta hook keymap company))
 
 (/require-lib file)
 
 (/eval-after-load lisp-mode
   (/def-keys-ctl-c-mode emacs-lisp-mode c checkdoc)
   (/add-hook (emacs-lisp-mode-hook)
-    eldoc-mode show-paren-mode
     (lambda ()
+      (eldoc-mode 1)
+      (show-paren-mode 1)
       (unless (/scratch-buffer-p)
-	(company-mode 1)
-	(set (make-local-variable 'company-backends)
-	     '((company-capf company-abbrev-code company-keywords)))))))
+	(/company-mode-on
+	 (company-capf company-abbrev-code company-keywords))))))
 
 (/provide)
 ;;; config/emacs-lisp.el ends here

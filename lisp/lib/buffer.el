@@ -109,14 +109,26 @@ If WINDOW is nil, choose the selected window."
     (or (memq major-mode /custom-temporary-buffer-major-mode-list)
 	(/temporary-buffer-prefix-p (buffer-name)))))
 
+(defun /kill-temporary-buffer (win pred)
+  "Kill buffer in window WIN with predicate PRED."
+  (let* (kill prev)
+    (while (and (window-valid-p win)
+		(window-live-p win)
+		(window-prev-buffers win)
+		(funcall pred (window-buffer win)))
+      (quit-window 'kill win)
+      (setq kill t))
+    (and (window-valid-p win)
+	 (window-live-p win)
+	 (or (window-prev-buffers win) (delete-window win)))
+    kill))
+
 (defun /close-other-buffer ()
   "Close buffer in the other window.
 If the corresponding buffer is temporary buffer, kill it."
   (interactive)
   (or (one-window-p)
-      (let* ((win (next-window))
-	     (first t)
-	     (closed t) buf)
+      (let* ((win (next-window)) (first t) (closed t) buf)
 	(while closed
 	  (setq closed nil)
 	  ;; Invoke buffer local close-buffer-function.
@@ -124,19 +136,12 @@ If the corresponding buffer is temporary buffer, kill it."
 	       (if (funcall /custom-close-other-buffer-function)
 		   (setq closed t first nil)))
 	  ;; Delete global temporary buffer.
-	  (while (and (window-valid-p win)
-		      (window-live-p win)
-		      (window-prev-buffers win)
-		      (/temporary-buffer-p (window-buffer win)))
-	    (quit-restore-window win 'kill)
-	    (setq closed t first nil))
-	  ;; Delete the first non-temporary buffer.
+	  (if (/kill-temporary-buffer win #'/temporary-buffer-p)
+	      (setq closed t first nil))
+	  ;; If no buffer is deleted, delete the one normal buffer.
 	  (when first
 	    (setq first nil closed t)
-	    (quit-window nil win)))
-	(and (window-valid-p win)
-	     (window-live-p win)
-	     (or (window-prev-buffers win) (delete-window win))))))
+	    (quit-window nil win))))))
 
 (defun /scroll-other-window-line-down (&optional count)
   "Scroll the other window COUNT lines downwards."
