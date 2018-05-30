@@ -54,7 +54,7 @@
 (defvar /--format-sgr-color-command-alist
   `((:black   . 0)
     (:red     . 1)
-    (:greed   . 2)
+    (:green   . 2)
     (:yellow  . 3)
     (:blue    . 4)
     (:magenta . 5)

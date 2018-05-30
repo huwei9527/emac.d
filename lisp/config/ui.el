@@ -4,6 +4,8 @@
 
 ;;; Code:
 
+(eval-when-compile (/require-meta hook))
+
 (/require-custom ui)
 
 ;; Set default font size in gui frame
@@ -30,10 +32,11 @@
 (column-number-mode 1)
 (setq linum-delay t)
 ; Don't show line number in some certain major mode.
-(advice-add 'linum-on :around
-            (lambda (func &rest args)
-              (or (memq major-mode /custom-inhibit-linum-mode-list)
-                (apply func args))))
+(/advice-add (linum-on) :around
+  (lambda (fun &rest args)
+    "Don't show line number for certain buffer."
+    (or (memq major-mode /custom-inhibit-linum-mode-list)
+	(apply fun args))))
 
 (/require-config theme)
 (/require-config mode-line)

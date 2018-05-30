@@ -6,7 +6,7 @@
 
 (eval-when-compile (/require-meta file))
 (/require-custom file)
-(/require-lib core)
+(/require-lib core format)
 
 (defun /path-to-file-name (path)
   "Transform path name PATH to file name.
@@ -83,6 +83,21 @@ If DEPTH is not a positive integer, the whole directory tree is searched."
   (let* ((path (file-name-as-directory path)))
     (add-to-list list path)
     (/add-subdirectory-to-list path list depth)))
+
+(defun /make-directory-safe (path &optional verbose)
+  "Create directory PATH.
+If PATH can't be created or PATH is already exits, no error will be signaled.
+If VERBOSE is non-nil, show messages."
+  (let* (create tag)
+    (unless (file-directory-p path)
+      (make-directory path)
+      (setq create t))
+    (when verbose
+      (setq tag (if noninteractive
+		    (if create (/format-red "C") (/format-green "E"))
+		  (if create (propertize "C" 'face '/red-foreground)
+		    (propertize "E" 'face '/green-foreground))))
+      (message "[%s] %s" tag path))))
 
 ;;; {{ buffer
 (defun /save-buffer (&optional silent)

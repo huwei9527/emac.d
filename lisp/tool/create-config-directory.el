@@ -17,13 +17,9 @@
   miscellany
   theme
   )
-(/require-test format)
-(message "boundp : %s" (boundp '*create*))
-(message "length: %s" (length /--pre-create-directory-list))
-;(message "length: %s" /--pre-create-directory-list)
-(switch-to-buffer "*Messages*")
 
-;(dolist (dir config-directory-list) (make-directory-safe (symbol-value dir)))
+(/require-lib file)
+(dolist (dir /--pre-create-directory-list) (/make-directory-safe dir 'verbose))
 
 (/provide)
 ;;; tool/create-config-directory.el ends here

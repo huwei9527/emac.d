@@ -29,7 +29,7 @@
 
 ; (/ppmacroexpand (/def-file-name-regexp-all))
 
-(when t
+(when nil
   (let* ((cnt 0))
     (when nil
       (/test-char "\\" /char-path-delimiter-p)
@@ -45,6 +45,9 @@
       (/test-char "(" /char-path-p)
       )
     ))
+
+(when t
+  (/make-directory-safe "~/Projects/test/xxxxx" 'verbose))
 
 (/message-test-end)
 
