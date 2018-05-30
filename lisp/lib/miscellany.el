@@ -23,5 +23,16 @@
 	     ;(fboundp 'toggle-hideshow-block)
 	     (call-interactively '/toggle-hideshow-block))))))
 
+(defvar /--write-region nil
+  "Store the symbol-function of original `write-region'.")
+(fset '/--write-region (symbol-function 'write-region))
+(defun /write-region-silently (start end filename &optional append visit
+				     lockname mustbenew)
+  "`write-region' with \"Wrote file\" message suppressed.
+See `/--write-resion'. The original is `write-region' but we replace it."
+  (/--write-region start end filename append 'nomsg lockname mustbenew))
+
+;(fset 'write-region (symbol-function '/write-region-silently))
+
 (/provide)
 ;;; lib/miscellany.el ends here

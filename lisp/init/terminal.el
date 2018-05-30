@@ -9,8 +9,8 @@
 
 (defvar /--pre-create-directory-list nil)
 
-; (/require-meta file)
 (/require-config
+  core
   elpa
   ui
   auto-save
@@ -34,14 +34,14 @@
   emacs-lisp
   python
   )
-(/require-test test)
+; (/require-test test)
 
 ;(pp /--pre-create-directory-list)
 
 (switch-to-buffer "*Messages*")
 ;; (switch-to-buffer "*AAA")
 ;; (switch-to-buffer "*BBB")
-;; (split-window-right)
+(split-window-right)
 ;; (other-window 1)
 ;; (switch-to-buffer "*Messages*")
 

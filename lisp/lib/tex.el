@@ -18,14 +18,15 @@
   (save-selected-window
     (let* ((lives (window-list-1))
 	   (next (next-window))
-	   win closed)
+	   win rlt delete)
       (while lives
 	(setq win (car lives))
-	(and (/kill-temporary-buffer win #'/tex-temporary-buffer-p)
+	(and (setq delete
+		   (/kill-temporary-buffer win #'/tex-temporary-buffer-p))
 	     (eq curr other)
-	     (setq closed t))
+	     (setq rlt delete))
 	(pop lives))
-      closed)))
+      rlt)))
 
 (/provide)
 ;;; lib/tex.el ends here

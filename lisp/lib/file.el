@@ -95,7 +95,11 @@ If SILENT is nil, avoid message when saving."
 	   (file-writable-p buffer-file-name)	       ;; Write permission
 	   )
       (progn
-	(if silent (with-temp-message "" (save-buffer)) (save-buffer))
+	;; FIXME: slient has no effect
+	(save-buffer)
+	;; (let* ((inhibit-message silent))
+	;;   (save-buffer))
+	;(if silent (with-temp-message "" (save-buffer)) (save-buffer))
 	t)
     nil))
 

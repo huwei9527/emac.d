@@ -110,7 +110,10 @@ If WINDOW is nil, choose the selected window."
 	(/temporary-buffer-prefix-p (buffer-name)))))
 
 (defun /kill-temporary-buffer (win pred)
-  "Kill buffer in window WIN with predicate PRED."
+  "Kill buffer in window WIN with predicate PRED.
+Return 'delete if the WIN is deleted.
+Return t if any buffer is killed and WIN is not deleted.
+Return nil if no buffer is killed and WIN is not deleted."
   (let* (kill prev)
     (while (and (window-valid-p win)
 		(window-live-p win)
@@ -118,9 +121,11 @@ If WINDOW is nil, choose the selected window."
 		(funcall pred (window-buffer win)))
       (quit-window 'kill win)
       (setq kill t))
-    (and (window-valid-p win)
-	 (window-live-p win)
-	 (or (window-prev-buffers win) (delete-window win)))
+    (if (and (window-valid-p win) (window-live-p win))
+	(unless (window-prev-buffers win)
+	  (delete-window win)
+	  (setq kill 'delete))
+      (setq kill 'delete))
     kill))
 
 (defun /close-other-buffer ()
@@ -128,16 +133,20 @@ If WINDOW is nil, choose the selected window."
 If the corresponding buffer is temporary buffer, kill it."
   (interactive)
   (or (one-window-p)
-      (let* ((win (next-window)) (first t) (closed t) buf)
+      (let* ((win (next-window)) (first t) (closed t) delete)
 	(while closed
 	  (setq closed nil)
 	  ;; Invoke buffer local close-buffer-function.
-	  (and /custom-close-other-buffer-function
-	       (if (funcall /custom-close-other-buffer-function)
-		   (setq closed t first nil)))
+	  (when (and /custom-close-other-buffer-function
+		     (setq delete
+			   (funcall /custom-close-other-buffer-function)))
+	    (setq first nil)
+	    (or (eq delete 'delete) (setq closed t)))
 	  ;; Delete global temporary buffer.
-	  (if (/kill-temporary-buffer win #'/temporary-buffer-p)
-	      (setq closed t first nil))
+	  (when (setq delete
+		      (/kill-temporary-buffer win #'/temporary-buffer-p))
+	    (setq first nil)
+	    (or (eq delete 'delete) (setq closed t)))
 	  ;; If no buffer is deleted, delete the one normal buffer.
 	  (when first
 	    (setq first nil closed t)
