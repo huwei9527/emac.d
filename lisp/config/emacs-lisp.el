@@ -6,7 +6,7 @@
 
 (eval-when-compile (/require-meta hook keymap company))
 
-(/require-lib file)
+(/require-lib file highlight-sexp)
 
 (/eval-after-load lisp-mode
   (/def-keys-ctl-c-mode emacs-lisp-mode c checkdoc)
@@ -14,6 +14,7 @@
     (lambda ()
       (eldoc-mode 1)
       (show-paren-mode 1)
+      (/highlight-sexp-mode 1)
       (unless (/scratch-buffer-p)
 	(/company-mode-on
 	 (company-capf company-abbrev-code company-keywords))))))

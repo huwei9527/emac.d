@@ -34,6 +34,7 @@
   emacs-lisp
   python
   )
+(/require-lib highlight-sexp)
 ; (/require-test test)
 
 ;(pp /--pre-create-directory-list)
@@ -41,7 +42,7 @@
 (switch-to-buffer "*Messages*")
 ;; (switch-to-buffer "*AAA")
 ;; (switch-to-buffer "*BBB")
-(split-window-right)
+;(split-window-right)
 ;; (other-window 1)
 ;; (switch-to-buffer "*Messages*")
 
