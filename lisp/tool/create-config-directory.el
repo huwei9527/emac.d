@@ -1,23 +1,29 @@
 ;; -*- lexical-binding : t ; byte-compile-dynamic : t -*-
 
+;; (require '/init/global
+;; 	 (expand-file-name "lisp/init/global.el" user-emacs-directory))
+
 ;; Place before configuration custom require to record the variable.
-(setq config-directory-list nil)
+(defvar /--pre-create-directory-list nil)
 
-;; Must before any configuration package.
-(require 'global-custom
-         ;; Specify the file because load-path is set after it is loaded.
-         (expand-file-name "lisp/custom/global-custom.el" user-emacs-directory))
+(/require-custom
+  elpa
+  yasnippet
+  company
+  spell
+  auto-save
+  file
+  ui
+  miscellany
+  theme
+  )
+(/require-test format)
+(message "boundp : %s" (boundp '*create*))
+(message "length: %s" (length /--pre-create-directory-list))
+;(message "length: %s" /--pre-create-directory-list)
+(switch-to-buffer "*Messages*")
 
+;(dolist (dir config-directory-list) (make-directory-safe (symbol-value dir)))
 
-(require 'elpa-custom)
-(require 'color-theme-custom)
-(require 'auto-save-custom)
-(require 'file-lib)
-(require 'company-custom)
-(require 'miscellany-custom)
-(require 'desktop-custom)
-
-(dolist (dir config-directory-list) (make-directory-safe (symbol-value dir)))
-
-(provide 'create-config-directory)
-; create-config-directory.el ends here
+(/provide)
+;;; tool/create-config-directory.el ends here

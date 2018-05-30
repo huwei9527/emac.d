@@ -195,7 +195,7 @@ Use `tab' to cycle backward."
    (call-interactively '/other-buffer-transient-mode))
   "Cycle through buffers in one window.
 Normal: Switch between `mru' buffer in the selected window.
-        See `mode-line-other-buffer'
+        See `Mode-line-other-buffer'
 Double: Cycle through buffers in the selected window. 
         See `/other-buffer-transient-mode'.")
 ;;; }}

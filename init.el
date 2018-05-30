@@ -12,12 +12,12 @@
 (require '/init/global
 	 (expand-file-name "lisp/init/global.el" user-emacs-directory))
 
-(/require-custom core)
-
-(if (display-graphic-p)
-    (/require-init graphic)
-  (/require-init terminal)
-  )
+(if noninteractive
+    (cond
+     ((boundp '*create*) (/require-tool create-config-directory))
+     ((boundp '*install*) (/require-tool create-config-directory))
+     (t (message "Exit.")))
+  (if (display-graphic-p) (/require-init graphic) (/require-init terminal)))
 
 (defvar emacs-load-time (time-to-seconds (time-since emacs-load-start-time)))
 (message "%f" emacs-load-time)

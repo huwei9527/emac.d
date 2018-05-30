@@ -14,8 +14,9 @@
   ;hook
   ;spell
   ;evil
-  keymap
+  ;keymap
   ;dynamic
+  format
   )
 
 

@@ -13,14 +13,14 @@
   (/def-keys company-active-map
     TAB      company-complete-selection
     [tab]    company-complete-selection
-    RET      company-newline
-    [return] company-newline
+    RET      /company-newline
+    [return] /company-newline
     )
   (/def-keys company-filter-map
     TAB      company-complete-selection
     [tab]    company-complete-selection
-    RET      company-newline
-    [return] company-newline
+    RET      /company-newline
+    [return] /company-newline
     )
   ;; company statistic
   (setq company-statistics-file

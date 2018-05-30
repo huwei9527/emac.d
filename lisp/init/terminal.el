@@ -7,8 +7,7 @@
 ;; (require '/init/global
 ;; 	 (expand-file-name "lisp/init/global.el" user-emacs-directory))
 
-(defvar /--pre-create-directory-list nil)
-
+(/require-custom core)
 (/require-config
   core
   elpa
@@ -34,10 +33,7 @@
   emacs-lisp
   python
   )
-(/require-lib highlight-sexp)
-; (/require-test test)
-
-;(pp /--pre-create-directory-list)
+(/require-test test)
 
 (switch-to-buffer "*Messages*")
 ;; (switch-to-buffer "*AAA")
