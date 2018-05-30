@@ -4,7 +4,7 @@
 
 ;;; Code:
 
-(/require-lib core)
+(/require-lib core hideshow)
 
 (defun /tab-dwim (prefix)
   "Tab everything."
@@ -20,8 +20,8 @@
 		   (company-manual-begin))
 	(call-interactively 'indent-for-tab-command)
 	(and (eq old (point))
-	     (fboundp 'toggle-hideshow-block)
-	     (call-interactively 'toggle-hideshow-block))))))
+	     ;(fboundp 'toggle-hideshow-block)
+	     (call-interactively '/toggle-hideshow-block))))))
 
 (/provide)
 ;;; lib/miscellany.el ends here

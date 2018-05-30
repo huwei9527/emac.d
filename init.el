@@ -14,9 +14,9 @@
 (require '/init/global
 	 (expand-file-name "lisp/init/global.el" user-emacs-directory))
 
-(require 'global-custom
-         ;; Specify the file because load-path is set after it is loaded.
-         (expand-file-name "lisp/custom/global-custom.el" user-emacs-directory))
+;; (require 'global-custom
+;;          ;; Specify the file because load-path is set after it is loaded.
+;;          (expand-file-name "lisp/custom/global-custom.el" user-emacs-directory))
 
 ; (require 'test-custom)
 ; (require 'test-lib)
@@ -24,7 +24,8 @@
 (/require-custom core)
 
 (if (display-graphic-p)
-    (/require-init graphic)
+    ;(/require-init graphic)
+    (/require-init terminal)
   (/require-init terminal)
   )
 

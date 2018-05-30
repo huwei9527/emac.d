@@ -28,6 +28,7 @@
 			  /custom-config-company-directory)
 	company-require-match nil)
   (/add-hook (company-mode-hook) company-statistics-mode)
+  (/advice-add-silence company-manual-begin)
   )
 
 (/provide)

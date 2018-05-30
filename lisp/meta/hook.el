@@ -86,7 +86,7 @@
 (/--def-hook-setter focus-loss focus-out-hook suspend-hook
 		    evil-normal-state-entry-hook)
 
-(defconst /--verbose-functions '(message) "Verbose function list.")
+(defconst /--verbose-functions '(message prin1 princ) "Verbose function list.")
 (defmacro /progn-silently (&rest body)
   "Evaluate BODY silently by advising `/--verbose-functions' to `ignore'."
   (declare (indent defun))

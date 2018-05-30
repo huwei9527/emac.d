@@ -23,7 +23,7 @@
   rainbow-delimiters
   which-key
   paredit
-  ;hideshow
+  hideshow
   company
   yasnippet
   magit
@@ -32,6 +32,7 @@
   buffer
   miscellany
   emacs-lisp
+  python
   )
 (/require-test test)
 
