@@ -12,11 +12,11 @@
 (setq package-user-dir config-packages-directory)
 (package-initialize)
 
-;; When you describe-package or Press Enter or C-m in the packages list, you will see
-;; a pop window with package description. If the package is not installed, package.el
-;; will download a readme file and store in the 'package-user-dir' which is annoying.
-;; This advice put all the readme file in some other directory to keep the 'package-user-dir'
-;; clean.
+;; When you describe-package or Press Enter or C-m in the packages list, you
+;; will see a pop window with package description. If the package is not
+;; installed, package.el will download a readme file and store in the
+;; 'package-user-dir' which is annoying.  This advice put all the readme file in
+;; some other directory to keep the 'package-user-dir' clean.
 (advice-add 'describe-package-1 :around
             (lambda (func pkg)
               (let ((package-user-dir config-package-describes-directory))

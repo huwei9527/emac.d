@@ -26,6 +26,9 @@
 ;; camel word support
 (subword-mode)
 
+;; disble mouse click
+(global-disable-mouse-mode)
+
 ;;; {{ Keymap
 ;; help-map
 (/def-keys-ctl-h

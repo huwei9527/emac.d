@@ -12,7 +12,8 @@
 (/require-config elpa)
 (/require-lib elpa format)
 
-;(install-package)
+(package-refresh-contents)
+(/package-install)
 
 (message "Time: %f s."
          (time-to-seconds (time-since install-packages-start-time)))

@@ -7,13 +7,25 @@
 (/require-custom elpa)
 
 ;; ELPA
-(setq package-enable-at-startup nil)
-(setq package-archives
-       ;; Tsinghua mirror
-      '(("gnu" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
-        ("melpa" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
-; Default ELPA's user package directory.
-(setq package-user-dir /custom-packages-directory)
+(setq package-enable-at-startup nil
+      ;; archives source
+      package-archives /custom-package-archives
+      ;; Default ELPA's user package directory.
+      package-user-dir /custom-packages-directory
+      ;; stop package to add (package-initialize) to your init.el file
+      package--init-file-ensured t)
+
+;; setup user instaled package and load selected packages
+;; see /custom-package-alist
+(setq package-selected-packages nil package-load-list nil)
+(let* (pkg load)
+  (dolist (attrs /custom-package-alist)
+    (setq pkg (car attrs) load (cdr attrs))
+    (push pkg package-selected-packages)
+    (or (eq load t) (push `(,pkg ,load) package-load-list)))
+  (push 'all package-load-list))
+
+;; load user installed packges
 (package-initialize)
 
 ;; When you describe-package or Press Enter or C-m in the packages

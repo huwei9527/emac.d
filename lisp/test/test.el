@@ -17,6 +17,7 @@
   ;keymap
   ;dynamic
   ;format
+  ;elpa
   )
 
 

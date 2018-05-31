@@ -4,84 +4,56 @@
 
 ;;; Code:
 
-(eval-when-compile (/require-meta file))
+(eval-when-compile (/require-meta file core))
 
-;; (defconst elpa-custom-packages-list
-;;   '(
-;;     ;; import vim in emacs
-;;     evil
-;;     ;; color-theme-solarized
-;;     ;; zenburn-theme
-;;     ;; labburn-theme
-;;     ;; molokai-theme
-;;     ;; ivy-hydra
-;;     ;; fuzzy search sortting
-;;     flx
-;;     smex
-;;     ;; ivy minibuffer completion and counsel utils
-;;     counsel
-;;     ;; show keymap menu
-;;     which-key
-;;     ;; find file in project like ctrl-p
-;;     find-file-in-project
-;;     ;; latex environment
-;;     auctex
-;;     company-auctex
-;;     ;; paredit
-;;     paredit
-;;     paredit-everywhere
-;;     rainbow-delimiters
-;;     ;; hl-sexp
-;;     ;; hideshow-org
-;;     ;; hideshowvis
-;;     company
-;;     company-statistics
-;;     company-ycmd
-;;     browse-kill-ring
-;;     workgroups
-;;     ;; workgroups2
-;;     ace-jump-mode
-;;     ace-link
-;;     flyspell-lazy
-;;     popwin
-;;     ;; python
-;;     elpy
-;;     magit
-;;     )
-;;   "Package to be install.")
+(/def-custom-var package-archives
+  `(("gnu"   . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+    ("melpa" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/"))
+  "An alist of achives from which to fetch.
+This will feed to `package-archives'.")
 
-(setq package-selected-packages
-      `(evil                 ; vim
-	;; color-theme-solarized
-	;; zenburn-theme
-	;; labburn-theme
-	;; molokai-theme
-	flx                  ; fuzzy search sortting
-	smex                 ; M-x-mru
-	counsel              ; minibuffer completion - ivy
-	;; ivy-hydra
-	which-key            ; show keymap interactively
-	find-file-in-project ; find in project
-	paredit              ; auto pair sexp
-	paredit-everywhere   ; auto pair sexp-like object
-	rainbow-delimiters   ; colored parenthesis
-	;; hideshow-org
-	;; hideshowvis
-	company              ; completion engine
-	company-statistics   ; complete-mru
-	company-ycmd         ; completion server
-	browse-kill-ring     ; kill ring
-	;; workgroups
-	;; workgroups2
-	ace-jump-mode        ; move cursor
-	ace-link             ; open link fast
-	flyspell-lazy        ; spell check in idle time
-	;; popwin
-	elpy                 ; python major mode
-	auctex               ; TeX major mode
-	company-auctex       ; completion for TeX
-	magit                ; git tool
-	))
+(/def-custom-var package-alist
+  `((evil . t)			; vim
+    (color-theme-solarized)	; solarized color theme
+    (zenburn-theme)		; zenburn color theme
+    (labburn-theme)		; labburn color theme
+    (molokai-theme)		; molokai color theme
+    (flx . t)			; fuzzy search sortting
+    (smex . t)			; M-x-mru
+    (counsel . t)		; minibuffer completion
+    (ivy-hydra)			; minibuffer completion control panel
+    (which-key . t)		; show keymap interactively
+    (find-file-in-project . t)	; find in project
+    (paredit . t)		; auto pair sexp
+    (paredit-everywhere . t)	; auto pair sexp-like object
+    (yasnippet . t)		; snippet
+    (rainbow-delimiters . t)	; colored parenthesis
+    (hideshow-org)		; org-mode hideshow
+    ;(hideshowvis)		; hideshow +/- icons
+    (company . t)		; completion engine
+    (company-statistics . t)	; complete-mru
+    (company-ycmd . t)		; completion server
+    (browse-kill-ring . t)	; kill ring
+    (workgroups)		; save session
+    (workgroups2)		; save session
+    (ace-jump-mode . t)		; move cursor
+    (ace-link . t)		; open link
+    (flyspell-lazy . t)		; spell check in idle time
+    (popwin) 			; pop window
+    (elpy . t)			; python major mode
+    (auctex . t)		; TeX major mode
+    (company-auctex . t)	; completion for TeX
+    (magit . t)			; git tool
+    (disable-mouse . t)		; diable mouse click
+    )
+  "The alist of user installed packages and select which one to load.
+Each element is a concell. 
+The first element is the name of the package (a symbol). 
+The second element is the version.
+If version is t, the package is loaded with the newest version.
+If version is a string, only that version is loaded.
+If version is nil, the package is not loaded (installed but disabled).
+See `package-load-list' for more explanation.")
 
 (/def-user-directory packages
   "The directory to store ELPA packages. This will be set to
