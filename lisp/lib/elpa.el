@@ -5,5 +5,6 @@
 ;;; Code:
 
 
+
 (/provide)
-;;; custom/miscellany.el ends here
+;;; lib/elpa.el ends here

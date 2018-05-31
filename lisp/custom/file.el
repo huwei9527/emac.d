@@ -40,6 +40,10 @@ When Emacs opens a file in these directory, the corresponding buffer is
 (/def-config-directory smex "e.g, smex-items")
 (/def-config-directory ido "e.g., id.last")
 (/def-config-directory recentf "e.g. recentf")
+(/def-config-directory custom
+  "Emacs custom file directory.
+Store the custom file used by the `customize*' command.
+See `custom-file' for details.")
 
 (/def-custom-var recentf-exclude-list
   (/regexp-quote ".el.gz'"

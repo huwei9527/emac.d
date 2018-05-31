@@ -4,7 +4,7 @@
 
 ;;; Code:
 
-(eval-when-compile (/require-meta file))
+(eval-when-compile (/require-meta file hook))
 
 (/require-custom file)
 (/require-lib file)
@@ -22,7 +22,14 @@
       recentf-save-file (/config-file-path recentf)
       recentf-max-saved-items 1024
       recentf-exclude /custom-recentf-exclude-list
+      ;; emacs c source file
+      source-directory (file-truename (expand-file-name "~/Codes/emacs-25.2"))
+      ;; custom file
+      custom-file (/config-file-path custom.el custom)
       )
+
+;; load custom file
+(if (file-exists-p custom-file) (load custom-file))
 
 ;; save cursor place
 (save-place-mode 1)
@@ -44,7 +51,6 @@
 	    (when (/file-in-directory-p buffer-file-name dir)
 	      (read-only-mode 1)
 	      (throw 'break-tag nil)))))))
-
 
 (/provide)
 ;;; config/file.el ends here

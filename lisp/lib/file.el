@@ -84,20 +84,32 @@ If DEPTH is not a positive integer, the whole directory tree is searched."
     (add-to-list list path)
     (/add-subdirectory-to-list path list depth)))
 
-(defun /make-directory-safe (path &optional verbose)
-  "Create directory PATH.
+(defun /--format-make-file-tag (create)
+  "format colored make file tag."
+  (if noninteractive
+      (if create (/format-red "C") (/format-green "E"))
+    (if create (propertize "C" 'face '/red-foreground)
+      (propertize "E" 'face '/green-foreground))))
+
+(defun /make-file-safe (path &optional verbose)
+    "Create file named PATH.
 If PATH can't be created or PATH is already exits, no error will be signaled.
 If VERBOSE is non-nil, show messages."
-  (let* (create tag)
+    (let* (create)
+      (unless (file-exists-p path)
+	(with-temp-buffer (write-file path))
+	(setq create t))
+      (when verbose (message "[%s] %s" (/--format-make-file-tag create) path))))
+
+(defun /make-directory-safe (path &optional verbose)
+  "Create directory named PATH.
+If PATH can't be created or PATH is already exits, no error will be signaled.
+If VERBOSE is non-nil, show messages."
+  (let* (create)
     (unless (file-directory-p path)
       (make-directory path)
       (setq create t))
-    (when verbose
-      (setq tag (if noninteractive
-		    (if create (/format-red "C") (/format-green "E"))
-		  (if create (propertize "C" 'face '/red-foreground)
-		    (propertize "E" 'face '/green-foreground))))
-      (message "[%s] %s" tag path))))
+    (when verbose (message "[%s] %s" (/--format-make-file-tag create) path))))
 
 ;;; {{ buffer
 (defun /save-buffer (&optional silent)
