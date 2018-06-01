@@ -10,7 +10,7 @@
 
 ;; Edit commit message
 (add-to-list 'auto-mode-alist
-	     '("\\.git/COMMIT_EDITMSG" . global-git-commit-mode))
+	     '("\\.git/COMMIT_EDITMSG\\'" . global-git-commit-mode))
 
 (/def-keys-ctl-x g magit-status)
 

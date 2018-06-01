@@ -32,6 +32,7 @@
   miscellany
   emacs-lisp
   python
+  shell
   )
 (/require-test test)
 
