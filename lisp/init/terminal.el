@@ -36,7 +36,7 @@
   )
 (/require-test test)
 
-(switch-to-buffer "*Messages*")
+;(switch-to-buffer "*Messages*")
 ;; (switch-to-buffer "*AAA")
 ;; (switch-to-buffer "*BBB")
 ;(split-window-right)

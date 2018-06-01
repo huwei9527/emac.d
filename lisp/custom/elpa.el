@@ -44,6 +44,7 @@ This will feed to `package-archives'.")
     (auctex . t)		; TeX major mode
     (company-auctex . t)	; completion for TeX
     (magit . t)			; git tool
+    (gitignore-mode . t)	; .gitignore major-mode
     (disable-mouse . t)		; diable mouse click
     )
   "The alist of user installed packages and select which one to load.
