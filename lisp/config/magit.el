@@ -8,6 +8,10 @@
 
 (require 'evil)
 
+;; Edit commit message
+(add-to-list 'auto-mode-alist
+	     '("\\.git/COMMIT_EDITMSG" . global-git-commit-mode))
+
 (/def-keys-ctl-x g magit-status)
 
 (setq magit-log-margin '(nil age margit-log-margin-width t 18))
@@ -31,7 +35,7 @@
 (/eval-after-load magit-branch
   (magit-remove-popup-key 'magit-branch-popup :action ?b)
   (magit-define-popup-action 'magit-branch-popup ?b
-			     "Checkout" magit-branch-or-checkout
+			     "Checkout" 'magit-branch-or-checkout
 			     'magit-branch t))
 
 (/eval-after-load magit
