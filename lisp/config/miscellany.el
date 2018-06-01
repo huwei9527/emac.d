@@ -26,7 +26,7 @@
 ;; camel word support
 (subword-mode)
 
-;; disble mouse click
+;; disable mouse click
 (global-disable-mouse-mode)
 
 ;;; {{ Keymap
@@ -38,8 +38,9 @@
 
 ;; global-map
 (/def-keys-global
- M-/ hippie-expand
- TAB /tab-dwim
+ M-/   hippie-expand
+ TAB   /tab-dwim
+ C-M-v /scroll-other-window-transient-mode
  )
 ;;; }}
 

@@ -23,7 +23,7 @@
       recentf-max-saved-items 1024
       recentf-exclude /custom-recentf-exclude-list
       ;; emacs c source file
-      source-directory (file-truename (expand-file-name "~/Codes/emacs-25.2"))
+      source-directory (file-truename (expand-file-name "~/Codes/emacs"))
       ;; custom file
       custom-file (/config-file-path custom.el custom)
       )

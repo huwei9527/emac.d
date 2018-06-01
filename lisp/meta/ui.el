@@ -44,13 +44,17 @@ ATTRS is a list of form (name tty hex):
 If FG is non-nil, the single color is set to foreground and F/B is
   %s, otherwise the single color is set to background and F/B is %s."
 	   /--fgname /--bgname))
-  (let* ((attrs (/--list attrs)) (tty (nth 1 attrs)) (hex (nth 2 attrs))
+  (let* ((attrs (/--list attrs))
+	 (name (car attrs)) (attrs (cdr attrs))
+	 (tty (car attrs)) (attrs (cdr attrs))
+	 (hex (car attrs)) (attrs (cdr attrs))
          prop face)
-    (if fg (setq prop :foreground face (/--intern-face (nth 0 attrs) nil))
-      (setq prop :background face (/--intern-face nil (nth 0 attrs))))
+    (if fg (setq prop :foreground face (/--intern-face name nil))
+      (setq prop :background face (/--intern-face nil name)))
     (and (boundp '/--face-list) (push face /--face-list))
     `(defface ,face
-       '((((class color) (type tty) (min-colors 256)) ,prop ,tty)
+       '((default ,prop ,(symbol-name name))
+	 (((class color) (type tty) (min-colors 256)) ,prop ,tty)
          (t ,prop ,hex))
        ,(format "Single face %s.\ntty : %s; t : %s" face tty hex))))
 

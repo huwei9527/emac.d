@@ -52,7 +52,9 @@ See `custom-file' for details.")
 		 "__init__"
 		 (expand-file-name "~/Codes")
 		 (expand-file-name "~/.local/lib")
-		 /custom-packages-directory))
+		 /custom-packages-directory
+		 (expand-file-name "packages" user-emacs-directory)
+		 ))
 
 
 (/def-custom-var max-path-length 2048 "The max length of path string.")

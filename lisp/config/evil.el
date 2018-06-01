@@ -56,18 +56,19 @@
 ;; here will also has effect in normal and visual mode.
 ; Emacs style cursor moving
 (/remove-keys evil-motion-state-map
-  C-f ; evil-scroll-page-down => forward-char 
-  C-b ; evil-scroll-page-up   => backward-char 
-  C-v ; evil-visual-block     => scroll-up-command
-  C-e ; evil-scroll-line-down => move-end-of-line
-  ?\t ; evil-jump-forward     => indent-for-tab-command
+  C-f			; evil-scroll-page-down  => forward-char 
+  C-b			; evil-scroll-page-up    => backward-char 
+  C-v			; evil-visual-block      => scroll-up-command
+  C-e 			; evil-scroll-line-down  => move-end-of-line
+  ?\t			; evil-jump-forward      => indent-for-tab-command
+  <down-mouse-1> 	; evil-mouse-drag-region => mouse-drag-region
   )
 
 (/remove-keys evil-normal-state-map
-  [?\e ?\.] ; evil-repeat-pop-next => xref-find-definitions
-            ; (kbd "M-.") => [134217774] but meta key is represent as ESC
-  C-n ; evil-paste-pop-next       => next-line
-  C-p ; evil-paste-pop            => previous-line
+  [?\e ?\.]		; evil-repeat-pop-next   => xref-find-definitions
+            		; (kbd "M-.")            => [134217774]
+  C-n 			; evil-paste-pop-next    => next-line
+  C-p 			; evil-paste-pop         => previous-line
   )
 
 (/remove-keys evil-insert-state-map
@@ -93,15 +94,15 @@
   )
 
 ;;; leader key
-;; - SPC -
+;; -- SPC --
 (/def-keys-evil-space-leader motion
   SPC /scroll-other-window-transient-mode)
 
-;; - , -
+;; -- , --
 (/def-keys-evil-comma-leader motion
   )
 
-;; - ; -
+;; -- ; --
 (/def-keys-evil-semicolon-leader motion
   )
 
