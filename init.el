@@ -4,7 +4,7 @@
 
 ;;; Code:
 
-(setq emacs-load-start-time (current-time))
+(setq /emacs-start-time (current-time))
 
 ;; Must before any configuration package.
 (require '/init/global
@@ -18,9 +18,10 @@
      (t (message "Exit.")))
   (if (display-graphic-p) (/require-init graphic) (/require-init terminal)))
 
-(defvar emacs-load-time (time-to-seconds (time-since emacs-load-start-time)))
-(message "%f" emacs-load-time)
-(setq initial-scratch-message (format ";; %f\n" emacs-load-time))
+(defvar /emacs-load-time (float-time (time-since /emacs-start-time))
+  "Emacs init file loading time.")
+(message "Time: %f s" /emacs-load-time)
+(setq initial-scratch-message (format ";; Load time: %f s.\n" /emacs-load-time))
 
 (provide 'init)
 

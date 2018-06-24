@@ -46,6 +46,7 @@ This will feed to `package-archives'.")
     (magit . t)			; git tool
     (gitignore-mode . t)	; .gitignore major-mode
     (disable-mouse . t)		; diable mouse click
+    (pyim . t)			; chinese input method
     )
   "The alist of user installed packages and select which one to load.
 Each element is a concell. 

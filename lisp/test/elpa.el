@@ -6,7 +6,7 @@
 
 (/require-lib elpa)
 (/message-test-start)
-(when t
+(when nil
   (let* ((attrs (assq 'evil package-alist))
 	 (pkg (car attrs))
 	 (name (symbol-name pkg))

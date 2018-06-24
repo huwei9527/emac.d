@@ -7,8 +7,168 @@
 (/require-meta core)
 (/require-lib core)
 
-
 (/message-test-start)
+
+(when nil
+  (require 'macroexp)
+  (defconst aaaa 1234)
+  (message "%s" (macroexp--const-symbol-p 'aaaa))
+  (message "quote   : %s" (macroexp-const-p ''aaaa))
+  (message "keyword : %s" (macroexp-const-p :keyword))
+  (message "lambda  : %s" (macroexp-const-p (lambda () nil)))
+  (message "vector  : %s" (macroexp-const-p [1 2 3 4]))
+  (message "char    : %s" (macroexp-const-p ?\t)))
+
+(when nil
+  (require 'cl-lib)
+  (message "lambda  : %s" (cl--const-expr-p (lambda () nil)))
+  (message "quote   : %s" (cl--const-expr-p ''aaaa)))
+
+(when nil
+  (/--def defun args &optional doc decl &rest body)
+  ;(/--def "defun" args &optional doc &rest body)
+  (/defun* tn () (declare (indent defun))
+    (:documentation "doc1234")
+    (message "%s" 123) (message "%s" 456))
+  (/--tn)
+  ;(/ppmacroexpand (/--def defconst init &optional doc))
+  )
+
+(when t
+  (/defconst* test1-format (/--format-class :prefix "test1"))
+  (/defconst* test2-format (/--format-class :suffix "test2"))
+  (/defconst* test3-format (/--format-class :prefix "test3p" :suffix "test3s"))
+  (message "%s" (/--format-internal /--custom-format "%s%s" 'a 'b))
+  (message "%s" (/--format-internal nil "%s%s" 'a 'b))
+  (message "%s" (/--format-internal `(,/--test1-format
+				  ,/--test2-format
+				  ,/--test3-format)
+				"%s%s" 'a 'b))
+  ;(message "%s" (/--format-base [1 2 3 4] "%s" 'a))
+  (message "%s" (/--fmt /--custom-format "%s%s" 'a 'b))
+  (message "%s" (/--fmt* /--test1-format "%s%s" 'a 'b))
+  (message "%s" (/--int /--test2-format "%s%s" 'a 'b))
+  (message "%s" (/--int* /--test3-format "%s%s" 'a 'b))
+  )
+
+(when nil
+  (defclass mca () ((aaa :initarg :aaa
+			 :type number
+			 :documentation "slot aaa"
+			 :initform 1234)
+		    (bbb :initarg :bbb
+			 :initform 5678
+			 :documentation "slot bbb")
+		    (ccc :allocation :class
+			 :initform 9999
+			 :documentation "slot ccc"))
+    "class 1234")
+  (defvar mca nil)
+  (message "default:  %s" (oref-default mca ccc))
+  (setq obja (mca :aaa 111 :bbb 111)) (message "obja:     %s" obja)
+  (setq objb (mca :aaa 222 :bbb 222)) (message "objb:     %s" objb)
+  (message "obja-ccc: %s" (oref obja ccc))
+  (oset-default 'mca :aaa 1234567890)
+  (setq objc (mca)) (message "objc:     %s" objc)
+  (message "orefb-aa: %s" (oref objb :aaa))
+  (message "orefdftb: %s" (oref-default objb :aaa))
+  (cl-defgeneric mca-test (a b c) "SSSS")
+  (cl-defmethod mca-test ((self mca) b c)
+    "Doc string"
+    (message "%s %s %s" (oref self :aaa) b c))
+  (mca-test obja 100 1000)
+  (/defclass tc () ((a :initarg :a))
+	     "def 1234")
+  (setq objd (/tc :a 11111))
+  (message "%s" (oref objd :a))
+  )
+
+(when nil
+  (/defun aaaaa (a b c) "funaaaaa" (message "funaaaaa"))
+  (/defgeneric aaaaa (a b c) "genericaaaaa" (message "genericaaaaaa"))
+  (/defmethod aaaaa ((a string) b c) "" (message "method"))
+  (/aaaaa 1 2 3)
+  (/aaaaa "1" 2 3)
+  )
+
+(when nil
+  (message "namespace : [%s]" /--namespace)
+  (message "internal  : [%s]" /--namespace*)
+
+  (/defmacro macroa (a b c) "/defmacro" (declare (indent defun))
+    `(message "/defmacro"))
+  (/macroa 1 2 3)
+  (/defun* funa (a b c) "/defun*" (declare (indent defun)) (message "/defun*"))
+  (/--funa 1 2 3)
+
+  (message "fmtsymbol : [%s]" (/--format 'abcd))
+  (message "fmtmix    : [%s]" (/--format "%s%s" 'a "bcd"))
+
+  (message "fmt*symbol: [%s]" (/--format* 'abcd))
+  (message "fmt*mix   : [%s]" (/--format* "%s%s" 'a "bcd"))
+
+  (message "intern    : [%s]" (/--intern "%s%s" 'a "bcd"))
+  (message "intern*   : [%s]" (/--intern* "%s%s" 'a "bcd"))
+
+  (/defmacro* macroa (a b c) "/defmacro*" (declare (indent defun))
+    `(message "/defmacro*"))
+  (/--macroa 1 2 3)
+
+  (message "doc-string: [%s]" (/--doc-ref 'fun 'a 'b 'c))
+  (message "doc-string: [%s]" (/--doc-ref 'fun))
+  (message "doc-name  : [%s]" (/--doc-ref-name 'a 'b 'c))
+  (message "doc-format: [%s]" (/--doc-ref-format 'a 'b 'c))
+  (message "doc-define: [%s]" (/--doc-define 'funtion 'defun t))
+  (message "doc-define: [%s]" (/--doc-define 'funtion 'defun))
+
+  (/defun funa (a b c) "/defun" (declare (indent defun)) (message "/defun"))
+  (/funa 1 2 3)
+  (/defvar vara "/defvar" "/defvar") (message "%s" /vara)
+  (/defvar* vara "/defvar*" "/defvar*") (message "%s" /--vara)
+  (/defconst consta "/defconst" "/defconst") (message "%s" /consta)
+  (/defconst* consta "/defconst*" "/defconst*") (message "%s" /--consta)
+  (/defclass classa () ((aa :initform "/defclass:aa")) "/defclass")
+  (message "%s" (oref-default /classa aa))
+  (/defclass* classa () ((aa :initform "/defclass*:aa")) "/defclass*")
+  (message "%s" (oref-default /--classa aa))
+  (/defgeneric generica (a b c) "/defgeneric" (message "/defgeneric"))
+  (/generica 1 2 3)
+  (/defgeneric* generica (a b c) "/defgeneric*" (message "/defgeneric*"))
+  (/--generica 1 2 3)
+  (/defmethod generica ((a string) b c) "/defmethod" (message "/defmethod"))
+  (/generica "1" 2 3)
+  (/defmethod* generica ((a string) b c) "/defmethod*" (message "/defmethod*"))
+  (/--generica "1" 2 3)
+  
+  ;; (message "%s" (/--format-custom 1234))
+  ;; (message "%s" (/--intern-custom 1234))
+  ;; (/defcustom customa 1234 "custom1234") (message "%s" /custom-customa)
+  )
+
+(when nil
+  (/def-intern test prefix)
+  (message "%s" /--namespace-test)
+  (message "%s" (/--format-test "ABCD"))
+  (message "%s" (/--intern-test "ABCD"))
+  (message "%s" (/--intern-test* "ABCD"))
+  
+  (message "%s" (/path-directory "ABCD" "/A/B/C"))
+  (message "%s" (/path-directory "ABCD" "A/B/C"))
+  (message "%s" (/path-directory "ABCD"))
+  (message "%s" (/path-user-directory "ABCD"))
+  (message "%s" (/path-user-directory 'abcd))
+  (message "%s" (/path-lisp-directory "ABCD"))
+  (message "%s" (/--format-directory 'ABCD))
+  (message "%s" (/--intern-directory 'ABCD))
+  )
+
+
+(when nil
+  (let* ((a '(a b c))
+	 (str (upcase (format "%s" a))))
+    (string-match "(\\(.*\\))" str)
+    (message "%s" (match-string 1 str)))
+  (message "%s" (/--redirect-doc abcd a b c)))
 
 (when nil
   (print (/regexp-quote "(abcd)"))
@@ -170,7 +330,7 @@
     (message "add : %s %s" (time-add 1 nil) (float-time (time-add 1 nil)))
     ))
 
-(when t
+(when nil
   (/def-double-keys-event-command
    dtest
    ((/show-key-binding)

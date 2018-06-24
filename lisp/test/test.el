@@ -7,8 +7,8 @@
 (/require-lib test)
 (/require-test
   ;global
+  core
   ;file
-  ;core
   ;ui
   ;auto-save
   ;hook

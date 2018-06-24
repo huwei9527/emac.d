@@ -20,6 +20,12 @@
       select-enable-primary t
       )
 
+(when (display-graphic-p)
+  (require 'pyim)
+  (require 'pyim-basedict)
+  (pyim-basedict-enable)
+  (setq default-input-method "pyim"))
+
 ;; always use short form promt
 (/advice-add (yes-or-no-p) :override y-or-n-p)
 

@@ -52,6 +52,8 @@ See `custom-file' for details.")
 		 "__init__"
 		 (expand-file-name "~/Codes")
 		 (expand-file-name "~/.local/lib")
+		 (expand-file-name "~/.local/share/texlive")
+		 (expand-file-name "/usr/share/emacs")
 		 /custom-packages-directory
 		 (expand-file-name "packages" user-emacs-directory)
 		 ))

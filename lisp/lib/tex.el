@@ -23,7 +23,7 @@
 	(setq win (car lives))
 	(and (setq delete
 		   (/kill-temporary-buffer win #'/tex-temporary-buffer-p))
-	     (eq curr other)
+	     (eq win next)
 	     (setq rlt delete))
 	(pop lives))
       rlt)))

@@ -109,6 +109,7 @@ Devide them into three categories: new package (install), old package (upgrade),
 (defun /package-install ()
   "Install packages in `package-selected-packages'.
 Also upgrade installed packages and remove packages no longer needed."
+  (package-refresh-contents)
   (let* ((deps (/--package-resolve-dependency))   ; dependent packages
 	 (dels (package--removable-packages))     ; package not needed
 	 installs upgrades deletes uptodates
@@ -132,8 +133,8 @@ Also upgrade installed packages and remove packages no longer needed."
     (dolist (pkg dels)
       (push `(,pkg ,(/package-version pkg)) deletes))
     ;; install all
-    (setq package-load-list '(all))
-    (package-install-selected-packages)
+    (let* ((package-load-list '(all)))
+      (package-install-selected-packages))
     ;; upgrade all
     (dolist (attrs upgrades)
       (package-reinstall (car attrs)))

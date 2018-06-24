@@ -28,6 +28,7 @@
 /smex-items
 /ido.last
 /company-statistics-cache.el
+/pyim/
 
 # Don't ignore self
 !.gitignore
