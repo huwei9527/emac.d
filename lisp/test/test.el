@@ -7,7 +7,8 @@
 (/require-lib test)
 (/require-test
   ;global
-  core
+  ;core
+  ;elpa
   ;file
   ;ui
   ;auto-save
@@ -17,7 +18,6 @@
   ;keymap
   ;dynamic
   ;format
-  ;elpa
   )
 
 

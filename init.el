@@ -7,8 +7,9 @@
 (setq /emacs-start-time (current-time))
 
 ;; Must before any configuration package.
-(require '/init/global
-	 (expand-file-name "lisp/init/global.el" user-emacs-directory))
+(eval-when-compile
+  (require '/init/global
+	   (expand-file-name "lisp/init/global.el" user-emacs-directory)))
 
 (if noninteractive
     (cond
@@ -16,7 +17,8 @@
      ((boundp '*install*) (/require-tool install-packages))
      ((boundp '*test*) (/require-test test))
      (t (message "Exit.")))
-  (if (display-graphic-p) (/require-init graphic) (/require-init terminal)))
+  (if (display-graphic-p) (/require-init graphic) (/require-init terminal)
+    ))
 
 (defvar /emacs-load-time (float-time (time-since /emacs-start-time))
   "Emacs init file loading time.")

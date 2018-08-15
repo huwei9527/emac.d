@@ -8,7 +8,7 @@
 (/require-lib file)
 
 ;; theme path
-(eval-after-load 'custom
+(/eval-after-load 'custom
   (progn
     (setq custom-theme-directory /custom-config-theme-directory)
     (/add-subdirectory-to-list /custom-config-theme-directory

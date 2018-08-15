@@ -8,32 +8,33 @@
 ;; 	 (expand-file-name "lisp/init/global.el" user-emacs-directory))
 
 (/require-custom core)
+(/require-meta xxxxxx)
 (/require-config
-  core
-  elpa
-  ui
-  auto-save
-  spell
-  evil
-  ace-link
-  ace-jump-mode
-  ivy
-  ffip
-  rainbow-delimiters
-  which-key
-  paredit
-  hideshow
-  company
-  yasnippet
-  magit
-  select
-  file
-  buffer
-  miscellany
-  emacs-lisp
-  python
-  tex
-  shell
+  ;; core
+  ;; elpa
+  ;; ui
+  ;; auto-save
+  ;; spell
+  ;; evil
+  ;; ace-link
+  ;; ace-jump-mode
+  ;; ivy
+  ;; ffip
+  ;; rainbow-delimiters
+  ;; which-key
+  ;; paredit
+  ;; hideshow
+  ;; company
+  ;; yasnippet
+  ;; magit
+  ;; select
+  ;; file
+  ;; buffer
+  ;; miscellany
+  ;; emacs-lisp
+  ;; python
+  ;; tex
+  ;; shell
   )
 (/require-test test)
 

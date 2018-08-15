@@ -12,9 +12,9 @@
 (set-face-attribute 'default nil :height /custom-font-height)
 
 ;; Hide GUI.
-(and (fboundp 'menu-bar-mode) (menu-bar-mode -1))
-(and (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-(and (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+(and (fboundp #'menu-bar-mode) (menu-bar-mode -1))
+(and (fboundp #'tool-bar-mode) (tool-bar-mode -1))
+(and (fboundp #'scroll-bar-mode) (scroll-bar-mode -1))
 (setq inhibit-startup-screen t
       inhibit-startup-echo-area-message nil)
 

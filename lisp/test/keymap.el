@@ -4,41 +4,68 @@
 
 ;;; Code:
 
-(/require-meta keymap)
+(/require keymap meta lib)
 
 (/message-test-start)
+
 (when nil
+  (message "01: %s" (/--kbd "a b c d"))
+  (message "02: %s" (/--kbd "abcd"))
+  (message "03: %s" (/--kbd 'abcd))
+  (message "04: %s" (/--kbd [?a ?b ?c ?d]))
+  (message "05: %s" (/--kbd ?a ?b ?c ?d))
+  (message "06: %s" (/--kbd (lambda () "ab") "cd"))
+  (message "07: %s" (/--kbd ''ab 'cd))
   (message "11: %s" (kbd "a b c d"))
   (message "12: %s" (kbd "abc SPC d"))
   (message "13: %s" (kbd "abc\C-d"))
   (message "14: %s" (kbd "abcC-d"))
   (message "15: %s" (kbd "abcd C-x"))
   (message "16: %s" (kbd "abcd\C-x"))
-  (message "21: %s" (/--key-sequence "C-x a" "\C-x l"))
-  (message "22: %s" (/--key-sequence "C-x a" [?\C-x ?l]))
-  (message "23: %s" (/--key-sequence [?\C-x ?a] "C-x l"))
-  (message "24: %s" (/--key-sequence [?\C-x ?a] [?\C-x ?l]))
-  (message "25: %s" (/--key-sequence "C-x l \C-x a"))
-  (message "26: %s" (/--key-sequence [?\C-x ?l ?\C-x ?a]))
-  (message "31: %s" (/--key-sequence "C-a bcd" "efgh"))
-  (message "32: %s" (/--key-sequence "\C-abcd" "efgh"))
-  (message "33: %s" (/--key-sequence 'abcd 'efgh))
-  (message "34: %s" (/--key-sequence 'C-a\ bcd 'efgh))
-  (message "35: %s" (/--key-sequence '\C-a\ bcd 'efgh))
-  (message "41: %s" (/key-string "C-x l \C-h a")))
+  (message "21: %s" (/--keys "C-x b" "\C-x a"))
+  (message "22: %s" (/--keys "C-x b" [?\C-x ?a]))
+  (message "23: %s" (/--keys '\C-x\ b "C-x a"))
+  (message "24: %s" (/--keys 'C-x\ a\ \C-x\ b))
+  (message "25: %s" (/--keys "C-x a C-x b"))
+  (message "26: %s" (/--keys "C-x aC-x b"))
+  ;(message "41: %s" (/key-string "C-x l \C-h a"))
+  )
+
+(defvar xxx-map nil)
+(fset 'xxx-map messages-buffer-mode-map)
+
 
 (when nil
-  (setq abc\ d 1234)
-  (message "%s %s %s" abc\ d 'abc\ d '\\C-abcd)
-  (message "%s" "\C-abcd")
-  (message "%s" '\C-a\0bcd)
-  (message "%s" '\?abcdefg)
-  (message "%s" (equal "\C-abcd" (symbol-name '\C-abcd)))
+  (message "%s" (keymapp 'xxx-map))
+  (message "%s" (/--keymap messages-buffer-mode-map))
+  (message "%s" (/--keymap (symbol-value 'messages-buffer-mode-map)))
+  (message "%s" (/--keymap 'xxx-map))
+  (message "%s" (/--keymap 'xxx))
+  (message "%s" (/--keymap '((%s - mode - map) messages-buffer)))
+  )
 
-  (let* ((a 'b))
-    (message "%s" a)
-    (setq a `(quote ,a))
-    (message "%s" a)))
+(when nil
+  (message "%s" (/--lookup-key help-map 113))
+  (message "%s" (/--lookup-key help-map 52))
+  (message "%s" (/--lookup-key help-map [52 105])))
+
+(when nil
+  (message "%s" (/--key-definition 'pwd))
+  (message "%s" (/--key-definition "C-c C-v"))
+  (message "%s" (/--key-definition help-map))
+  (message "%s" (/--key-definition (lambda () ignore)))
+  )
+
+(when nil
+  (message "%s" (/--bindings ?a '("xxx" car
+				  "yyy" message
+				  "zzz" pwd)))
+  (/--sexp-define-key ?a '("xxx" car
+			   "yyy" message
+			   "zzz" pwd)
+		      (dolist (l bindings)
+			(message "show: %s" l)))
+  )
 
 (when nil
   (let* ((c `("1234" . /show-key-binding))
@@ -66,22 +93,44 @@
   )
 
 (when nil
+  (message "%s" (/--keymap 'xxx-map))
+  (/remove-key 'xxx-map [50] )
+  (message "%s" (/--keymap 'xxx-map))
+  )
+
+(when nil
+  (message "%s" (/--keymap help-map))
+  (/remove-key help-map [52 105])
+  (message "%s" (/--keymap help-map))
+  )
+
+(when nil
+  (message "%s" (/--keymap 'xxx-map))
+  (/remove-keys 'xxx-map [51] [52] [53] [54] [55])
+  (message "%s" (/--keymap 'xxx-map))
+  )
+
+(message "%s" 'aaaa)
+;(/define-keys global-map "\C-c\C-c" #'/show-key-binding)
+(message "after: %s" 'aaa)
+
+(when nil
   (when nil
-    (/--def-keys global-map
-		  "\C-c\C-c" #'/show-key-binding
-		  "\C-c\C-v" #'/show-key-binding))
+    (/--define-keys global-map
+		    "\C-c\C-c" #'/show-key-binding
+		    "\C-c\C-v" #'/show-key-binding))
   (when nil
-    (/def-keys global-map C-c
-		C-v /show-key-binding
-		C-c /show-key-binding))
+    (/define-keys global-map C-c
+  		  C-v /show-key-binding
+  		  C-c /show-key-binding))
   (when nil
-    (/def-keys global-map C-c
+    (/define-keys global-map C-c
       C-c /show-key-binding
       C-v /show-key-binding
       C-n /show-key-binding
       ab /show-key-binding))
   (when nil
-    (/def-keys global-map
+    (/define-keys global-map
       "C-c C-c" /show-key-binding
       "C-c ab" /show-key-binding))
   (when nil
@@ -104,6 +153,17 @@
     (message "map %s" (symbol-function map)))
   )
 
+(message "%s" "here")
+(when nil
+  (/define-keys-mode /test-minor-mode "C-c"
+		     "C-v" /show-key-binding
+		     "C-c" /show-key-binding
+		     ))
+
+(when t
+  ;(/ppmacroexpand (/--define-specific-keymap-macro global global-map))
+  )
+
 (when nil
   (when t
     (/def-keys-global C-c
@@ -119,7 +179,7 @@
   (/def-keys-ctl-c-mode messages-buffer-mode ab /show-key-binding)
   )
 
-(when t
+(when nil
   (/def-keys-evil-state motion a (lambda () (interactive) (message "fuck")))
   (/def-transient-minor-mode abcd "abcde" `(([?a] . /show-key-binding)) 1234)
   )

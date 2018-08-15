@@ -14,6 +14,45 @@
   (message "%s : %s" (/uneditable-file-p path) path))
 
 (when nil
+  (/defregexp abcd "`abcd(e|f)" "xxxx" 'quote)
+  (/define-file-name-predictor abcd "nil")
+  (message "%s" (/abcd-file-name-p "/a/b/c/abcdexxx"))
+  (message "dotdirectory: %s" (/dotdirectory-file-name-p "/a/b/c/.."))
+  (message "dotdirectory: %s" (/dotdirectory-file-name-p "/a/b/c/..."))
+  (message "uneditable:   %s" (/uneditable-file-file-name-p "/a/b/c/d~"))
+  (message "system:       %s" (/system-buffer-file-name-p "/a/b/c/*abc"))
+  (message "scratch:      %s" (/scratch-buffer-file-name-p "/a/b/c/*scratch*"))
+  (message "message:      %s" (/message-buffer-file-name-p "/a/b/c/*Messages*")))
+
+(when nil
+  (message "%s" (/path '/a 'b 'c 'd))
+  (message "%s" (/path 'a 'b 'c 'd))
+  (message "%s" (/path 12))
+  (message "%s" (/path))
+  (message "%s" (/path-to-file-name "/a/b/c/d"))
+  (message "%s" (/path-to-file-name default-directory)))
+
+(when nil
+  (message "%s" (/file-contain-p "/a/b/c" "/a/b"))
+  (message "%s" (/file-contain-p "/a/d/c" "/a/b"))
+  (message "%s" (/file-name-match "/a/b/c/xxxxyyyxxx" "yyy"))
+  )
+
+(defvar list '("XXX" "YYY"))
+
+(when t
+  (let* ((path "~/Projects/test/abcd")
+	 (list nil))
+    (message "%s" (/subdirectory path))
+    (message "%s" (/subdirectory path 1))
+    ;(add-to-list 'list "aaa")
+    (/add-subdirectory-to-list path 'list)
+    (message "%s" list)
+    )
+  (message "%s" list)
+  )
+
+(when nil
   (print (/subdirectory /testdir))
   (/test-editable "/a/b/c.pdf")
   (/test-editable "/a/b/c.exe")
@@ -46,7 +85,7 @@
       )
     ))
 
-(when t
+(when nil
   (/make-directory-safe "~/Projects/test/xxxxx" 'verbose))
 
 (/message-test-end)

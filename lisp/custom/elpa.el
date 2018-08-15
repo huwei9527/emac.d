@@ -6,13 +6,13 @@
 
 (eval-when-compile (/require-meta file core))
 
-(/def-custom-var package-archives
+(/defcustom package-archives
   `(("gnu"   . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
     ("melpa" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/"))
   "An alist of achives from which to fetch.
 This will feed to `package-archives'.")
 
-(/def-custom-var package-alist
+(/defcustom package-alist
   `((evil . t)			; vim
     (color-theme-solarized)	; solarized color theme
     (zenburn-theme)		; zenburn color theme
@@ -57,17 +57,18 @@ If version is a string, only that version is loaded.
 If version is nil, the package is not loaded (installed but disabled).
 See `package-load-list' for more explanation.")
 
-(/def-user-directory packages
-  "The directory to store ELPA packages. This will be set to
-package-user-dir automatically.")
+(/define-user-directory packages
+  "`/packages' directory.
+The directory to store ELPA packages.
+This will be used to set to `package-user-dir'.")
 
-(/def-config-directory package-describes
+(/define-config-directory package-describes
   "The directory to save ELPA describe file. When you describe a
 package (C-m or <RET> in the package mode) which is no installed,
 ELPA will download a package-name-readme.txt file to describe the
 package to you. The file is store in the package-user-dir directory
 by default which would dirty the directory. So I hack it to this
-directory by advice describe-package-1.")
+directory by advice `describe-package-1'.")
 
 (/provide)
 ;;; custom/elpa.el ends here

@@ -4,8 +4,8 @@
 
 ;;; Code:
 
+;(/require-lib core)
 (/require-meta core)
-(/require-lib core)
 
 (/message-test-start)
 
@@ -34,22 +34,6 @@
   ;(/ppmacroexpand (/--def defconst init &optional doc))
   )
 
-(when t
-  (/defconst* test1-format (/--format-class :prefix "test1"))
-  (/defconst* test2-format (/--format-class :suffix "test2"))
-  (/defconst* test3-format (/--format-class :prefix "test3p" :suffix "test3s"))
-  (message "%s" (/--format-internal /--custom-format "%s%s" 'a 'b))
-  (message "%s" (/--format-internal nil "%s%s" 'a 'b))
-  (message "%s" (/--format-internal `(,/--test1-format
-				  ,/--test2-format
-				  ,/--test3-format)
-				"%s%s" 'a 'b))
-  ;(message "%s" (/--format-base [1 2 3 4] "%s" 'a))
-  (message "%s" (/--fmt /--custom-format "%s%s" 'a 'b))
-  (message "%s" (/--fmt* /--test1-format "%s%s" 'a 'b))
-  (message "%s" (/--int /--test2-format "%s%s" 'a 'b))
-  (message "%s" (/--int* /--test3-format "%s%s" 'a 'b))
-  )
 
 (when nil
   (defclass mca () ((aaa :initarg :aaa
@@ -84,201 +68,142 @@
   )
 
 (when nil
-  (/defun aaaaa (a b c) "funaaaaa" (message "funaaaaa"))
-  (/defgeneric aaaaa (a b c) "genericaaaaa" (message "genericaaaaaa"))
-  (/defmethod aaaaa ((a string) b c) "" (message "method"))
-  (/aaaaa 1 2 3)
-  (/aaaaa "1" 2 3)
+  (message "string: %s" (/--name "abcd"))
+  (message "number: %s" (/--name 1234))
+  (message "symbol: %s" (/--name 'abcd))
+  (message "list:   %s" (/--name '((a b c d))))
   )
 
 (when nil
-  (message "namespace : [%s]" /--namespace)
-  (message "internal  : [%s]" /--namespace*)
-
-  (/defmacro macroa (a b c) "/defmacro" (declare (indent defun))
-    `(message "/defmacro"))
-  (/macroa 1 2 3)
-  (/defun* funa (a b c) "/defun*" (declare (indent defun)) (message "/defun*"))
-  (/--funa 1 2 3)
-
-  (message "fmtsymbol : [%s]" (/--format 'abcd))
-  (message "fmtmix    : [%s]" (/--format "%s%s" 'a "bcd"))
-
-  (message "fmt*symbol: [%s]" (/--format* 'abcd))
-  (message "fmt*mix   : [%s]" (/--format* "%s%s" 'a "bcd"))
-
-  (message "intern    : [%s]" (/--intern "%s%s" 'a "bcd"))
-  (message "intern*   : [%s]" (/--intern* "%s%s" 'a "bcd"))
-
-  (/defmacro* macroa (a b c) "/defmacro*" (declare (indent defun))
-    `(message "/defmacro*"))
-  (/--macroa 1 2 3)
-
-  (message "doc-string: [%s]" (/--doc-ref 'fun 'a 'b 'c))
-  (message "doc-string: [%s]" (/--doc-ref 'fun))
-  (message "doc-name  : [%s]" (/--doc-ref-name 'a 'b 'c))
-  (message "doc-format: [%s]" (/--doc-ref-format 'a 'b 'c))
-  (message "doc-define: [%s]" (/--doc-define 'funtion 'defun t))
-  (message "doc-define: [%s]" (/--doc-define 'funtion 'defun))
-
-  (/defun funa (a b c) "/defun" (declare (indent defun)) (message "/defun"))
-  (/funa 1 2 3)
-  (/defvar vara "/defvar" "/defvar") (message "%s" /vara)
-  (/defvar* vara "/defvar*" "/defvar*") (message "%s" /--vara)
-  (/defconst consta "/defconst" "/defconst") (message "%s" /consta)
-  (/defconst* consta "/defconst*" "/defconst*") (message "%s" /--consta)
-  (/defclass classa () ((aa :initform "/defclass:aa")) "/defclass")
-  (message "%s" (oref-default /classa aa))
-  (/defclass* classa () ((aa :initform "/defclass*:aa")) "/defclass*")
-  (message "%s" (oref-default /--classa aa))
-  (/defgeneric generica (a b c) "/defgeneric" (message "/defgeneric"))
-  (/generica 1 2 3)
-  (/defgeneric* generica (a b c) "/defgeneric*" (message "/defgeneric*"))
-  (/--generica 1 2 3)
-  (/defmethod generica ((a string) b c) "/defmethod" (message "/defmethod"))
-  (/generica "1" 2 3)
-  (/defmethod* generica ((a string) b c) "/defmethod*" (message "/defmethod*"))
-  (/--generica "1" 2 3)
-  
-  ;; (message "%s" (/--format-custom 1234))
-  ;; (message "%s" (/--intern-custom 1234))
-  ;; (/defcustom customa 1234 "custom1234") (message "%s" /custom-customa)
+  (message "%s" (/--quotep '(quote a)))
+  (message "%s" (/--quotep '(function a)))
+  (message "%s" (/--quotep '(cl-function a)))
+  (message "quote symbol: %s" (/--quote 'a))
+  (message "quote quote:  %s" (/--quote ''a))
+  (message "unquote:      %s" (/--unquote ''a))
+  (message "unquote many: %s" (/--unquote '#''#'(cl-function a)))
   )
 
 (when nil
-  (/def-intern test prefix)
-  (message "%s" /--namespace-test)
-  (message "%s" (/--format-test "ABCD"))
-  (message "%s" (/--intern-test "ABCD"))
-  (message "%s" (/--intern-test* "ABCD"))
-  
-  (message "%s" (/path-directory "ABCD" "/A/B/C"))
-  (message "%s" (/path-directory "ABCD" "A/B/C"))
-  (message "%s" (/path-directory "ABCD"))
-  (message "%s" (/path-user-directory "ABCD"))
-  (message "%s" (/path-user-directory 'abcd))
-  (message "%s" (/path-lisp-directory "ABCD"))
-  (message "%s" (/--format-directory 'ABCD))
-  (message "%s" (/--intern-directory 'ABCD))
+  (message "%s" (/--list 'a))
+  (message "%s" (/--list ''a)))
+
+(when nil
+  (message "%s" (/--symbol '((custom - %s - directory) "%s" "sample"))))
+
+(when nil
+  (message "%s" (/--file-name "/a/b/c/aaaa"))
+  (message "%s" (/--file-name nil))
+  (message "%s" (/--file-name (save-excursion (next-buffer))))
+  (message "%s" (/--buffer-file-name))
   )
 
+(when nil
+  (message "nil:     %s" (/--function nil))
+  (message "symbol:  %s" (/--function '+))
+  (message "default: %s" (/--function nil '(+ 1 2 3 4)))
+  (message "list:    %s" (/--function '(+ 100 200 300 400)))
+  (/--funcall '(message 1 2 3 4) "%s%s%s%s%s%s" 0 "X")
+  (/--apply '(message 1 2 3 4) "%s%s%s%s%s%s" 0 '("X")))
 
 (when nil
-  (let* ((a '(a b c))
-	 (str (upcase (format "%s" a))))
-    (string-match "(\\(.*\\))" str)
-    (message "%s" (match-string 1 str)))
-  (message "%s" (/--redirect-doc abcd a b c)))
-
-(when nil
-  (print (/regexp-quote "(abcd)"))
-  (print (/regexp-quote "`..?'"))
-  (print (/regexp-quote "`..?'" "(a)" "(b)"))
-  (print (/regexp-quote `("(a)" "(b)")))
-  ;(print (/regexp-quote "(a)" '("(A)" "(B)")))
+  (/--defformat fmtM :format "M"
+		:func (lambda (s &optional b) (format "M%sM" s)))
+  (/--defformat fmtN :format '("N" %s "N"))
+  (/--defformat fmtP :format '((fmtN) ("P" %s "P")))
+  (message "%s" (/--format '("A" 1 fmtM)))
+  (message "%s" (/--format '(fmtM %s (fmtM)) "%s%s" "XX" "YY"))
+  (message "%s" (/--format '("A" fmtN "B") "XXX"))
+  (message "%s" (/--format '(fmtP) "XXX"))
+  (message "%s" (/--format '(a b c d)))
   )
 
-(defvar vara (make-symbol "unintern-symbol") "Test")
-(defmacro testma ()
-  "Test unintern-symbol."
-  (set vara 100)
-  (setq unintern-symbol 11111)
-  (print (eval vara))
-  `(let* ((,vara 111))
-     (print ,vara)
-     (setq ,vara 1000)
-     (print ,vara)
-     (let* ((,vara 222))
-       (print ,vara))
-     (print ,vara)))
-; (testma) (print (eval vara))
-
-;; (let* ((ll '(1 2 3)))
-;;   (dolist (e (1 2 3))
-;;     (print e)))
-
-;; (setq lst nil)
-;; (print lst)
-;; (dolist (e '(1 2 3))
-;;   (push `(aaa ,e) lst))
-;; (print lst)
-
-(defmacro testb ()
-  "Test b."
-  (/--sexp
-    (/--sexp-append-1 'message)
-    (/--sexp-append-1 "fuck you %s %s")
-    (/--sexp-exec "c" "d")))
-
-(defmacro testc ()
-  "Test c."
-  (/--sexp-progn
-    ; (/--sexp-append-1 '(message "a%s" 1234))
-    (/--sexp-append
-      '(message "b") '(message "c"))))
-
-(defmacro testd ()
-  "Test d."
-  (/--sexp-cond-case
-    '((boundp 'a) (message "bound a"))
-    '(t (message "a") (message "b"))))
-
-(defmacro teste (&rest body)
-  "Test e."
-  `(let ((,/--sexp-list nil))
-     (dolist (e ,body) (push e ,/--sexp-list))
-     ))
-
-;(/ppmacroexpand-all (/--sexp-append a b c))
-;(/ppmacroexpand-all (/--sexp-progn (/--sexp-append a)))
-; (/ppmacroexpand-all (testc))
-(setq a 100)
-; (testc)
-
-(defvar aaa 1)
-;(message "before aaa: %s" aaa)
-
-(eval-after-load '"~/.emacs.d/test_compile"
-  '(testd))
-
-(eval-after-load "~/.emacs.d/test_compile"
-  '(setq aaa 2))
-; (message "eval aaa: %s" aaa)
-
-; (load "/home/hw/Projects/emacs.d/test_compile.el")
-; (message "load aaa: %s" aaa)
-
-;(/ppmacroexpand-all (/eval-after-load abcd a b c d))
-;(/eval-after-load abcd a b c d)
+(when nil
+  (/defregexp abcd "`a(b|d)" "doc" 'quote)
+  (/defpred abcd "pred doc")
+  (message "%s" /custom-abcd-regexp)
+  (message "%s" (/abcd-p "abccc"))
+  (message "%s" (/abcd-p "adccc"))
+  (message "%s" (/abcd-p "aeccc"))
+  )
 
 (when nil
-  (message "%s" (/--list-quote-all '(a b c d)))
-  (message "%s" (/--list-quote-odd '(a b c d)))
-  (message "%s" (/--list-quote-even '(a b c d))))
-
-; (/ppmacroexpand-all (/--sexp (/--sexp-append-1-literally a) (/--sexp-append-1-literally b)))
-; (/--sexp (/--sexp-append-1-literally a) (/--sexp-append-1-literally b))
-; (/ppmacroexpand-all (/--sexp (/--sexp-append-literally 1 2 3)))
-; (print (/--sexp (/--sexp-append-literally a b c d e f g)))
-;; (/ppmacroexpand-all (/--sexp (/--sexp-append-literally-odd 1 2 3 4)))
-;; (print (/--sexp (/--sexp-append-literally-odd a 'b c 'd)))
+  ;(/mute-call #'message "%s" 1234)
+  (/mute-call (lambda () (message "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")))
+  (message "neq: %s" (/neq 'a 'a))
+  (message "nequal: %s" (/nequal '(1 2 3 4) '(1 2 3 4)))
+  )
 
 (when nil
-  (defmacro teste (a c b d)
-    "Test e"
-    (/--sexp-setq
-      (/--sexp-pair 'a c 'b d)))
-  (print (/--sexp-setq (/--sexp-pair 'a (+ 123 100) 'b (+ 456 100))))
-  (teste a (1+  123) b (1- 456))
-  (message "a = %s b = %s" a b))
+  (message "prepend: %s" (/prepend '(1) '(2 3 4 5)))
+  (message "push: %s" (/push '(1 2 3 4) 5 6 7 8))
+  (message "quote: %s" (/seq-quote '(a b c d e 1 2 3)))
+  (message "pick-quote: %s"
+	   (/seq-pick-quote '(a b c d e 1 2 3) (lambda (_e i)
+						 (cl-oddp i))))
+  (message "quote-even: %s" (/seq-quote-even '(a b c d e f)))
+  (message "quote-odd : %s" (/seq-quote-odd '(a b c d e f)))
+)
 
 (when nil
-  (message "even: %s %s" (/evenp 1) (/evenp 2))
-  (message "odd : %s %s" (/oddp 101) (/oddp 102))
-  (let* ((tmp 1) (var 2))
-    (message "before: tmp %s var %s" tmp var)
-    (/swap tmp var)
-    (message "after: tmp %s var %s" tmp var)))
+  (message "%s" (/seq-map-alternate '(1 2 3 4)
+				    (lambda (e) (format "first: %s" e))
+				    (lambda (e) (format "second: %s" e)))))
+
+(when nil
+  (message "%s" (/--sexp (set /--sexp--form-symbol 124)))
+  (message "%s" (/--sexp (/--sexp-add 1 2 3 4)
+		  (/--sexp-add '(print 1) '(print 2) '(print 3))))
+  (message "%s" (/--sexp (/--sexp-quote-add (print 1) (print 2) (print 3))))
+  (message "%s" (/--sexp (/--sexp-quote-add-even
+  			  (message "%s" "aaa")
+  			  (message "%s" "bbb")
+  			  (message "%s" "ccc"))))
+  (message "%s" (/--sexp (/--sexp-append `((message "aaa")
+					   (message "bbb")
+					   (message "ccc"))
+			   `((message "111") (message "222") (message "333")))))
+  (message "%s" (/--sexp-progn (/--sexp-exec '(message "1") '(message "2"))))
+  (message "%s" (/--sexp-cond-case `(t (message "aaa")) `(nil (message "ccc"))))
+  (message "%s" (/--sexp-cond (/--sexp-case '(eq a 1) '(print 1) '(print 2))
+  		  (/--sexp-case '(eq a 2) '(print 11) '(print 22))))
+  (message "%s" (/--sexp-setq (/--sexp-pair a '(format "aaaa")
+				b '(format "bbbb"))))
+  (message "%s" (/--sexp-setq-pair a '(format "aaa") b '(format "bbb")))
+  )
+
+(when nil
+  (/ppmacroexpand (/require elpa lib init meta)))
+
+(when nil
+  (/eval-after-load package (message "1") (message "2")
+    (message "3")))
+
+(when nil
+  (message "%s" (/regexp-quote "abcd"))
+  (message "%s" (/regexp-quote "`(a)(b).*'"))
+  (message "%s" (/regexp-quote "(a)" "(b)" "|c|"))
+  (message "%s" (/regexp-quote '("(a)" "(b)" "|c|")))
+  (message "%s" (/regexp-quote '(("(a)" "(b)" cd|e) "(d)" ("(e)" 123))))
+  )
+
+(when nil
+  (defvar sss (symbol-function #'message))
+  (message "xxx: %s" sss)
+  (defmacro mtt ()
+    ""
+    `(funcall ,sss "%s %s" 12 34))
+  ;(/ppmacroexpand (mtt))
+  (mtt)
+  (defvar a 11111)
+  (defvar b 11111)
+  (defvar c 11111)
+  (let* (a b c)
+    (cl-multiple-value-setq (a b c) '(100 200 300))
+    (message "%s %s %s" a b c))
+  (message "%s %s %s" a b c)
+  )
+
 
 (when nil
   (let* ((cnt 0))

@@ -7,17 +7,16 @@
 ;; (eval-when-compile
 ;;   (/require-meta core))
 
-(/require-lib core)
-(/require-lib file)
+(/require-lib core file)
 (/require-custom auto-save)
 
-(defvar /--auto-save-last-time (current-time)
+(/defvar* auto-save-last-time (current-time)
   "The timestamp of last auto save.")
 
-(defvar /--auto-save-idle-timer nil
+(/defvar* auto-save-idle-timer nil
   "The timer used to auto save in idle time.")
 
-(defun /auto-save-idle-function ()
+(/defun auto-save-idle-function ()
   "Auto save function executed when idle."
   ;; (message "time %s %s"
   ;; 	   (/time-since /--auto-save-last-time) /custom-auto-save-interval)
@@ -27,11 +26,11 @@
       (setq /--auto-save-last-time (current-time))
       (or /custom-auto-save-silently (message "Idle save %s files." cnt)))))
 
-(defun /auto-save-buffer-advice (&rest args)
+(/defun auto-save-buffer-advice (&rest args)
   "Portable auto save advice."
   (/save-buffer /custom-auto-save-silently))
 
-(define-minor-mode /idle-save-mode
+(/define-minor-mode idle-save-mode
   "Toggle idle-saving in the current buffer (Idle Save mode).
 With a prefix argument ARG, enable Auto Save mode if ARG is
 positive, and disable it otherwise.
@@ -55,7 +54,7 @@ When Idle Save mode is on, all the modified and editable buffer will
 
 (eval-when-compile (/require-meta hook))
 
-(define-minor-mode /focus-save-mode
+(/define-minor-mode focus-save-mode
   "Toggle focus-saving in the current buffer (Focus Save mode).
 With a prefix argument ARG, enable Auto Save mode if ARG is
 positive, and disable it otherwise.
@@ -76,8 +75,6 @@ before losing focus."
     (/advice-remove-buffer-change /auto-save-buffer-advice)
     (/advice-remove-windwo-switch /auto-save-buffer-advice)
     (/remove-hook-focus-loss /auto-save-buffer-advice)))
-
-
 
 (/provide)
 ;;; lib/auto-save.el ends here

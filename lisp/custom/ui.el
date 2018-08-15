@@ -4,12 +4,10 @@
 
 ;;; Code:
 
-(eval-when-compile
-  (/require-meta core)
-  (/require-meta ui))
+(eval-when-compile (/require-meta core ui))
 
-(/def-custom-var font-height 120 "The height of font")
-(/def-custom-var inhibit-linum-mode-list
+(/defcustom font-height 120 "The height of font")
+(/defcustom inhibit-linum-mode-list
   (list 'help-mode
         'Info-mode
         'completion-list-mode
@@ -19,7 +17,7 @@
   "Major mode list which disable line number.")
 
 ;; construct simple color face.
-(/defface-simple)
+(/--defface-simple)
 
 (/provide)
 ;;; custom/ui.el ends here

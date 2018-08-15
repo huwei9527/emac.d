@@ -6,29 +6,29 @@
 
 (/require-custom ui)
 
-(defface /mode-line-client-tag '((t (:inherit /blue-foreground)))
+(/defface mode-line-client-tag '((t (:inherit /blue-foreground)))
   "The face for emacs client tag in mode line.")
 
-(defface /mode-line-remote-tag '((t (:inherit /magenta-foreground)))
+(/defface mode-line-remote-tag '((t (:inherit /magenta-foreground)))
   "The face for remote file tag in mode line.")
 
-(defface /mode-line-modified-tag '((t (:inherit /mode-line-remote-tag)))
+(/defface mode-line-modified-tag '((t (:inherit /mode-line-remote-tag)))
   "The face for modified tag in mode line.")
 
-(defface /mode-line-read-only-tag '((t (:inherit /mode-line-modified-tag)))
+(/defface mode-line-read-only-tag '((t (:inherit /mode-line-modified-tag)))
   "The face for read-only tag in mode line.")
 
-(defface /mode-line-line-column-number '((t (:inherit /blue-foreground)))
+(/defface mode-line-line-column-number '((t (:inherit /blue-foreground)))
   "The face for line number and column number in mode line.")
 
-(defface /mode-line-overwrite-tag
+(/defface mode-line-overwrite-tag
   '((t (:inherit /mode-line-evil-insert-state-tag)))
   "The face for overwrite tag in mode line")
 
-(defface /mode-line-transient-minor-mode-tag '((t (:inherit /red-foreground)))
+(/defface mode-line-transient-minor-mode-tag '((t (:inherit /red-foreground)))
   "The face for transient minor mode tag in mode line")
 
-(defvar /mode-line-overwrite-mode
+(/defvar mode-line-overwrite-mode
   `(overwrite-mode
     ,(propertize "+"
                  'face '/mode-line-overwrite-tag
@@ -38,7 +38,7 @@
   "Show overwrite mode status in mode line.")
 (put '/mode-line-overwrite-mode 'risky-local-variable t)
 
-(defvar /mode-line-line-column
+(/defvar mode-line-line-column
   (let* ((num-color '/mode-line-line-column-number))
     `(line-number-mode
       ((column-number-mode
@@ -73,12 +73,12 @@ mouse-1: Display Line and Column Mode Menu"))))))
 mouse-1: Display Line and Column Mode Menu"))))))))
   "Colored line number and column number in mode line.")
 
-(defvar /mode-line-vc-mode
+(/defvar mode-line-vc-mode
   `(vc-mode (:eval (format "(%s)" (substring vc-mode 1))))
   "VC mode in mode line.")
 (put '/mode-line-vc-mode 'risky-local-variable t)
 
-(defvar /mode-line-transient-minor-mode
+(/defvar mode-line-transient-minor-mode
   `(overriding-terminal-local-map
     (:propertize /custom-transient-minor-mode-mode-line-tag
 		 face /mode-line-transient-minor-mode-tag))

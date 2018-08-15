@@ -12,8 +12,7 @@
 (eval-when-compile (/require-meta evil))
 
 (require 'evil)
-(/require-custom evil)
-(/require-lib evil)
+(/require evil custom lib)
 
 ;; Set the custom evil initial state for major mode.
 (dolist (cus /custom-evil-initial-state-alist)

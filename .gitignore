@@ -29,6 +29,7 @@
 /ido.last
 /company-statistics-cache.el
 /pyim/
+session*
 
 # Don't ignore self
 !.gitignore

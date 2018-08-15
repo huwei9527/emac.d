@@ -6,7 +6,7 @@
 
 (eval-when-compile (/require-meta file))
 
-(/def-config-directory theme
+(/define-config-directory theme
   "The custom color theme directory for custom color theme.
 Put the color theme file (e.g. [theme-name]-theme.el]) in to this
   directory. The path and subdirectory of depth 1 will be added
